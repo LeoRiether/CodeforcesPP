@@ -16,5 +16,7 @@
     "tap-diff": "^0.1.1",
     "tape": "^4.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "diff": "^3.5.0"
+  }
 }
