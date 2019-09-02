@@ -15,6 +15,8 @@ Think there's something missing from Codeforces++ or some feature could be bette
 I probably won't write many tests, if any at all
 
 # TODO
++ [ ] Docs
++ [ ] @icon
 + [ ] Settings button & popup
 + [x] Remove white thingies and replace them by actual borders
 + [ ] Mashup profiles! / Codeforces automation
