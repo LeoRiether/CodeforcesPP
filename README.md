@@ -2,21 +2,7 @@
 ### Codeforces extension pack
 
 # Installing
-Put this into a userscript manager like Tampermonkey and Greasemonkey
-```
-// ==UserScript==
-// @name         Codeforces++
-// @namespace    cfpp
-// @version      1.0
-// @description  Codeforces extension pack
-// @author       LeoRiether
-// @source       https://github.com/LeoRiether/CodeforcesPP
-// @match        https://codeforces.com/*
-// @grant        none
-// @updateURL    https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/meta.js
-// @downloadURL  https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/bundle.js
-// ==/UserScript==
-```
+Go to the latest [release](https://github.com/LeoRiether/CodeforcesPP/releases/) and download `script.user.js`
 
 # Development
 Run `yarn build` to build with Parcel

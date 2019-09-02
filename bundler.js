@@ -20,13 +20,13 @@ let userscriptString =
 // @source       https://github.com/LeoRiether/CodeforcesPP
 // @match        https://codeforces.com/*
 // @grant        none
-// @updateURL    https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/meta.js
-// @downloadURL  https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/bundle.js
+// @updateURL    https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/script.meta.js
+// @downloadURL  https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/script.user.js
 // ==/UserScript==\n`;
 // userscriptString = '';
 
 const outDir = Path.join(__dirname, './dist');
-const outFilename = 'bundle.js';
+const outFilename = 'script.user.js';
 const outFile = Path.join(outDir, outFilename); 
 
 let bundler = new Bundler(Path.join(__dirname, "./src/index.js"), {
