@@ -11,16 +11,21 @@ let customCSS = '';
 let style = document.createElement('style');
 style.className = 'cfpp-style';
 
+// TODO: group border:none 
+
 let css = `
 @import url('https://fonts.googleapis.com/css?family=Libre+Franklin&display=swap');
 
-a, a:visited, .contest-state-phase, .titled, .caption {
-    text-decoration: none;
+a, a:visited, .contest-state-phase {
+    text-decoration: none !important;
     /* color: #0000EE; */ /* default link color */
+    color: #2c63d5;
+}
+.titled, .caption {
     color: #2c63d5 !important;
 }
 
-p, span, a, div {
+p, span:not(.tex-span), a, div {
     font-family: '${fontFamily}', 'Roboto', sans-serif !important;
 }
 
@@ -61,7 +66,6 @@ table th, table td {
 .datatable {
     background-color: #f8f8f8 !important;
 }
-
 
 /* Remove borders on profile page */
 .title-photo div:first-child, .userbox {
@@ -106,12 +110,64 @@ input[type=submit]:active {
     border: none;
 }
 
+/* Weird divisors next to the Logout button */
+.lang-chooser {
+    font-size: 0;
+}
+.lang-chooser a {
+    font-size: small;
+    margin-left: 0.3em;
+}
+
+/* Better problem statement */
+.problem-statement {
+    margin: 0; /* why did it have a 4-side margin in first place?? */
+    margin-right: 1.5em; /* better separation */
+}
+.problem-statement .property-title {
+    display: none;
+}
+/*.problem-statement .header .title {
+    font-size: 180%;
+}
+.problem-statement .header {
+    margin: 2em 0;
+}*/
+.problem-statement .header .title {
+    font-size: 200%;
+    margin-bottom: 0;
+}
+.problem-statement .header {
+    margin: 2.5em 0 1.5em 0;
+    text-align: left;
+}
+.problem-statement .header>div {
+    display: inline-block !important;
+    margin-right: 0.5em;
+}
+.problem-statement .header>div:not(.title) {
+    color: #9E9E9E;
+}
+.problem-statement .header>div:not(:last-child)::after {
+    content: ",";
+}
+div.ttypography p, .sample-test {
+    margin-bottom: 1.5em !important;
+}
+.problem-statement .section-title {
+    font-size: 150%;
+    margin-bottom: 0.25em;
+}
+
+.source-and-history-div {
+    border: none;
+}
+#facebox {
+    position: fixed;
+}
+
 ${customCSS}
 `;
-
-if (dom.$('.darkreader')) { // https://github.com/darkreader/darkreader
-    css += ``;
-}
 
 style.append(css);
 document.body.appendChild(style);
