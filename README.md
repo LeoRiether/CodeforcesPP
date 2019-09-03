@@ -17,7 +17,7 @@ I probably won't write many tests, if any at all
 # TODO
 + [ ] Docs
 + [ ] @icon
-+ [ ] Settings button & popup
++ [ ] Settings button & pop-up
 + [x] Remove white thingies and replace them by actual borders
 + [ ] Mashup profiles! / Codeforces automation
 + [x] Navbar dropdowns
@@ -30,3 +30,4 @@ I probably won't write many tests, if any at all
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think)
 + [x] "Google this problem" button (for mashups)
   + [ ] Custom engines
++ [ ] Problem-specific editorial pop-up
