@@ -4,7 +4,7 @@ const { promisify } = require('util');
 let fs = require('fs');
 const package = require('./package.json');
 
-let DEV = false; // TODO: change to process.environment
+let DEV = true; // TODO: change to process.environment
 
 fs.readFileAsync = promisify(fs.readFile);
 fs.writeFileAsync = promisify(fs.writeFile);
@@ -29,6 +29,7 @@ let bundler = new Bundler(Path.join(__dirname, "./src/index.js"), {
     global:      'cfpp',
     contentHash: false,
     watch:       DEV ? true : false,
+    sourceMaps:  false,
 });
 
 // TODO: Maybe there's a way to pipe Parcel's output to a JS function, then to the output?
