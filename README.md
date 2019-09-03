@@ -20,11 +20,12 @@ I probably won't write many tests, if any at all
 + [ ] Settings button & popup
 + [x] Remove white thingies and replace them by actual borders
 + [ ] Mashup profiles! / Codeforces automation
-+ [ ] Navbar dropdowns
++ [x] Navbar dropdowns
     + Groups => My Groups, All Groups
     + Contests => My Contests, All Contests
     + Add "Friends" tab?
-+ [ ] Goal: decrease number of clicks to navigate the site
++ [ ] Goal: decrease number of clicks to navigate the site (partially done with navbar dropdowns!)
 + [ ] Remove bloat from parcel's bundle
-+ [ ] File dropdown to submit
++ [ ] File drag & drop to submit
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think)
++ [ ] "Google this problem" button (for mashups)
