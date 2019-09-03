@@ -10,9 +10,10 @@ let dom = require('./dom');
 let config;
 function loadConfig() {
     config = {
-        showTags: true,
-        style:    true,
-        isOk:     true, // In case the config is overwritten by something not-JSON (e.g. a bool), this will tell us
+        showTags:  true,
+        style:     true,
+        searchBtn: true,
+        isOk:      true, // In case the config is overwritten by something not-JSON (e.g. a bool), this will tell us
     };
     localStorage.cfpp = JSON.stringify(config);
 }
@@ -37,3 +38,13 @@ if (config.showTags && dom.$('.tag-box')) {
 }
 
 require('./navbar')();
+
+let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i;
+if (config.searchBtn && location.pathname.match(searchableRegex))
+    require('./search_button')();
+
+module.exports = {
+    debug: {
+        resetConfig: loadConfig,
+    },
+};
