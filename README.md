@@ -31,3 +31,4 @@ I probably won't write many tests, if any at all
 + [x] "Google this problem" button (for mashups)
   + [ ] Custom engines
 + [ ] Problem-specific editorial pop-up
++ [ ] [Codeforces Visualizer](https://cfviz.netlify.com/index.html) link in profile page (not sure)

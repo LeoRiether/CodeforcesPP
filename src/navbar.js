@@ -9,8 +9,7 @@ module.exports = function() {
     const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
 
     let oldNav = dom.$('.main-menu-list');
-    let newNav = document.createElement('nav');
-    newNav.className = 'cfpp-navbar';
+    let newNav = dom.element('nav', { className: 'cfpp-navbar' });
 
     // Without this the dropdowns don't appear
     oldNav.parentNode.parentNode.style.overflow = 'visible';
@@ -28,12 +27,13 @@ module.exports = function() {
         },
         "/contests": {
             "My Contests": `/contests/with/${handle}`,
+            "My Problems": `/contests/writer/${handle}`,
         },
         "/gyms": {
             "Mashups": "/mashups",
         },
         "/ratings": {
-            "Friends": "/ratings/friend/true",
+            "Friends": "/ratings/friends/true",
         },
     };
 
@@ -42,18 +42,18 @@ module.exports = function() {
         let link = item.children[0]; // <a> tag
 
         // Create new item and append the old <a> to it
-        let newItem = document.createElement('div');
-        newItem.className = 'cfpp-navbar-item';
-        newItem.appendChild(link);
+        let newItem = dom.element('div', {
+            className: 'cfpp-navbar-item',
+            children: [ link ],
+        });
 
         // Add dropdown menu, if needed 
         const href = link.getAttribute('href');
         if (keys[href]) {
-            let dropdown = document.createElement('div');
-            dropdown.className = 'cfpp-dropdown';
+            let dropdown = dom.element('div', { className: 'cfpp-dropdown' });
 
             for (let ddText in keys[href]) {
-                let ddItem = document.createElement('a');
+                let ddItem = dom.element('a');
                 ddItem.innerText = ddText;
                 ddItem.href = keys[href][ddText];
                 dropdown.appendChild(ddItem);
@@ -101,7 +101,7 @@ module.exports = function() {
     }
     `;
 
-    let styleTag = document.createElement('style');    
+    let styleTag = dom.element('style');    
     styleTag.innerHTML = style;
     document.body.appendChild(styleTag);
 };

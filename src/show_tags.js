@@ -14,9 +14,8 @@ module.exports = function () {
     container.classList.add('tag-container');
 
     // Create button
-    let showTagsButton = document.createElement('button');
+    let showTagsButton = dom.element('button', { className: 'caption' });
     showTagsButton.innerText = "Show";
-    showTagsButton.classList.add('caption');
     showTagsButton.addEventListener('click', () => {
         showTagsButton.remove();
         container.style.display = 'block';

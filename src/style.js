@@ -8,8 +8,7 @@ let fontFamily = 'Libre Franklin';
 let customCSS = '';
 
 // TODO: Check if having the style on github and appendind a <link> isn't better. Probably is
-let style = document.createElement('style');
-style.className = 'cfpp-style';
+let style = dom.element('style', { className: 'cfpp-style' });
 
 // TODO: group border:none 
 

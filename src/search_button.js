@@ -11,8 +11,8 @@ module.exports = function() {
     problemName += ' codeforces';
 
     let ul = dom.$('.second-level-menu-list');
-    let li = document.createElement('li');
-    let a = document.createElement('a');
+    let li = dom.element('li');
+    let a = dom.element('a');
     a.href = `https://google.com/search?q=${problemName.replace(/ /g, '+')}`;
     a.innerText = 'Google It';
     li.appendChild(a);
