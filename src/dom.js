@@ -12,12 +12,9 @@ module.exports = {
     on(element, event, handler) {
         element.addEventListener(event, handler);
     },
-    element(tag, { className, id, children }) {
+    element(tag, attrs) {
         let el = document.createElement(tag);
-        el.id = id || "";
-        el.className = className || "";
-        for (let c of children)
-            el.appendChild(c);
+        Object.assign(el, attrs);
         return el;
     },
 };
