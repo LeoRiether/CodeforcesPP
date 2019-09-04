@@ -10,3 +10,21 @@ test('Tape works', t => {
     t.throws(() => { throw "indeed throws"; });
     t.end();
 });
+
+global.document = {
+  createElement(tag) {
+    return { tag, style: {} };
+  }
+};
+
+test("dom.js works", t => {
+  let dom = require('../src/dom');
+  let props = {
+    href: 'codeforces.com',
+    className: 'cfpp-link'
+  };
+  
+  t.deepEqual(dom.element('a', props), { ...props, 'tag': 'a', style: {} });
+  
+  t.end();
+});
