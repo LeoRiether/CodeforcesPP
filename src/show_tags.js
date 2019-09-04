@@ -11,21 +11,21 @@ module.exports = function () {
     let tbox = dom.$('.tag-box'); // individual tag
     let container = tbox.parentNode.parentNode; // actual container for all the tags
     container.style.display = 'none';
-    container.classList.add('tag-container');
 
     // Create button
-    let showTagsButton = dom.element('button', { className: 'caption' });
-    showTagsButton.innerText = "Show";
-    showTagsButton.addEventListener('click', () => {
+    let showTagsButton = dom.element('button', { 
+        className: 'caption',
+        innerText: 'Show',
+        style: {
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer'
+        } 
+    });
+    dom.on(showTagsButton, 'click', () => {
         showTagsButton.remove();
         container.style.display = 'block';
-    });
+    })
 
-    Object.assign(showTagsButton.style, {
-        background: 'transparent',
-        border: 'none',
-        cursor: 'pointer'
-    });
-    
     container.parentNode.appendChild(showTagsButton);
 }

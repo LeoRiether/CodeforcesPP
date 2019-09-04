@@ -53,9 +53,10 @@ module.exports = function() {
             let dropdown = dom.element('div', { className: 'cfpp-dropdown' });
 
             for (let ddText in keys[href]) {
-                let ddItem = dom.element('a');
-                ddItem.innerText = ddText;
-                ddItem.href = keys[href][ddText];
+                let ddItem = dom.element('a', {
+                    innerText: ddText,
+                    href: keys[href][ddText]
+                });
                 dropdown.appendChild(ddItem);
             }
 
@@ -101,7 +102,6 @@ module.exports = function() {
     }
     `;
 
-    let styleTag = dom.element('style');    
-    styleTag.innerHTML = style;
+    let styleTag = dom.element('style', { innerHTML: style });    
     document.body.appendChild(styleTag);
 };

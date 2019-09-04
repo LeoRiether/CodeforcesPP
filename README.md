@@ -17,7 +17,7 @@ I probably won't write many tests, if any at all
 # TODO
 + [ ] Docs
 + [ ] @icon
-+ [ ] Settings button & pop-up
++ [x] Settings button & pop-up
 + [x] Remove white thingies and replace them by actual borders
 + [ ] Mashup profiles! / Codeforces automation
 + [x] Navbar dropdowns
