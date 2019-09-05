@@ -32,9 +32,9 @@ function save() {
 /**
  * Creates the interface to change the settings.
  * The modal created has the following structure:
- * <div class="cfpp-config cfpp-hidden">
- *      <div class="cfpp-config-background"></div>
- *      <div class="cfpp-config-inner">
+ * <div class="cfpp-config cfpp-modal cfpp-hidden">
+ *      <div class="cfpp-modal-background"></div>
+ *      <div class="cfpp-modal-inner">
  *          <!-- All the settings -->
  *      </div>
  * </div>
@@ -76,14 +76,14 @@ function createUI() {
     });
 
     // Create the modal and its children
-    let modalInner = dom.element('div', { className: 'cfpp-config-inner' , children: modalProps });
+    let modalInner = dom.element('div', { className: 'cfpp-modal-inner' , children: modalProps });
     modalInner.append('Refresh the page to apply changes'); // TODO: not this
 
-    let modalBg = dom.element('div', { className: 'cfpp-config-background' });
+    let modalBg = dom.element('div', { className: 'cfpp-modal-background' });
     dom.on(modalBg, 'click', closeUI); // clicking on the background closes the UI
 
     let modal = dom.element('div', { 
-        className: 'cfpp-config cfpp-hidden',
+        className: 'cfpp-config cfpp-modal cfpp-hidden',
         children: [ modalBg, modalInner ]
     });
 
@@ -116,16 +116,15 @@ function createUI() {
         cursor: pointer;
     }
 
-    .cfpp-config {
+    .cfpp-modal {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: #00000087;
         z-index: 101;
     }
-    .cfpp-config-background {
+    .cfpp-modal-background {
         position: absolute;
         top: 0;
         left: 0;
@@ -133,7 +132,7 @@ function createUI() {
         height: 100vh;
         background: #00000087;
     }
-    .cfpp-config-inner {
+    .cfpp-modal-inner {
         position: absolute;
         top: 50%;
         left: 50%;
