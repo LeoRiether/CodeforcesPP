@@ -23,11 +23,12 @@ if (config.get('showTags') && dom.$('.tag-box')) {
 require('./navbar')();
 
 let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i; // Maches a problem on a /gym or /group page
-if (config.get('searchBtn') && location.pathname.match(searchableRegex))
+if (config.get('searchBtn') && searchableRegex.test(location.pathname))
     require('./search_button')();
 
 // Regex matches a page of a problem in the problemset (most of these have tutorials)
-if (location.pathname.match(/\/problemset\/problem\//i))
+let problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
+if (problemRegex.test(location.pathname))
     require('./show_tutorial')();
 
 // Exported to a global cfpp variable

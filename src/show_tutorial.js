@@ -2,9 +2,14 @@
  * @file Adds a button to easily check the editorial/tutorial for a problem
  */
 
+// FIXME: modal overflows viewport when the tutorial is too big
+// TODO:
+
 let dom = require('./dom');
 
 let modalLoaded = false;
+
+// TODO: support /contest/{code1}/problem/{code2}
 
 // createBtn might be a little bit too long for a "creates a button" function
 
@@ -41,7 +46,16 @@ module.exports = function createBtn(url) {
         document.body.appendChild(modal);
 
         // Get the problem ID
-        const pcode = location.pathname.split('/').slice(-2).join('');
+        let matches = location.pathname.match(/\/problemset\/problem\/(\d+)\/(.+)|\/contest\/(\d+)\/problem\/(.+)/i);
+        let pcode;
+        if (matches[1])
+            pcode = matches[1] + matches[2];
+        else if (matches[3])
+            pcode = matches[3] + matches[4];
+        else {
+            modalInner.innerText = `Failed to get the problem code...`;
+            return;
+        }
 
         // Get the CSRF Token
         // lol
@@ -58,7 +72,7 @@ module.exports = function createBtn(url) {
         xhr.responseType = 'json';
 
         xhr.onload = () => {
-            if (xhr.response.success) {
+            if (xhr.response && xhr.response.success) {
                 modalInner.innerHTML = xhr.response.html;
             } else {
                 modalInner.innerText = "Something went wrong!";
@@ -66,7 +80,7 @@ module.exports = function createBtn(url) {
         };
 
         xhr.onerror = () => {
-            modalInner.innerText = `Failed to fetch tutorial! Here's an error message: ${xhr.status}`;
+            modalInner.innerText = `Failed to fetch tutorial! Here's an error code: ${xhr.status}`;
         };
 
         xhr.send(`problemCode=${pcode}&csrf_token=${csrf}`);
