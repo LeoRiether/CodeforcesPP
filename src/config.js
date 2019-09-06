@@ -40,6 +40,10 @@ function save() {
  * </div>
  */
 function createUI() {
+    // Some pages, like error pages and m2.codeforces, don't have a header
+    // As there's no place to put the settings button, just abort
+    if (!dom.$('.lang-chooser')) return;
+
     function prop(title, type, id) {
         return { title, type, id };
     }
