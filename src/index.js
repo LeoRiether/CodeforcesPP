@@ -31,9 +31,17 @@ let problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
 if (problemRegex.test(location.pathname))
     require('./show_tutorial')();
 
+// Replace links on groups list page (they go to /members by default, changed to /contests)
+if ((/\/groups\/with\//i).test(location.pathname)) {
+    let links = dom.$$('.datatable a.groupName');
+    for (let link of links)
+        link.href = link.href.replace("/members", "/contests");
+}
+
 // Exported to a global cfpp variable
 module.exports = {
     debug: {
         resetConfig: config.reset
     },
+    dom: dom
 };
