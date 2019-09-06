@@ -2,7 +2,7 @@
 ### Codeforces extension pack
 
 # Installing
-Go to the latest [release](https://github.com/LeoRiether/CodeforcesPP/releases/) and download `script.user.js`
+First you need a userscript manager, like [Tampermonkey](https://www.tampermonkey.net) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/). Then, go to the latest [release](https://github.com/LeoRiether/CodeforcesPP/releases/), download `script.user.js` and add it as as userscript.
 
 # Development
 Run `yarn build` to build with Parcel
