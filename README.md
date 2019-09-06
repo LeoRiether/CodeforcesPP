@@ -30,5 +30,5 @@ I probably won't write many tests, if any at all
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think)
 + [x] "Google this problem" button (for mashups)
   + [ ] Custom engines
-+ [ ] Problem-specific editorial pop-up
++ [x] Problem-specific editorial pop-up
 + [ ] [Codeforces Visualizer](https://cfviz.netlify.com/index.html) link in profile page (not sure)
