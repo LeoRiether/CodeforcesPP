@@ -9,8 +9,6 @@ let dom = require('./dom');
 
 let modalLoaded = false;
 
-// TODO: support /contest/{code1}/problem/{code2}
-
 // createBtn might be a little bit too long for a "creates a button" function
 
 /**
@@ -74,6 +72,7 @@ module.exports = function createBtn(url) {
         xhr.onload = () => {
             if (xhr.response && xhr.response.success) {
                 modalInner.innerHTML = xhr.response.html;
+                MathJax.Hub.Typeset(modalInner);
             } else {
                 modalInner.innerText = "Something went wrong!";
             }
