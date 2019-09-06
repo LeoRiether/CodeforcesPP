@@ -163,6 +163,9 @@ div.ttypography p, .sample-test {
 }
 #facebox {
     position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50% , -50%);
 }
 
 ${customCSS}
