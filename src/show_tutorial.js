@@ -72,7 +72,7 @@ module.exports = function createBtn(url) {
         xhr.onload = () => {
             if (xhr.response && xhr.response.success) {
                 modalInner.innerHTML = xhr.response.html;
-                MathJax.Hub.Typeset(modalInner);
+                MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner));
             } else {
                 modalInner.innerText = "Something went wrong!";
             }
