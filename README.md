@@ -28,6 +28,8 @@ I probably won't write many tests, if any at all
 + [ ] Remove bloat from parcel's bundle
 + [ ] File drag & drop to submit
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think)
+  + [ ] `<link rel="prerender">` should solve this!
+    + [ ] Doesn't seem to work...
 + [x] "Google this problem" button (for mashups)
   + [ ] Custom engines
 + [x] Problem-specific editorial pop-up
