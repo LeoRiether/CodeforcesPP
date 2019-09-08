@@ -126,7 +126,7 @@ function createUI() {
         width: 100vw;
         height: 100vh;
         z-index: 101;
-        transition: opacity 0.3s;
+        transition: opacity 0.3s; /* TODO: fix opacity transition */
     }
     .cfpp-modal-background {
         position: absolute;
