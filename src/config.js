@@ -112,7 +112,6 @@ function createUI() {
     .cfpp-hidden {
         display: none;
         opacity: 0;
-        transition: opacity 0.3s;
     }
 
     .cfpp-config-btn {
@@ -127,6 +126,7 @@ function createUI() {
         width: 100vw;
         height: 100vh;
         z-index: 101;
+        transition: opacity 0.3s;
     }
     .cfpp-modal-background {
         position: absolute;
