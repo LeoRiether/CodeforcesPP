@@ -17,16 +17,17 @@ I probably won't write many tests, if any at all
 # TODO
 + [ ] Docs
 + [ ] @icon
++ [ ] File drag & drop to submit
++ [ ] Mashup profiles! / Codeforces automation
++ [ ] Goal: decrease number of clicks to navigate the site (partially done with navbar dropdowns!)
++ [ ] Auto-update standings
 + [x] Settings button & pop-up
 + [x] Remove white thingies and replace them by actual borders
-+ [ ] Mashup profiles! / Codeforces automation
 + [x] Navbar dropdowns
     + Groups => My Groups, All Groups
     + Contests => My Contests, All Contests
     + Add "Friends" tab?
-+ [ ] Goal: decrease number of clicks to navigate the site (partially done with navbar dropdowns!)
 + [ ] Remove bloat from parcel's bundle
-+ [ ] File drag & drop to submit
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think)
   + [ ] `<link rel="prerender">` should solve this!
     + [ ] Doesn't seem to work...
@@ -34,4 +35,3 @@ I probably won't write many tests, if any at all
   + [ ] Custom engines
 + [x] Problem-specific editorial pop-up
 + [ ] [Codeforces Visualizer](https://cfviz.netlify.com/index.html) link in profile page (not sure)
-+ [ ] Auto-update standings

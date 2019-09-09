@@ -9,6 +9,80 @@ let dom = require('./dom');
 
 let modalLoaded = false;
 
+function showModal() {
+    dom.$('.cfpp-tutorial').classList.remove('cfpp-hidden');
+}
+
+function loadModal(deadline) {
+    if (modalLoaded && !deadline) {
+        showModal();
+        return;
+    }
+
+    if (deadline && deadline.timeRemaining() <= 0)
+        return;
+    
+    modalLoaded = true;
+
+    // Create the modal and its children
+    let modalInner = dom.element('div', { className: 'cfpp-modal-inner' });
+    modalInner.append('loading...');
+
+    let modalBg = dom.element('div', { className: 'cfpp-modal-background' });
+    dom.on(modalBg, 'click', () => { // clicking on the background closes the UI
+        dom.$('.cfpp-tutorial').classList.add('cfpp-hidden');
+    });
+
+    let modal = dom.element('div', { 
+        className: 'cfpp-tutorial cfpp-modal cfpp-hidden',
+        children: [ modalBg, modalInner ]
+    });
+
+    // Puts the modal in the HTML
+    document.body.appendChild(modal);
+
+    // Get the problem ID
+    let matches = location.pathname.match(/\/problemset\/problem\/(\d+)\/(.+)|\/contest\/(\d+)\/problem\/(.+)/i);
+    let pcode;
+    if (matches[1])
+        pcode = matches[1] + matches[2];
+    else if (matches[3])
+        pcode = matches[3] + matches[4];
+    else {
+        modalInner.innerText = `Failed to get the problem code...`;
+        return;
+    }
+
+    // Get the CSRF Token
+    // lol
+    const csrf = document.querySelector('.csrf-token').dataset.csrf;
+
+    // Finally, load the tutorial
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/data/problemTutorial');
+
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+    xhr.setRequestHeader('X-Csrf-Token', csrf);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    xhr.responseType = 'json';
+
+    xhr.onload = () => {
+        if (xhr.response && xhr.response.success) {
+            modalInner.innerHTML = xhr.response.html;
+            MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner));
+        } else {
+            modalInner.innerText = "Something went wrong!";
+        }
+    };
+
+    xhr.onerror = () => {
+        modalInner.innerText = `Failed to fetch tutorial! Here's an error code: ${xhr.status}`;
+    };
+
+    xhr.send(`problemCode=${pcode}&csrf_token=${csrf}`);
+}
+
 // createBtn might be a little bit too long for a "creates a button" function
 
 /**
@@ -18,72 +92,14 @@ let modalLoaded = false;
 module.exports = function createBtn(url) {
     let btn = dom.element('a', { innerText: 'Tutorial', style: { cursor:'pointer' } });
     dom.on(btn, 'click', () => {
-        if (modalLoaded) {
-            // Show the modal and return
-            dom.$('.cfpp-tutorial').classList.remove('cfpp-hidden');
-            return;
-        }
-        
-        modalLoaded = true;
-
-        // Create the modal and its children
-        let modalInner = dom.element('div', { className: 'cfpp-modal-inner' });
-        modalInner.append('loading...');
-
-        let modalBg = dom.element('div', { className: 'cfpp-modal-background' });
-        dom.on(modalBg, 'click', () => { // clicking on the background closes the UI
-            dom.$('.cfpp-tutorial').classList.add('cfpp-hidden');
-        });
-
-        let modal = dom.element('div', { 
-            className: 'cfpp-tutorial cfpp-modal',
-            children: [ modalBg, modalInner ]
-        });
-
-        // Puts the modal in the HTML
-        document.body.appendChild(modal);
-
-        // Get the problem ID
-        let matches = location.pathname.match(/\/problemset\/problem\/(\d+)\/(.+)|\/contest\/(\d+)\/problem\/(.+)/i);
-        let pcode;
-        if (matches[1])
-            pcode = matches[1] + matches[2];
-        else if (matches[3])
-            pcode = matches[3] + matches[4];
-        else {
-            modalInner.innerText = `Failed to get the problem code...`;
-            return;
-        }
-
-        // Get the CSRF Token
-        // lol
-        const csrf = document.querySelector('.csrf-token').dataset.csrf;
-
-        // Finally, load the tutorial
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', '/data/problemTutorial');
-
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
-        xhr.setRequestHeader('X-Csrf-Token', csrf);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-        xhr.responseType = 'json';
-
-        xhr.onload = () => {
-            if (xhr.response && xhr.response.success) {
-                modalInner.innerHTML = xhr.response.html;
-                MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner));
-            } else {
-                modalInner.innerText = "Something went wrong!";
-            }
-        };
-
-        xhr.onerror = () => {
-            modalInner.innerText = `Failed to fetch tutorial! Here's an error code: ${xhr.status}`;
-        };
-
-        xhr.send(`problemCode=${pcode}&csrf_token=${csrf}`);
+        loadModal();
+        showModal();
     });
+
+    // Load the tutorial if we're idle
+    if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(loadModal, { timeout: 10000 });
+    }
     
     let menu = dom.$('.second-level-menu-list');
     menu.appendChild(dom.element('li', { children: [ btn ] }));
