@@ -4,10 +4,11 @@ const { promisify } = require('util');
 let fs = require('fs');
 const package = require('./package.json');
 
-let DEV = true; // TODO: change to process.environment
-
 fs.readFileAsync = promisify(fs.readFile);
 fs.writeFileAsync = promisify(fs.writeFile);
+
+if (process.argv.indexOf('--production') != -1)
+    process.env.NODE_ENV = 'production';
 
 // Read meta.js and replace {{VERSION}}
 let metaPromise = fs.readFileAsync(Path.join(__dirname, './meta.js'));
@@ -28,7 +29,7 @@ let bundler = new Bundler(Path.join(__dirname, "./src/index.js"), {
     minify:      true,
     global:      'cfpp',
     contentHash: false,
-    watch:       DEV ? true : false,
+    watch:       process.env.NODE_ENV != 'production',
     sourceMaps:  false,
 });
 
