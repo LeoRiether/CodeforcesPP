@@ -52,9 +52,10 @@ p, span:not(.tex-span), a, div {
 }
 
 /* Remove weird person icon on the problemset page */
-.problems td:last-child img, .contests-table td:last-child img {
+/* FIXME: this breaks some other important images */
+/*.problems td:last-child img, .contests-table td:last-child img {
     display: none;
-}
+}*/
 
 /* Remove borders between cells on tables */
 table th, table td {
