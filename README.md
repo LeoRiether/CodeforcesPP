@@ -16,6 +16,8 @@ I probably won't write many tests, if any at all
 
 # TODO
 + [ ] Docs
++ [ ] CTRL+SHIFT+P SEARCH FUNCTION
+  + [ ] THIS IS HIGH PRIORITY
 + [ ] @icon
 + [ ] File drag & drop to submit
 + [ ] Mashup profiles! / Codeforces automation
