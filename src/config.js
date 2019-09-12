@@ -25,6 +25,7 @@ function load() {
     save();
 }
 
+// TODO: consider promisifying reset and save (maybe load too (maybe everything!))
 function reset() {
     config = defaultConfig;
     save();
