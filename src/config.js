@@ -9,7 +9,6 @@ const defaultConfig = {
     showTags:  true,
     style:     true,
     searchBtn: true,
-    isOk:      true, // In case the config is overwritten by something not-JSON (e.g. a bool), this will tell us
 };
     
 function load() {
