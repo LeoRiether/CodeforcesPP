@@ -14,10 +14,15 @@ const defaultConfig = {
     
 function load() {
     config = localStorage.cfpp;
-    config = config ? JSON.parse(config) : false;
-    if (!config || !config.isOk) {
-        reset();
+    try {
+        config = JSON.parse(config) || {};
+    } catch {
+        config = {};
     }
+
+    // Settings auto-extend when more are added in the script
+    Object.assign(defaultConfig, config);
+    save();
 }
 
 function reset() {
