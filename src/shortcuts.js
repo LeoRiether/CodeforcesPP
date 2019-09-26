@@ -24,6 +24,13 @@ function submit() {
     fileInput.click(); // open the file picker
 }
 
+function scrollToPageContent() {
+    const pageContent = dom.$('#pageContent');
+    if (!pageContent) return;
+    pageContent.scrollIntoView();
+    document.documentElement.scrollBy(0, -20);
+}
+
 // Opens the uuuh I don't know the name yet, it's CtrlShiftP
 function ctrlShiftP() {
     alert("Coming soon!");
@@ -31,6 +38,7 @@ function ctrlShiftP() {
 
 const shortcuts = {
     'ctrl+s': submit,
+    'ctrl+shift+V': scrollToPageContent, // V => view
     'ctrl+shift+P': ctrlShiftP,
 };
 
