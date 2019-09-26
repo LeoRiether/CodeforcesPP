@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="cf++ logo.svg"
+   inkscape:export-xdpi="285.44986"
+   inkscape:export-ydpi="285.44986">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.4472656"
+     inkscape:cx="191.49354"
+     inkscape:cy="874.48381"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:measure-start="264.377,893.242"
+     inkscape:measure-end="281.13,893.242"
+     inkscape:window-width="1842"
+     inkscape:window-height="1051"
+     inkscape:window-x="69"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       position="65.192656,273.96053"
+       orientation="0,1"
+       id="guide4545"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="15.676509,238.6073"
+       orientation="1,0"
+       id="guide4547"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="40.434583,237.30993"
+       orientation="1,0"
+       id="guide4549"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="65.668868,260.99363"
+       orientation="0,1"
+       id="guide4553"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="75.683561,228.12097"
+       orientation="1,0"
+       id="guide4555"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="100.22338,228.809"
+       orientation="1,0"
+       id="guide4557"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#fbca4a;fill-opacity:1;stroke:none;stroke-width:3.44780874;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="rect4518"
+       width="24.649961"
+       height="49.299919"
+       x="15.784623"
+       y="47.256981" />
+    <rect
+       y="23.039476"
+       x="45.726257"
+       height="73.517426"
+       width="24.649961"
+       id="rect4531"
+       style="fill:#1e8dcc;fill-opacity:1;stroke:none;stroke-width:4.21032095;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" />
+    <rect
+       style="fill:#b81f24;fill-opacity:1;stroke:none;stroke-width:2.95076084;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="rect4533"
+       width="24.649961"
+       height="36.110031"
+       x="75.667892"
+       y="60.446873" />
+    <path
+       style="fill:#fbca4a;fill-opacity:1;stroke:none;stroke-width:13.34173203;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       d="M 97.703125 87.078125 L 97.703125 118.95117 L 65.830078 118.95117 L 65.830078 136.11328 L 97.703125 136.11328 L 97.703125 167.98438 L 114.86523 167.98438 L 114.86523 136.11328 L 146.73828 136.11328 L 146.73828 118.95117 L 114.86523 118.95117 L 114.86523 87.078125 L 97.703125 87.078125 z "
+       transform="scale(0.26458333)"
+       id="rect4535" />
+    <path
+       style="fill:#b81f24;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       d="M 322.85938 136.08789 L 322.85938 167.95898 L 290.98633 167.95898 L 290.98633 185.12109 L 322.85938 185.12109 L 322.85938 216.99414 L 340.02148 216.99414 L 340.02148 185.12109 L 371.89258 185.12109 L 371.89258 167.95898 L 340.02148 167.95898 L 340.02148 136.08789 L 322.85938 136.08789 z "
+       transform="scale(0.26458333)"
+       id="rect4541" />
+  </g>
+</svg>
