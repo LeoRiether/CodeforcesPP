@@ -59,5 +59,6 @@ module.exports = {
     debug: {
         resetConfig: config.reset
     },
-    dom: dom
+    dom: dom,
+    version: config.get('version')
 };
