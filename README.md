@@ -38,3 +38,5 @@ I probably won't write many tests, if any at all
 + [x] Problem-specific editorial pop-up
 + [ ] [Codeforces Visualizer](https://cfviz.netlify.com/index.html) link in profile page (not sure)
 + [ ] Rewrite it in Rust! (Parcel supports it, it's fine)
++ [ ] Zen Mode
++ [ ] Shortcuts

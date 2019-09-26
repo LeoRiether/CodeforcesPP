@@ -97,7 +97,8 @@ module.exports = function() {
         display: block;
         color: #E0E0E0;
     }
-    .cfpp-navbar-item:hover .cfpp-dropdown {
+    .cfpp-navbar-item:hover .cfpp-dropdown,
+    .cfpp-navbar-item:focus-within .cfpp-dropdown {
         display: block;
     }
     `;

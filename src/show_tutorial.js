@@ -2,15 +2,16 @@
  * @file Adds a button to easily check the editorial/tutorial for a problem
  */
 
-// FIXME: modal overflows viewport when the tutorial is too big
-// TODO:
-
 let dom = require('./dom');
 
 let modalLoaded = false;
 
 function showModal() {
     dom.$('.cfpp-tutorial').classList.remove('cfpp-hidden');
+}
+
+function closeModal() {
+    dom.$('.cfpp-tutorial').classList.add('cfpp-hidden');
 }
 
 function loadModal(deadline) {
@@ -29,9 +30,15 @@ function loadModal(deadline) {
     modalInner.append('loading...');
 
     let modalBg = dom.element('div', { className: 'cfpp-modal-background' });
-    dom.on(modalBg, 'click', () => { // clicking on the background closes the UI
-        dom.$('.cfpp-tutorial').classList.add('cfpp-hidden');
+
+    // Pressing ESC closes the UI
+    dom.on(document, 'keyup', keyupEvent => {
+        const key = keyupEvent.code || keyupEvent.key;
+        if (key == 'Escape') 
+            closeModal();
     });
+    // Clicking on the background also closes the UI
+    dom.on(modalBg, 'click', closeModal);
 
     let modal = dom.element('div', { 
         className: 'cfpp-tutorial cfpp-modal cfpp-hidden',
@@ -54,8 +61,7 @@ function loadModal(deadline) {
     }
 
     // Get the CSRF Token
-    // lol
-    const csrf = document.querySelector('.csrf-token').dataset.csrf;
+    const csrf = (Codeforces && Codeforces.getCsrfToken()) || document.querySelector('.csrf-token').dataset.csrf;
 
     // Finally, load the tutorial
     let xhr = new XMLHttpRequest();
