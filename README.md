@@ -4,8 +4,20 @@
 # Installing
 First you need a userscript manager, like [Tampermonkey](https://www.tampermonkey.net) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/). Then, go to the latest [release](https://github.com/LeoRiether/CodeforcesPP/releases/), download `script.user.js` and add it as as userscript.
 
+# Features
++ Navbar dropdowns for easier navigation
++ "Google It" button on mashups/gym problems
++ Tutorial pop-up button
++ Custom, more minimalistic styling
++ Auto-update standings page
++ Keyboard shortcuts (see below)
+
+## Shortcuts
++ Open file picker to submit: `Ctrl+S`,
++ Scroll to problem viewport: `Ctrl+Shift+V`
+
 # Development
-Run `yarn build` to build with Parcel
+Run `yarn build` to build with Parcel or `yarn start` to build in watch mode
 
 # Contributing
 Think there's something missing from Codeforces++ or some feature could be better? I think so too, please send some PRs
@@ -22,7 +34,7 @@ I probably won't write many tests, if any at all
 + [ ] File drag & drop to submit
 + [ ] Mashup profiles! / Codeforces automation
 + [ ] Goal: decrease number of clicks to navigate the site (partially done with navbar dropdowns!)
-+ [ ] Auto-update standings
++ [x] Auto-update standings
 + [x] Settings button & pop-up
 + [x] Remove white thingies and replace them by actual borders
 + [x] Navbar dropdowns
