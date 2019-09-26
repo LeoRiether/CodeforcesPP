@@ -34,21 +34,12 @@ I probably won't write many tests, if any at all
 + [ ] File drag & drop to submit
 + [ ] Mashup profiles! / Codeforces automation
 + [ ] Goal: decrease number of clicks to navigate the site (partially done with navbar dropdowns!)
-+ [x] Auto-update standings
-+ [x] Settings button & pop-up
-+ [x] Remove white thingies and replace them by actual borders
-+ [x] Navbar dropdowns
-    + Groups => My Groups, All Groups
-    + Contests => My Contests, All Contests
-    + Add "Friends" tab?
 + [ ] Remove bloat from parcel's bundle
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think)
   + [ ] `<link rel="prerender">` should solve this!
     + [ ] Doesn't seem to work...
 + [x] "Google this problem" button (for mashups)
   + [ ] Custom engines
-+ [x] Problem-specific editorial pop-up
 + [ ] [Codeforces Visualizer](https://cfviz.netlify.com/index.html) link in profile page (not sure)
-+ [ ] Rewrite it in Rust! (Parcel supports it, it's fine)
 + [ ] Zen Mode
 + [ ] Shortcuts
