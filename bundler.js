@@ -26,7 +26,7 @@ const outMetaFile = Path.join(outDir, outMetaFilename);
 let bundler = new Bundler(Path.join(__dirname, "./src/index.js"), {
     outDir:      outDir,
     outFile:     outFilename,
-    minify:      true,
+    minify:      false,
     global:      'cfpp',
     contentHash: false,
     watch:       process.env.NODE_ENV != 'production',
