@@ -9,15 +9,20 @@ const defaultConfig = {
     showTags:  true,
     style:     true,
     searchBtn: true,
-    isOk:      true, // In case the config is overwritten by something not-JSON (e.g. a bool), this will tell us
+    standingsItv: 0,
 };
     
 function load() {
     config = localStorage.cfpp;
-    config = config ? JSON.parse(config) : false;
-    if (!config || !config.isOk) {
-        reset();
+    try {
+        config = JSON.parse(config) || {};
+    } catch {
+        config = {};
     }
+
+    // Settings auto-extend when more are added in the script
+    config = Object.assign({}, defaultConfig, config);
+    save();
 }
 
 function reset() {
@@ -52,6 +57,7 @@ function createUI() {
         prop('"Show Tags" button', 'toggle', 'showTags'),
         prop('Custom Style', 'toggle', 'style'),
         prop('"Google It" button', 'toggle', 'searchBtn'),
+        prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
     ];
 
     // Create the actual nodes based on the props
@@ -76,6 +82,26 @@ function createUI() {
             wrapper.appendChild(checkbox);
             wrapper.appendChild(label);
             return wrapper;
+        } else if (p.type == 'number') {
+            let wrapper = dom.element('div');
+
+            let input = dom.element('input', { 
+                type:     'number',
+                value:    config[p.id] || 0,
+                id:       p.id,
+            });
+            dom.on(input, 'input', () => {
+                // Update property value when the number changes
+                config[p.id] = +input.value;
+                save();
+            });
+
+            let label = dom.element('label', { innerText: p.title });
+            label.setAttribute('for', p.id);
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+            return wrapper;
         }
     });
 
@@ -85,6 +111,11 @@ function createUI() {
 
     let modalBg = dom.element('div', { className: 'cfpp-modal-background' });
     dom.on(modalBg, 'click', closeUI); // clicking on the background closes the UI
+    dom.on(document, 'keyup', keyupEvent => { // pressing ESC also closes the UI
+        const key = keyupEvent.code || keyupEvent.key;
+        if (key == 'Escape')
+            closeUI();
+    });
 
     let modal = dom.element('div', { 
         className: 'cfpp-config cfpp-modal cfpp-hidden',
@@ -120,6 +151,7 @@ function createUI() {
     }
 
     .cfpp-modal {
+        box-sizing: border-box;
         position: fixed;
         top: 0;
         left: 0;

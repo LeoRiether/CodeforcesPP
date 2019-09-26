@@ -10,6 +10,15 @@ let config = require('./config');
 config.load();
 config.createUI();
 
+// Update version
+if (GM_info && config.get('version') != GM_info.script.version) {
+    config.set('version', GM_info.script.version);
+    config.save();
+    if (Codeforces && Codeforces.showMessage) {
+        Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}! Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest">changelog</a>`);
+    }
+}
+
 if (config.get('style'))
     require('./style');
 
@@ -31,12 +40,19 @@ let problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
 if (problemRegex.test(location.pathname))
     require('./show_tutorial')();
 
-// Replace links on groups list page (they go to /members by default, changed to /contests)
-if ((/\/groups\/with\//i).test(location.pathname)) {
-    let links = dom.$$('.datatable a.groupName');
-    for (let link of links)
-        link.href = link.href.replace("/members", "/contests");
-}
+if ((/\/groups\/with\//i).test(location.pathname))
+    require('./groups')();
+
+
+// Fontawesome stuff
+// not yet
+// document.body.appendChild(dom.element('script', { src: 'https://kit.fontawesome.com/db1c9d7219.js' }));
+
+const standingsItv = +config.get('standingsItv');
+if (standingsItv > 0 && (/\/standings/i).test(location.pathname))
+    require('./update_standings')(standingsItv);
+
+require('./shortcuts')();
 
 // Exported to a global cfpp variable
 module.exports = {
