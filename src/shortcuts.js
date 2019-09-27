@@ -16,7 +16,7 @@ function submit() {
 
     fileInput = fileInput[0];
 
-    dom.on(fileInput, 'change', () => {
+    dom.on(window, 'focus', () => {
         const submitBtn = dom.$('.submit', fileInput.parentNode.parentNode.parentNode); // cool huh?
         submitBtn.focus();
     }, { once: true });
