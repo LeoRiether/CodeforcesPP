@@ -105,4 +105,10 @@ module.exports = function() {
 
     let styleTag = dom.element('style', { innerHTML: style });    
     document.body.appendChild(styleTag);
+
+    // Change Codeforces logo to Codeforces++
+    let logo = dom.$('#header img');
+    if (logo && logo.getAttribute('src').endsWith('codeforces-logo-with-telegram.png')) {
+        logo.setAttribute('src', 'https://github.com/LeoRiether/CodeforcesPP/raw/master/assets/codeforcespp.png');
+    }
 };
