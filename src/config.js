@@ -194,14 +194,10 @@ function createUI() {
     }));
 }
 
-/**
- * Toggles the UI's visibility
- */
 function closeUI() {
-    save();
     dom.$('.cfpp-config').classList.add('cfpp-hidden');
+    save();
 }
-
 
 module.exports = {
     createUI,

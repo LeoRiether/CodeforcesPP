@@ -30,16 +30,17 @@ I probably won't write many tests, if any at all
 + [ ] Docs
 + [ ] CTRL+SHIFT+P SEARCH FUNCTION
   + [ ] THIS IS HIGH PRIORITY
-+ [ ] @icon
-+ [ ] File drag & drop to submit
++ [ ] Shortcuts
 + [ ] Mashup profiles! / Codeforces automation
 + [ ] Goal: decrease number of clicks to navigate the site (partially done with navbar dropdowns!)
++ [ ] [Codeforces Visualizer](https://cfviz.netlify.com/index.html) link in profile page (not sure)
 + [ ] Remove bloat from parcel's bundle
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think)
   + [ ] `<link rel="prerender">` should solve this!
     + [ ] Doesn't seem to work...
 + [x] "Google this problem" button (for mashups)
   + [ ] Custom engines
-+ [ ] [Codeforces Visualizer](https://cfviz.netlify.com/index.html) link in profile page (not sure)
 + [ ] Zen Mode
-+ [ ] Shortcuts
++ [ ] File drag & drop to submit
++ [ ] Default Standings (General|Friends(|Group?)) (by mmello)
++ [ ] Change header logo (by mmello)
