@@ -11,6 +11,7 @@ First you need a userscript manager, like [Tampermonkey](https://www.tampermonke
 + Custom, more minimalistic styling
 + Auto-update standings page
 + Keyboard shortcuts (see below)
++ Choose the default between common/friends-only standings
 
 ## Shortcuts
 + Open file picker to submit: `Ctrl+S`,
