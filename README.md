@@ -42,5 +42,3 @@ I probably won't write many tests, if any at all
   + [ ] Custom engines
 + [ ] Zen Mode
 + [ ] File drag & drop to submit
-+ [ ] Default Standings (General|Friends(|Group?)) (by mmello)
-+ [ ] Change header logo (by mmello)

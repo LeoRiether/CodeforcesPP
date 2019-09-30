@@ -29,8 +29,6 @@ if (config.get('showTags') && dom.$('.tag-box')) {
     require('./problemset')();
 }
 
-require('./navbar')();
-
 let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i; // Maches a problem on a /gym or /group page
 if (config.get('searchBtn') && searchableRegex.test(location.pathname))
     require('./search_button')();
@@ -40,16 +38,16 @@ let problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
 if (problemRegex.test(location.pathname))
     require('./show_tutorial')();
 
-if ((/\/groups\/with\//i).test(location.pathname))
-    require('./groups')();
 
+require('./navbar')();
+require('./redirector')();
 
 // Fontawesome stuff
 // not yet
 // document.body.appendChild(dom.element('script', { src: 'https://kit.fontawesome.com/db1c9d7219.js' }));
 
 const standingsItv = +config.get('standingsItv');
-if (standingsItv > 0 && (/\/standings/i).test(location.pathname))
+if (standingsItv > 0 && /\/standings/i.test(location.pathname))
     require('./update_standings')(standingsItv);
 
 require('./shortcuts')();

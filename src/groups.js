@@ -1,7 +1,6 @@
 /**
- * @file Improves navigation on /group pages. Does so by replacing the /members links by /contests 
- * links (because that's often what the user is looking for), as well as adding shortcuts to see
- * the groups contests in the /groups/with page
+ * @deprecated
+ * @file replaceLinks() functionality now resides at `replacer.js`. Keeping this file because I might want createShortcuts() later
  */
 
 let dom = require('./dom');
@@ -10,9 +9,7 @@ let dom = require('./dom');
  * Replaces all /members links with /contests
  */
 function replaceLinks() {
-    let links = dom.$$('.datatable a.groupName');
-    for (let link of links)
-        link.href = link.href.replace("/members", "/contests");
+    
 }
 
 /**

@@ -10,6 +10,7 @@ const defaultConfig = {
     style:     true,
     searchBtn: true,
     standingsItv: 0,
+    defStandings: 'Common',
 };
     
 function load() {
@@ -50,12 +51,13 @@ function createUI() {
     // As there's no place to put the settings button, just abort
     if (!dom.$('.lang-chooser')) return;
 
-    function prop(title, type, id) {
-        return { title, type, id };
+    function prop(title, type, id, data) {
+        return { title, type, id, data };
     }
 
     let modalProps = [
         prop('"Show Tags" button', 'toggle', 'showTags'),
+        prop('Default standings', 'select', 'defStandings', ['Common', 'Friends']),
         prop('Custom Style', 'toggle', 'style'),
         prop('"Google It" button', 'toggle', 'searchBtn'),
         prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
@@ -94,6 +96,33 @@ function createUI() {
             dom.on(input, 'input', () => {
                 // Update property value when the number changes
                 config[p.id] = +input.value;
+                save();
+            });
+
+            let label = dom.element('label', { innerText: p.title });
+            label.setAttribute('for', p.id);
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+            return wrapper;
+        } else if (p.type == 'select') {
+            let wrapper = dom.element('div');
+
+            let input = dom.element('select', { id: p.id });
+            for (let option of p.data) {
+                let e = dom.element('option', {
+                    value: option,
+                    innerText: option
+                });
+                if (option == config[p.id]) {
+                    e.setAttribute('selected', true);
+                }
+                input.appendChild(e);
+            }
+
+            dom.on(input, 'change', () => {
+                // Update property value when the number changes
+                config[p.id] = input.value;
                 save();
             });
 
