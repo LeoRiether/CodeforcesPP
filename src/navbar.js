@@ -24,6 +24,7 @@ module.exports = function() {
             "Friends Status": "/problemset/status?friends=on",
             "My Submissions": `/submissions/${handle}`,
             "Favourites": `/favourite/problems`,
+            "ACM SGU": "/problemsets/acmsguru",
         },
         "/contests": {
             "My Contests": `/contests/with/${handle}`,

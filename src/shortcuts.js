@@ -39,6 +39,7 @@ function ctrlShiftP() {
 const shortcuts = {
     'ctrl+s': submit,
     'ctrl+shift+V': scrollToPageContent, // V => view
+    'ctrl+alt+v': scrollToPageContent,
     'ctrl+shift+P': ctrlShiftP,
 };
 

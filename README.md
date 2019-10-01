@@ -15,7 +15,7 @@ First you need a userscript manager, like [Tampermonkey](https://www.tampermonke
 
 ## Shortcuts
 + Open file picker to submit: `Ctrl+S`,
-+ Scroll to problem viewport: `Ctrl+Shift+V`
++ Scroll to problem viewport: `Ctrl+Shift+V`/`Ctrl+Alt+V`
 
 # Development
 Run `yarn build` to build with Parcel or `yarn start` to build in watch mode
