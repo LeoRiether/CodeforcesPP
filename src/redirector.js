@@ -34,8 +34,8 @@ function problemsetStandings(contestID) {
     let links = dom.$$('.second-level-menu-list a');
     for (let link of links) {
         if (link.href.endsWith('/problemset/standings')) {
-            link.href = link.href.replace('problemset', contestID);
-            break;
+            link.href = link.href.replace('problemset', 'contest/' + contestID);
+            return;
         }
     }
 }
@@ -47,8 +47,8 @@ module.exports = function() {
 
     // Always do this *before* friendsStandings() because of endsWith('/problemset/standings')
     const contestIDMatch = location.pathname.match(/problemset\/problem\/(\d+)/i);
-    if (contestIDMatch.length > 0) {
-        problemsetStandings(contestIDMatch.groups[1]);
+    if (contestIDMatch) {
+        problemsetStandings(contestIDMatch[1]);
     }
 
     if (config.get('defStandings') == 'Friends' && !/\/standings/i.test(location.pathname)) {
