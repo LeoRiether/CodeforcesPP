@@ -46,11 +46,13 @@ const shortcuts = {
 module.exports = function() {
     dom.on(document, 'keydown', (e) => {
         // Not going to use precious cycles when there's not even a ctrl or shift
-        if (!e.ctrlKey && !e.shiftKey) return;
+        if (!e.ctrlKey) return;
 
+        
         // Build the key sequence string (like 'ctrl+shift+p')
         let key = "";
         if (e.ctrlKey) key += 'ctrl+';
+        if (e.altKey) key += 'alt+';
         if (e.shiftKey) key += 'shift+';
         key += e.key;
 
