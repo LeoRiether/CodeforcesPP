@@ -26,7 +26,7 @@ function friendsStandings() {
 
 // Redirects contest registrants to friends registrants
 function registrants() {
-    dom.$('.contestParticipantCountLinkMargin').href += '/friends/true';
+    dom.$$('.contestParticipantCountLinkMargin').forEach(e => e.href += '/friends/true');
 }
 
 // Redirects /problemset/standings to the contest standings you actually want
