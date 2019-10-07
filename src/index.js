@@ -61,5 +61,3 @@ module.exports = {
     dom: dom,
     version: config.get('version')
 };
-
-// teste
