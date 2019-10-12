@@ -14,8 +14,9 @@ First you need a userscript manager, like [Tampermonkey](https://www.tampermonke
 + Choose the default between common/friends-only standings
 
 ## Shortcuts
-+ Open file picker to submit: `Ctrl+S`,
++ Open file picker to submit: `Ctrl+S`
 + Scroll to problem viewport: `Ctrl+Shift+V`/`Ctrl+Alt+V`
++ Invert images: `Ctrl+I`
 
 # Development
 Run `yarn build` to build with Parcel or `yarn start` to build in watch mode
