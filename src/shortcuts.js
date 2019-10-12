@@ -36,11 +36,16 @@ function ctrlShiftP() {
     alert("Coming soon!");
 }
 
+function invertImages() {
+    dom.$$('img').forEach(i => i.classList.toggle('inverted'));
+}
+
 const shortcuts = {
     'ctrl+s': submit,
     'ctrl+shift+V': scrollToPageContent, // V => view
     'ctrl+alt+v': scrollToPageContent,
     'ctrl+shift+P': ctrlShiftP,
+    'ctrl+i': invertImages,
 };
 
 module.exports = function() {

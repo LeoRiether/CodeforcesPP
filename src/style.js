@@ -169,6 +169,10 @@ div.ttypography p, .sample-test {
     transform: translate(-50% , -50%);
 }
 
+.inverted {
+    filter: invert(1);
+}
+
 ${customCSS}
 `;
 
