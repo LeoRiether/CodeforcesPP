@@ -72,7 +72,7 @@ module.exports = function() {
     }
 
     // /gym/:ID or /group/:GroupID/contest/:ID
-    if (/gym\/\d+$|/i.test(location.pathname) || /group\/[a-zA-Z0-9]+\/contest\/\d+$/i.test(location.pathname)) {
+    if (/gym\/\d+$/i.test(location.pathname) || /group\/[a-zA-Z0-9]+\/contest\/\d+$/i.test(location.pathname)) {
         gymVirtual();
     }
 };
