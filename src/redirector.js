@@ -40,6 +40,18 @@ function problemsetStandings(contestID) {
     }
 }
 
+// Adds a /virtual button on gym pages
+function gymVirtual() {
+    dom.$('#sidebar').children[0].insertAdjacentHTML('afterend', `
+        <div class="roundbox sidebox">
+            <div class="caption titled">→ Virtual participation</div>
+            <form style="text-align:center; margin:1em;" action="${location.href}/virtual" method="get">
+                <input type="submit" value="Start virtual contest">
+            </form>
+        </div>
+    `);
+}
+
 module.exports = function() {
     if ((/\/groups\/with\//i).test(location.pathname)) {
         groups();
@@ -57,5 +69,10 @@ module.exports = function() {
 
     if (dom.$('.contestParticipantCountLinkMargin')) {
         registrants();
+    }
+
+    // /gym/:ID or /group/:GroupID/contest/:ID
+    if (/gym\/\d+$|/i.test(location.pathname) || /group\/[a-zA-Z0-9]+\/contest\/\d+$/i.test(location.pathname)) {
+        gymVirtual();
     }
 };
