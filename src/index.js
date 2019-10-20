@@ -10,15 +10,19 @@ let config = require('./config');
 config.load();
 config.createUI();
 
-// Update version
-if (GM_info && config.get('version') != GM_info.script.version) {
-    config.set('version', GM_info.script.version);
-    config.save();
-    if (Codeforces && Codeforces.showMessage) {
-        Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}! 
-        Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">changelog</a>`);
+try {
+    // Update version
+    if (GM_info && config.get('version') != GM_info.script.version) {
+        config.set('version', GM_info.script.version);
+        config.save();
+        if (Codeforces && Codeforces.showMessage) {
+            Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}! 
+            Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">changelog</a>`);
+        }
     }
-} 
+} catch {
+    // gracefully do nothing
+}
 
 // Execute features according to the current page
 if (config.get('showTags') && dom.$('.tag-box')) {
