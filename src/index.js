@@ -46,7 +46,6 @@ if (standingsItv > 0 && /\/standings/i.test(location.pathname))
 
 require('./shortcuts')();
 
-
 const style = require('./style');
 if (config.get('style')) {
     style.custom();
