@@ -1,180 +1,265 @@
 /**
- * @file Injects some CSS when `require`d
+ * @file Provides styling for cfpp-created elements as well as a custom Codeforces styling
  */
 
 const dom = require("./dom");
 
-let fontFamily = 'Libre Franklin';
-let customCSS = '';
+function applyCustomCSS() {
+    const fontFamily = 'Libre Franklin';
+    let customCSS = '';
 
-// TODO: Check if having the style on github and appendind a <link> isn't better. Probably is
-let style = dom.element('style', { className: 'cfpp-style' });
+    let style = dom.element('style', { className: 'cfpp-style' });
 
-// TODO: group border:none 
+    let css = `
+    @import url('https://fonts.googleapis.com/css?family=Libre+Franklin&display=swap');
 
-let css = `
-@import url('https://fonts.googleapis.com/css?family=Libre+Franklin&display=swap');
+    a, a:visited, .contest-state-phase {
+        text-decoration: none !important;
+        /* color: #0000EE; */ /* default link color */
+        color: #2c63d5;
+    }
+    .titled, .caption {
+        color: #2c63d5 !important;
+    }
 
-a, a:visited, .contest-state-phase {
-    text-decoration: none !important;
-    /* color: #0000EE; */ /* default link color */
-    color: #2c63d5;
-}
-.titled, .caption {
-    color: #2c63d5 !important;
-}
+    p, span:not(.tex-span), a, div {
+        font-family: '${fontFamily}', 'Roboto', sans-serif !important;
+    }
 
-p, span:not(.tex-span), a, div {
-    font-family: '${fontFamily}', 'Roboto', sans-serif !important;
-}
+    /* Put smallcaps on the navbar */
+    .menu-list-container a {
+        text-transform: none !important;
+        font-variant: small-caps;
+    }
 
-/* Put smallcaps on the navbar */
-.menu-list-container a {
-    text-transform: none !important;
-    font-variant: small-caps;
-}
+    /* Remove CF's image borders */
+    .roundbox-lt, .roundbox-lb, .roundbox-rt, .roundbox-rb,
+    .lt, .lb, .rt, .rb,
+    .ilt, .ilb, .irt, .irb {
+        display: none;
+    }
+    /* Replace them by real borders */
+    .roundbox {
+        border-radius: 6px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 1px 1px 5px rgba(108, 108, 108, 0.17);
+    }
+    .titled {
+        border: none !important;
+    }
 
-/* Remove CF's image borders */
-.roundbox-lt, .roundbox-lb, .roundbox-rt, .roundbox-rb,
-.lt, .lb, .rt, .rb,
-.ilt, .ilb, .irt, .irb {
-    display: none;
-}
-/* Replace them by real borders */
-.roundbox {
-    border-radius: 6px;
-    overflow: hidden;
-    border: none;
-    box-shadow: 1px 1px 5px rgba(108, 108, 108, 0.17);
-}
-.titled {
-    border: none !important;
-}
+    /* Remove borders between cells on tables */
+    table th, table td {
+        border: none !important;
+    }
 
-/* Remove weird person icon on the problemset page */
-/* FIXME: this breaks some other important images */
-/*.problems td:last-child img, .contests-table td:last-child img {
-    display: none;
-}*/
+    /* Better table border color */
+    .datatable {
+        background-color: #f8f8f8 !important;
+    }
 
-/* Remove borders between cells on tables */
-table th, table td {
-    border: none !important;
-}
+    /* Remove borders on profile page */
+    .title-photo div:first-child, .userbox {
+        border: none !important;
+    }
 
-/* Better table border color */
-.datatable {
-    background-color: #f8f8f8 !important;
-}
+    /* Make .nav-links prettier */
+    .nav-links li {
+        list-style: none !important;
+    }
 
-/* Remove borders on profile page */
-.title-photo div:first-child, .userbox {
-    border: none !important;
-}
+    /* Weird thing on nav menus that move with the mouse */
+    .backLava {
+        display: none !important;
+    }
 
-/* Make .nav-links prettier */
-.nav-links li {
-    list-style: none !important;
-}
-.nav-links a {
-    text-decoration: none; /* TODO: remove this if global a{text-decoration:none;} is kept */
-}
+    /* Better buttons */
+    input[type=submit] {
+        background: #d2d2d245;
+        border: none;
+        border-bottom: 3px solid #b6b6b678;
+        padding: 0.4em 1.1em !important;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    input[type=submit]:active {
+        border-bottom: 1px solid #b6b6b678;
+    }
 
-/* Weird thing on nav menus that move with the mouse */
-.backLava {
-    display: none !important;
-}
+    /* Better selects */
+    .submitForm input, .submitForm select {
+        border: none;
+    }
 
-/* Better buttons */
-input[type=submit] {
-    background: #d2d2d245;
-    border: none;
-    border-bottom: 3px solid #b6b6b678;
-    padding: 0.4em 1.1em !important;
-    border-radius: 6px;
-    cursor: pointer;
-}
-input[type=submit]:active {
-    border-bottom: 1px solid #b6b6b678;
-}
+    /* Copy button */
+    .input-output-copier {
+        text-transform: lowercase;
+        font-variant: small-caps;
+        border: none;
+    }
 
-/* Better selects */
-.submitForm input, .submitForm select {
-    border: none;
-}
+    /* Weird divisors next to the Logout button */
+    .lang-chooser {
+        font-size: 0;
+    }
+    .lang-chooser a {
+        font-size: small;
+        margin-left: 0.3em;
+    }
 
-/* Copy button */
-.input-output-copier {
-    text-transform: lowercase;
-    font-variant: small-caps;
-    border: none;
-}
+    /* Better problem statement */
+    .problem-statement {
+        margin: 0; /* why did it have a 4-side margin in first place?? */
+        margin-right: 1.5em; /* better separation */
+    }
+    .problem-statement .property-title {
+        display: none;
+    }
+    /*.problem-statement .header .title {
+        font-size: 180%;
+    }
+    .problem-statement .header {
+        margin: 2em 0;
+    }*/
+    .problem-statement .header .title {
+        font-size: 200%;
+        margin-bottom: 0;
+    }
+    .problem-statement .header {
+        margin: 2.5em 0 1.5em 0;
+        text-align: left;
+    }
+    .problem-statement .header>div {
+        display: inline-block !important;
+        margin-right: 0.5em;
+    }
+    .problem-statement .header>div:not(.title) {
+        color: #9E9E9E;
+    }
+    .problem-statement .header>div:not(:last-child)::after {
+        content: ",";
+    }
+    div.ttypography p, .sample-test {
+        margin-bottom: 1.5em !important;
+    }
+    .problem-statement .section-title {
+        font-size: 150%;
+        margin-bottom: 0.25em;
+    }
 
-/* Weird divisors next to the Logout button */
-.lang-chooser {
-    font-size: 0;
-}
-.lang-chooser a {
-    font-size: small;
-    margin-left: 0.3em;
-}
+    .source-and-history-div {
+        border: none;
+    }
+    #facebox {
+        position: fixed;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50% , -50%);
+    }
 
-/* Better problem statement */
-.problem-statement {
-    margin: 0; /* why did it have a 4-side margin in first place?? */
-    margin-right: 1.5em; /* better separation */
-}
-.problem-statement .property-title {
-    display: none;
-}
-/*.problem-statement .header .title {
-    font-size: 180%;
-}
-.problem-statement .header {
-    margin: 2em 0;
-}*/
-.problem-statement .header .title {
-    font-size: 200%;
-    margin-bottom: 0;
-}
-.problem-statement .header {
-    margin: 2.5em 0 1.5em 0;
-    text-align: left;
-}
-.problem-statement .header>div {
-    display: inline-block !important;
-    margin-right: 0.5em;
-}
-.problem-statement .header>div:not(.title) {
-    color: #9E9E9E;
-}
-.problem-statement .header>div:not(:last-child)::after {
-    content: ",";
-}
-div.ttypography p, .sample-test {
-    margin-bottom: 1.5em !important;
-}
-.problem-statement .section-title {
-    font-size: 150%;
-    margin-bottom: 0.25em;
-}
+    .inverted {
+        filter: invert(1);
+    }
 
-.source-and-history-div {
-    border: none;
-}
-#facebox {
-    position: fixed;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50% , -50%);
-}
+    ${customCSS}
+    `;
 
-.inverted {
-    filter: invert(1);
+    style.append(css);
+    document.body.appendChild(style);
 }
 
-${customCSS}
-`;
+function applyCommonCSS() {
+    let style = dom.element('style');
 
-style.append(css);
-document.body.appendChild(style);
+    const css = `
+    /** Config **/
+    .cfpp-hidden {
+        display: none;
+        opacity: 0;
+    }
+
+    .cfpp-config-btn {
+        font-size: 22px !important;
+        cursor: pointer;
+    }
+
+    .cfpp-modal {
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 101;
+    }
+    .cfpp-modal-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #00000087;
+    }
+    .cfpp-modal-inner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60vw;
+        max-height: 80vh;
+        background: white;
+        padding: 2em;
+        border-radius: 6px;
+        overflow: auto;
+    }
+    .cfpp-config-inner>div {
+        margin-bottom: 0.5em;
+    }
+
+    .cfpp-config label {
+        margin-left: 0.5em;
+    }
+
+    /** Navbar **/
+    .cfpp-navbar {
+        margin-left: 1.5em;
+    }
+    .cfpp-navbar-item {
+        display: inline-block;
+        position: relative;
+        margin-right: 1.5em;
+    }
+    .cfpp-navbar-item>a {
+        color: #212121;
+    }
+    .cfpp-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 200%;
+        z-index: 99;
+        display: none;
+        background: #212121;
+        padding: 1em;
+        box-shadow: 1px 7px 19px #00000054;
+    }
+    .cfpp-dropdown a {
+        display: block;
+        color: #E0E0E0;
+    }
+    .cfpp-navbar-item:hover .cfpp-dropdown,
+    .cfpp-navbar-item:focus-within .cfpp-dropdown {
+        display: block;
+    }
+
+    `;
+
+    style.append(css);
+    document.body.appendChild(style);
+}
+
+module.exports  = {
+    custom: applyCustomCSS,
+    common: applyCommonCSS
+};

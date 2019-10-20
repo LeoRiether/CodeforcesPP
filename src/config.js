@@ -63,76 +63,79 @@ function createUI() {
         prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
     ];
 
+    function makeToggle({id}) {
+        let checkbox = dom.element('input', { 
+            type:     'checkbox',
+            checked:  config[id],
+            id:       id,
+        });
+        dom.on(checkbox, 'change', () => {
+            // Update property value when the checkbox is toggled
+            config[id] = checkbox.checked;
+            save();
+        });
+
+        return checkbox;
+    }
+
+    function makeNumber({id}) {
+        let input = dom.element('input', { 
+            type:     'number',
+            value:    config[id] || 0,
+            id:       id,
+        });
+
+        dom.on(input, 'input', () => {
+            // Update property value when the number changes
+            config[id] = +input.value;
+            save();
+        });
+
+        return input;
+    }
+
+    function makeSelect({id, data}) {
+        let input = dom.element('select', { id: id });
+        data
+            .map(option => 
+                dom.element('option', {
+                    value: option,
+                    innerText: option,
+                    selected: option == config[id]
+                })
+            )
+            .forEach(opt => input.appendChild(opt));
+
+        dom.on(input, 'change', () => {
+            // Update property value when the number changes
+            config[id] = input.value;
+            save();
+        });
+
+        return input;
+    }
+
+    let make = {
+        'toggle': makeToggle,
+        'number': makeNumber,
+        'select': makeSelect,
+    };
+
     // Create the actual nodes based on the props
     modalProps = modalProps.map(p => {
-        if (p.type == 'toggle') {
-            let wrapper = dom.element('div');
-
-            let checkbox = dom.element('input', { 
-                type:     'checkbox',
-                checked:  config[p.id],
-                id:       p.id,
-            });
-            dom.on(checkbox, 'change', () => {
-                // Update property value when the checkbox is toggled
-                config[p.id] = checkbox.checked;
-                save();
-            });
-
-            let label = dom.element('label', { innerText: p.title });
-            label.setAttribute('for', p.id);
-
-            wrapper.appendChild(checkbox);
-            wrapper.appendChild(label);
-            return wrapper;
-        } else if (p.type == 'number') {
-            let wrapper = dom.element('div');
-
-            let input = dom.element('input', { 
-                type:     'number',
-                value:    config[p.id] || 0,
-                id:       p.id,
-            });
-            dom.on(input, 'input', () => {
-                // Update property value when the number changes
-                config[p.id] = +input.value;
-                save();
-            });
-
-            let label = dom.element('label', { innerText: p.title });
-            label.setAttribute('for', p.id);
-
-            wrapper.appendChild(label);
-            wrapper.appendChild(input);
-            return wrapper;
-        } else if (p.type == 'select') {
-            let wrapper = dom.element('div');
-
-            let input = dom.element('select', { id: p.id });
-            for (let option of p.data) {
-                let e = dom.element('option', {
-                    value: option,
-                    innerText: option
-                });
-                if (option == config[p.id]) {
-                    e.setAttribute('selected', true);
-                }
-                input.appendChild(e);
-            }
-
-            dom.on(input, 'change', () => {
-                // Update property value when the number changes
-                config[p.id] = input.value;
-                save();
-            });
-
-            let label = dom.element('label', { innerText: p.title });
-            label.setAttribute('for', p.id);
-
-            wrapper.appendChild(label);
-            wrapper.appendChild(input);
-            return wrapper;
+        let label = dom.element('label', { innerText: p.title });
+        label.setAttribute('for', p.id);
+        
+        let node;
+        if (typeof make[p.type] === 'function') {
+            node = make[p.type](p);
+        } else {
+            node = document.createTextNode(`${p.type} does not have a make function! Please check the createUI function on config.js`);
         }
+        
+        return dom.element('div', { 
+            children: [ label, node ] 
+        });
     });
 
     // Create the modal and its children
@@ -165,62 +168,6 @@ function createUI() {
     // Append the created elements to the DOM
     document.body.appendChild(modal);
     dom.$('.lang-chooser').children[0].prepend(modalBtn);
-
-    // TODO: Jesus fucking Christ I need a unified .css file for everything
-    // FIXME: what am I doing
-    // PRIORITY: highest
-    let style = `
-    .cfpp-hidden {
-        display: none;
-        opacity: 0;
-    }
-
-    .cfpp-config-btn {
-        font-size: 22px !important;
-        cursor: pointer;
-    }
-
-    .cfpp-modal {
-        box-sizing: border-box;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 101;
-        transition: opacity 0.3s; /* TODO: fix opacity transition */
-    }
-    .cfpp-modal-background {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #00000087;
-    }
-    .cfpp-modal-inner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 60vw;
-        max-height: 80vh;
-        background: white;
-        padding: 2em;
-        border-radius: 6px;
-        overflow: auto;
-    }
-    .cfpp-config-inner>div {
-        margin-bottom: 0.5em;
-    }
-
-    .cfpp-config label {
-        margin-left: 0.5em;
-    }
-    `;
-    document.body.appendChild(dom.element('style', {
-        innerHTML: style
-    }));
 }
 
 function closeUI() {

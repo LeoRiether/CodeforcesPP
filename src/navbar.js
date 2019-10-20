@@ -69,44 +69,6 @@ module.exports = function() {
 
     oldNav.replaceWith(newNav);
 
-
-    // Create styling for the new menu
-    const style = `
-    .cfpp-navbar {
-        margin-left: 1.5em;
-    }
-    .cfpp-navbar-item {
-        display: inline-block;
-        position: relative;
-        margin-right: 1.5em;
-    }
-    .cfpp-navbar-item>a {
-        color: #212121;
-    }
-    .cfpp-dropdown {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 200%;
-        z-index: 99;
-        display: none;
-        background: #212121;
-        padding: 1em;
-        box-shadow: 1px 7px 19px #00000054;
-    }
-    .cfpp-dropdown a {
-        display: block;
-        color: #E0E0E0;
-    }
-    .cfpp-navbar-item:hover .cfpp-dropdown,
-    .cfpp-navbar-item:focus-within .cfpp-dropdown {
-        display: block;
-    }
-    `;
-
-    let styleTag = dom.element('style', { innerHTML: style });    
-    document.body.appendChild(styleTag);
-
     // Change Codeforces logo to Codeforces++
     let logo = dom.$('#header img');
     if (logo && logo.getAttribute('src').endsWith('codeforces-logo-with-telegram.png')) {

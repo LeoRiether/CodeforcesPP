@@ -18,10 +18,7 @@ if (GM_info && config.get('version') != GM_info.script.version) {
         Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}! 
         Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">changelog</a>`);
     }
-}
-
-if (config.get('style'))
-    require('./style');
+} 
 
 // Execute features according to the current page
 if (config.get('showTags') && dom.$('.tag-box')) {
@@ -43,15 +40,18 @@ if (problemRegex.test(location.pathname))
 require('./navbar')();
 require('./redirector')();
 
-// Fontawesome stuff
-// not yet
-// document.body.appendChild(dom.element('script', { src: 'https://kit.fontawesome.com/db1c9d7219.js' }));
-
 const standingsItv = +config.get('standingsItv');
 if (standingsItv > 0 && /\/standings/i.test(location.pathname))
     require('./update_standings')(standingsItv);
 
 require('./shortcuts')();
+
+
+const style = require('./style');
+if (config.get('style')) {
+    style.custom();
+}
+style.common();
 
 // Exported to a global cfpp variable
 module.exports = {
