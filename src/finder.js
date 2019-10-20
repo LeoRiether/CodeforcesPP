@@ -54,13 +54,13 @@ function create() {
 }
 
 async function open() {
-    const { modal, input } = await create();
+    let { modal, input } = await create();
     modal.classList.remove('cfpp-hidden');
     input.focus();
 }
 
 async function close() {
-    const { modal, input } = await create();
+    let { modal, input } = await create();
     modal.classList.add('cfpp-hidden');
     input.value = "";
 }
