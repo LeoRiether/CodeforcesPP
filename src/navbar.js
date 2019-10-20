@@ -9,7 +9,7 @@ module.exports = function() {
     const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
 
     let oldNav = dom.$('.main-menu-list');
-    let newNav = dom.element('nav', { className: 'cfpp-navbar' });
+    let newNav = <nav className="cfpp-navbar"/>;
 
     // Without this the dropdowns don't appear
     oldNav.parentNode.parentNode.style.overflow = 'visible';
@@ -42,23 +42,19 @@ module.exports = function() {
     for (let item of oldNav.children) {
         let link = item.children[0]; // <a> tag
 
-        // Create new item and append the old <a> to it
-        let newItem = dom.element('div', {
-            className: 'cfpp-navbar-item',
-            children: [ link ],
-        });
+        let newItem = <div className="cfpp-navbar-item">{link}</div>
 
         // Add dropdown menu, if needed 
         const href = link.getAttribute('href');
         if (keys[href]) {
-            let dropdown = dom.element('div', { className: 'cfpp-dropdown' });
+            let dropdown = <div className="cfpp-dropdown"/>
 
             for (let ddText in keys[href]) {
-                let ddItem = dom.element('a', {
-                    innerText: ddText,
-                    href: keys[href][ddText]
-                });
-                dropdown.appendChild(ddItem);
+                dropdown.appendChild(
+                    <a href={keys[href][ddText]}>
+                        {ddText}
+                    </a>
+                );
             }
 
             newItem.appendChild(dropdown);

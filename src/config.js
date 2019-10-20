@@ -38,13 +38,6 @@ function save() {
 
 /**
  * Creates the interface to change the settings.
- * The modal created has the following structure:
- * <div class="cfpp-config cfpp-modal cfpp-hidden">
- *      <div class="cfpp-modal-background"></div>
- *      <div class="cfpp-modal-inner">
- *          <!-- All the settings -->
- *      </div>
- * </div>
  */
 function createUI() {
     // Some pages, like error pages and m2.codeforces, don't have a header
@@ -65,11 +58,11 @@ function createUI() {
     ];
 
     function makeToggle({id}) {
-        let checkbox = dom.element('input', { 
-            type:     'checkbox',
-            checked:  config[id],
-            id:       id,
-        });
+        let checkbox = 
+            <input id={id}
+                   checked={config[id]} 
+                   type="checkbox"/>;
+
         dom.on(checkbox, 'change', () => {
             // Update property value when the checkbox is toggled
             config[id] = checkbox.checked;
@@ -80,11 +73,10 @@ function createUI() {
     }
 
     function makeNumber({id}) {
-        let input = dom.element('input', { 
-            type:     'number',
-            value:    config[id] || 0,
-            id:       id,
-        });
+        let input =
+            <input id={id}
+                   value={config[id] || 0}
+                   type="number"/>
 
         dom.on(input, 'input', () => {
             // Update property value when the number changes
@@ -96,14 +88,13 @@ function createUI() {
     }
 
     function makeSelect({id, data}) {
-        let input = dom.element('select', { id: id });
+        let input = <select id={id}/>;
         data
             .map(option => 
-                dom.element('option', {
-                    value: option,
-                    innerText: option,
-                    selected: option == config[id]
-                })
+                <option value={option}
+                        selected={option == config[id]}>
+                    {option}
+                </option>
             )
             .forEach(opt => input.appendChild(opt));
 
@@ -117,7 +108,7 @@ function createUI() {
     }
 
     function makeText({id}) {
-        let input = dom.element('input', { id: id, type: 'text', value: config[id] });
+        let input = <input id={id} value={config[id]} type="text"/>
         dom.on(input, 'change', () => {
             config[id] = input.value;
             save();
@@ -135,8 +126,7 @@ function createUI() {
 
     // Create the actual nodes based on the props
     modalProps = modalProps.map(p => {
-        let label = dom.element('label', { innerText: p.title });
-        label.setAttribute('for', p.id);
+        let label = <label for={p.id}> {p.title} </label> 
         
         let node;
         if (typeof make[p.type] === 'function') {
@@ -145,32 +135,30 @@ function createUI() {
             node = document.createTextNode(`${p.type} does not have a make function! Please check the createUI function on config.js`);
         }
         
-        return dom.element('div', { 
-            children: [ label, node ] 
-        });
+        return <div>
+            {label} 
+            {node}
+        </div>;
     });
 
-    // Create the modal and its children
-    let modalInner = dom.element('div', { className: 'cfpp-modal-inner' , children: modalProps });
-    modalInner.append('Refresh the page to apply changes'); // TODO: not this
-
-    let modalBg = dom.element('div', { className: 'cfpp-modal-background' });
-    dom.on(modalBg, 'click', closeUI); // clicking on the background closes the UI
+    let background = <div className="cfpp-modal-background"/>;
+    dom.on(background, 'click', closeUI); // clicking on the background closes the UI
     dom.on(document, 'keyup', keyupEvent => { // pressing ESC also closes the UI
         if (keyupEvent.key == 'Escape')
             closeUI();
     });
 
-    let modal = dom.element('div', { 
-        className: 'cfpp-config cfpp-modal cfpp-hidden',
-        children: [ modalBg, modalInner ]
-    });
+    let modal = 
+        <div class="cfpp-config cfpp-modal cfpp-hidden">
+            {background}
+            <div className="cfpp-modal-inner">
+                {modalProps}
+                Refresh the page to apply changes
+            </div>
+        </div>; 
 
     // Create the button that shows the modal
-    let modalBtn = dom.element('a', { 
-        className: 'cfpp-config-btn', 
-        innerText: "[++]"
-    });
+    let modalBtn = <a className="cfpp-config-btn">[++]</a>
     dom.on(modalBtn, 'click', ev => {
         ev.preventDefault();
         modal.classList.remove('cfpp-hidden');

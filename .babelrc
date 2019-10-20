@@ -4,6 +4,12 @@
         "targets": {
           "browsers": ["last 5 Chrome versions"]
         }
-      }]
+      }],
+      ["@babel/preset-react",
+        {
+          "pragma": "dom.element",
+          "pragmaFrag": "dom.fragment"
+        }
+      ]
     ]
   }

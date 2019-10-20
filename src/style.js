@@ -9,9 +9,7 @@ const fontFamily = 'Libre Franklin';
 function applyCustomCSS() {
     let customCSS = '';
 
-    let style = dom.element('style', { className: 'cfpp-style' });
-
-    let css = `
+    document.body.appendChild(<style className="cfpp-style">{`
     @import url('https://fonts.googleapis.com/css?family=Libre+Franklin&display=swap');
 
     a, a:visited, .contest-state-phase {
@@ -163,17 +161,13 @@ function applyCustomCSS() {
         filter: invert(1);
     }
 
-    ${customCSS}
-    `;
-
-    style.append(css);
-    document.body.appendChild(style);
+    `}
+    {customCSS}
+    </style>);
 }
 
 function applyCommonCSS() {
-    let style = dom.element('style');
-
-    const css = `
+    document.body.appendElement(<style>{`
     @keyframes fadeIn {
         from { opacity: 0; }
         to   { opacity: 1; }
@@ -290,10 +284,7 @@ function applyCommonCSS() {
         background: white;
     }
 
-    `;
-
-    style.append(css);
-    document.body.appendChild(style);
+    `}</style>);
 }
 
 module.exports  = {

@@ -6,10 +6,10 @@ let dom = require('./dom');
 
 // TODO
 function bindEvents(input, results) {
-
+    
 }
 
-// Create can be called many times, but will only run once
+// Create can be called many times, but will only create the finder once
 // Returns a promise
 let createPromise = undefined;
 function create() {
@@ -18,36 +18,28 @@ function create() {
     }
     
     createPromise = new Promise((res, rej) => {
-        let input = dom.element('input', {
-            type: 'text',
-            className: 'finder-input',
-            placeholder: 'Search anything'
-        });
+        let background = <div className="cfpp-background"/>;
+        let input = <input type="text" className="finder-input" placeholder="Search anything"/>;
+        let results = <div className="finder-results"></div>;
 
-        let results = dom.element('div', {
-            className: 'finder-results'
+        let modal = 
+            <div className="cfpp-modal cfpp-hidden">
+                {background}
+                <div className="finder-inner">
+                    {input}
+                    {results}
+                </div>
+            </div>;
+
+        dom.on(background, 'click', close);
+
+        dom.on(document, 'keyup', e => {
+            if (e.key == 'Escape')
+                close();
         });
 
         bindEvents(input, results);
 
-        const modalInner = dom.element('div', {
-            className: 'finder-inner',
-            children: [ input, results ]
-        });
-
-        const background = dom.element('div', { className: 'cfpp-modal-background' });
-        dom.on(document, 'keyup', (e) => {
-            if (e.key == 'Escape')
-                close();
-        });
-        dom.on(background, 'click', close);
-
-        const modal = dom.element('div', {
-            className: 'cfpp-modal cfpp-hidden',
-            children: [ background, modalInner ]
-        });
-
-        document.body.appendChild(modal);
         res({ modal, input, results });
     });
     return createPromise;

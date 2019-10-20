@@ -17,6 +17,7 @@ global.document = {
   }
 };
 
+// TODO: check if the tests broke after injecting jsx
 test("dom.js works", t => {
   let dom = require('../src/dom');
   let props = {
@@ -24,7 +25,7 @@ test("dom.js works", t => {
     className: 'cfpp-link'
   };
   
-  t.deepEqual(dom.element('a', props), { ...props, 'tag': 'a', style: {} });
+  t.deepEqual(<a {...props}/>, { ...props, 'tag': 'a', style: {} });
   
   t.end();
 });

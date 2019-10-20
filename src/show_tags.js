@@ -13,15 +13,11 @@ module.exports = function () {
     container.style.display = 'none';
 
     // Create button
-    let showTagsButton = dom.element('button', { 
-        className: 'caption',
-        innerText: 'Show',
-        style: {
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer'
-        } 
-    });
+    let showTagsButton = 
+        <button className="caption" style="background: transparent; border: none; cursor: pointer;">
+            Show
+        </button>;
+
     dom.on(showTagsButton, 'click', () => {
         showTagsButton.remove();
         container.style.display = 'block';

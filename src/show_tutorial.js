@@ -26,22 +26,18 @@ function loadModal(deadline) {
     modalLoaded = true;
 
     // Create the modal and its children
-    let modalInner = dom.element('div', { className: 'cfpp-modal-inner' });
-    modalInner.append('loading...');
+    let modalInner = <div className="cfpp-modal-inner">loading...</div>
+    let background = <div className="cfpp-modal-background"/>;
+    let modal = 
+        <div>
+            {background}
+            {modalInner}
+        </div>;
 
-    let modalBg = dom.element('div', { className: 'cfpp-modal-background' });
-
-    // Pressing ESC closes the UI
+    dom.on(background, 'click', closeModal);
     dom.on(document, 'keyup', keyupEvent => {
         if (keyupEvent.key == 'Escape') 
             closeModal();
-    });
-    // Clicking on the background also closes the UI
-    dom.on(modalBg, 'click', closeModal);
-
-    let modal = dom.element('div', { 
-        className: 'cfpp-tutorial cfpp-modal cfpp-hidden',
-        children: [ modalBg, modalInner ]
     });
 
     // Puts the modal in the HTML
@@ -88,14 +84,12 @@ function loadModal(deadline) {
     xhr.send(`problemCode=${pcode}&csrf_token=${csrf}`);
 }
 
-// createBtn might be a little bit too long for a "creates a button" function
-
 /**
  * Creates a "Tutorial" button. 
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
 module.exports = function createBtn(url) {
-    let btn = dom.element('a', { innerText: 'Tutorial', style: { cursor:'pointer' } });
+    let btn = <a className="cfpp-tutorial" style="cursor: pointer;"> Tutorial </a>;
     dom.on(btn, 'click', () => {
         loadModal();
         showModal();
@@ -106,6 +100,5 @@ module.exports = function createBtn(url) {
         window.requestIdleCallback(loadModal, { timeout: 10000 });
     }
     
-    let menu = dom.$('.second-level-menu-list');
-    menu.appendChild(dom.element('li', { children: [ btn ] }));
+    dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> );
 }

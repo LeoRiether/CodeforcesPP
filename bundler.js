@@ -23,7 +23,7 @@ const outMetaFilename = 'script.meta.js';
 const outFile = Path.join(outDir, outFilename); 
 const outMetaFile = Path.join(outDir, outMetaFilename);
 
-let bundler = new Bundler(Path.join(__dirname, "./src/index.js"), {
+let bundler = new Bundler(Path.join(__dirname, package.main), {
     outDir:      outDir,
     outFile:     outFilename,
     minify:      false,
