@@ -9,6 +9,7 @@ const defaultConfig = {
     showTags:  true,
     style:     true,
     searchBtn: true,
+    finder:    'Ctrl+Space',
     standingsItv: 0,
     defStandings: 'Common',
 };
@@ -26,7 +27,6 @@ function load() {
     save();
 }
 
-// TODO: consider promisifying reset and save (maybe load too (maybe everything!))
 function reset() {
     config = defaultConfig;
     save();
@@ -61,6 +61,7 @@ function createUI() {
         prop('Custom Style', 'toggle', 'style'),
         prop('"Google It" button', 'toggle', 'searchBtn'),
         prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
+        prop('Finder keyboard shortcut', 'text', 'finder'),
     ];
 
     function makeToggle({id}) {
@@ -115,10 +116,21 @@ function createUI() {
         return input;
     }
 
+    function makeText({id}) {
+        let input = dom.element('input', { id: id, type: 'text', value: config[id] });
+        dom.on(input, 'change', () => {
+            config[id] = input.value;
+            save();
+        });
+
+        return input;
+    }
+
     let make = {
         'toggle': makeToggle,
         'number': makeNumber,
         'select': makeSelect,
+        'text':   makeText,
     };
 
     // Create the actual nodes based on the props
@@ -145,8 +157,7 @@ function createUI() {
     let modalBg = dom.element('div', { className: 'cfpp-modal-background' });
     dom.on(modalBg, 'click', closeUI); // clicking on the background closes the UI
     dom.on(document, 'keyup', keyupEvent => { // pressing ESC also closes the UI
-        const key = keyupEvent.code || keyupEvent.key;
-        if (key == 'Escape')
+        if (keyupEvent.key == 'Escape')
             closeUI();
     });
 

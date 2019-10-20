@@ -4,8 +4,9 @@
 
 const dom = require("./dom");
 
+const fontFamily = 'Libre Franklin'; 
+
 function applyCustomCSS() {
-    const fontFamily = 'Libre Franklin';
     let customCSS = '';
 
     let style = dom.element('style', { className: 'cfpp-style' });
@@ -173,10 +174,14 @@ function applyCommonCSS() {
     let style = dom.element('style');
 
     const css = `
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
     /** Config **/
     .cfpp-hidden {
         display: none;
-        opacity: 0;
     }
 
     .cfpp-config-btn {
@@ -200,6 +205,7 @@ function applyCommonCSS() {
         width: 100vw;
         height: 100vh;
         background: #00000087;
+        animation: fadeIn 0.15s forwards;
     }
     .cfpp-modal-inner {
         position: absolute;
@@ -212,13 +218,14 @@ function applyCommonCSS() {
         padding: 2em;
         border-radius: 6px;
         overflow: auto;
+        animation: fadeIn 0.15s forwards;
     }
-    .cfpp-config-inner>div {
+    .cfpp-config .cfpp-modal-inner>div {
         margin-bottom: 0.5em;
     }
 
     .cfpp-config label {
-        margin-left: 0.5em;
+        margin-right: 0.75em;
     }
 
     /** Navbar **/
@@ -251,6 +258,36 @@ function applyCommonCSS() {
     .cfpp-navbar-item:hover .cfpp-dropdown,
     .cfpp-navbar-item:focus-within .cfpp-dropdown {
         display: block;
+    }
+
+    /** Finder **/
+    .finder-inner {
+        position: absolute;
+        top: 8%;
+        left: 50%;
+        transform: translate(-50%, 0%);
+        width: 60vw;
+        animation: fadeIn 0.15s forwards;
+    }
+    .finder-input, .finder-results {
+        box-sizing: border-box;
+        width: 100%;
+        border: none;
+        border-radius: 6px;
+        font-family: '${fontFamily}', 'Roboto', sans-serif;
+        font-size: 1.25em;
+        padding: 1em 1.25em;
+    }
+    .finder-input {
+        margin-bottom: 1.5em;
+        outline: none;
+        transition: box-shadow 0.2s;
+    }
+    .finder-input:focus {
+        box-shadow: 0px 6px 19px #0b28667a;
+    }
+    .finder-results {
+        background: white;
     }
 
     `;

@@ -3,6 +3,8 @@
  */
 
 let dom = require('./dom');
+let finder = require('./finder');
+let config = require('./config');
 
 //
 // Commands
@@ -31,35 +33,31 @@ function scrollToPageContent() {
     document.documentElement.scrollBy(0, -20);
 }
 
-// Opens the uuuh I don't know the name yet, it's CtrlShiftP
-function ctrlShiftP() {
-    alert("Coming soon!");
-}
-
 function invertImages() {
     dom.$$('img').forEach(i => i.classList.toggle('inverted'));
 }
 
-const shortcuts = {
+let shortcuts = {
     'ctrl+s': submit,
-    'ctrl+shift+V': scrollToPageContent, // V => view
+    'ctrl+shift+v': scrollToPageContent, // V => view
     'ctrl+alt+v': scrollToPageContent,
-    'ctrl+shift+P': ctrlShiftP,
     'ctrl+i': invertImages,
 };
+shortcuts[config.get('finder').toLowerCase()] = finder.open;
 
 module.exports = function() {
     dom.on(document, 'keydown', (e) => {
         // Not going to use precious cycles when there's not even a ctrl or shift
         if (!e.ctrlKey) return;
-
         
         // Build the key sequence string (like 'ctrl+shift+p')
         let key = "";
+        if (e.metaKey) key += 'meta+';
         if (e.ctrlKey) key += 'ctrl+';
         if (e.altKey) key += 'alt+';
         if (e.shiftKey) key += 'shift+';
-        key += e.key;
+
+        key += e.key == ' ' ? 'space' : e.key;
 
         const fn = shortcuts[key];
         if (fn)  {

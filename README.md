@@ -35,3 +35,4 @@ I probably won't write many tests, if any at all
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think, maybe `<link rel="prerender">`, but that doesn't seem to work)
 + [ ] Zen Mode
 + [ ] More shortcuts
++ [ ] Move navbar to the top

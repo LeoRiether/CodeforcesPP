@@ -48,13 +48,13 @@ const standingsItv = +config.get('standingsItv');
 if (standingsItv > 0 && /\/standings/i.test(location.pathname))
     require('./update_standings')(standingsItv);
 
-require('./shortcuts')();
-
 const style = require('./style');
 if (config.get('style')) {
     style.custom();
 }
 style.common();
+
+require('./shortcuts')();
 
 // Exported to a global cfpp variable
 module.exports = {

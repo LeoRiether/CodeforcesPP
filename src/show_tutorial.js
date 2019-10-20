@@ -33,8 +33,7 @@ function loadModal(deadline) {
 
     // Pressing ESC closes the UI
     dom.on(document, 'keyup', keyupEvent => {
-        const key = keyupEvent.code || keyupEvent.key;
-        if (key == 'Escape') 
+        if (keyupEvent.key == 'Escape') 
             closeModal();
     });
     // Clicking on the background also closes the UI
