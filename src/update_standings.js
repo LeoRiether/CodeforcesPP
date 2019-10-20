@@ -13,7 +13,9 @@ function update() {
     xhr.responseType = 'document';
 
     xhr.onload = function() {
-        if (!xhr.response) return console.log("Codeforces++ wasn't able to reload the standings. Reason: xhr.response is null");
+        if (!xhr.response || xhr.response.responseURL.includes('/offline')) { 
+            return console.log("Codeforces++ wasn't able to reload the standings. Reason: xhr.response is null");
+        }
         
         dom.$('#pageContent').replaceWith(dom.$('#pageContent', xhr.response));  
         const scripts = dom.$$('#pageContent script');
