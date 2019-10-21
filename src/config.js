@@ -73,10 +73,7 @@ function createUI() {
     }
 
     function makeNumber({id}) {
-        let input =
-            <input id={id}
-                   value={config[id] || 0}
-                   type="number"/>
+        let input = <input id={id} value={config[id] || 0} type="number"/>
 
         dom.on(input, 'input', () => {
             // Update property value when the number changes
@@ -126,8 +123,6 @@ function createUI() {
 
     // Create the actual nodes based on the props
     modalProps = modalProps.map(p => {
-        let label = <label for={p.id}> {p.title} </label> 
-        
         let node;
         if (typeof make[p.type] === 'function') {
             node = make[p.type](p);
@@ -135,10 +130,12 @@ function createUI() {
             node = document.createTextNode(`${p.type} does not have a make function! Please check the createUI function on config.js`);
         }
         
-        return <div>
-            {label} 
-            {node}
-        </div>;
+        return (
+            <div>
+                <label for={p.id}>{p.title}</label>
+                {node}
+            </div>
+        );
     });
 
     let background = <div className="cfpp-modal-background"/>;
@@ -149,7 +146,7 @@ function createUI() {
     });
 
     let modal = 
-        <div class="cfpp-config cfpp-modal cfpp-hidden">
+        <div className="cfpp-config cfpp-modal cfpp-hidden">
             {background}
             <div className="cfpp-modal-inner">
                 {modalProps}

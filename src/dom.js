@@ -21,7 +21,7 @@ module.exports = {
         if (typeof tag === 'string') {
             el = document.createElement(tag);
         } else if (typeof tag === 'function') {
-            el = tag();
+            el = tag(attrs);
         }
 
         if (children) {

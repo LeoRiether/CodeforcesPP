@@ -167,7 +167,7 @@ function applyCustomCSS() {
 }
 
 function applyCommonCSS() {
-    document.body.appendElement(<style>{`
+    document.body.appendChild(<style>{`
     @keyframes fadeIn {
         from { opacity: 0; }
         to   { opacity: 1; }

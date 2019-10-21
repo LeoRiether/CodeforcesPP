@@ -26,10 +26,10 @@ function loadModal(deadline) {
     modalLoaded = true;
 
     // Create the modal and its children
-    let modalInner = <div className="cfpp-modal-inner">loading...</div>
     let background = <div className="cfpp-modal-background"/>;
+    let modalInner = <div className="cfpp-modal-inner">loading...</div>
     let modal = 
-        <div>
+        <div className="cfpp-modal cfpp-tutorial cfpp-hidden">
             {background}
             {modalInner}
         </div>;
@@ -37,10 +37,8 @@ function loadModal(deadline) {
     dom.on(background, 'click', closeModal);
     dom.on(document, 'keyup', keyupEvent => {
         if (keyupEvent.key == 'Escape') 
-            closeModal();
+        closeModal();
     });
-
-    // Puts the modal in the HTML
     document.body.appendChild(modal);
 
     // Get the problem ID
@@ -89,7 +87,7 @@ function loadModal(deadline) {
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
 module.exports = function createBtn(url) {
-    let btn = <a className="cfpp-tutorial" style="cursor: pointer;"> Tutorial </a>;
+    let btn = <a className="cfpp-tutorial-btn" style="cursor: pointer;"> Tutorial </a>;
     dom.on(btn, 'click', () => {
         loadModal();
         showModal();

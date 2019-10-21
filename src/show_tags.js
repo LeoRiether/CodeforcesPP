@@ -12,16 +12,16 @@ module.exports = function () {
     let container = tbox.parentNode.parentNode; // actual container for all the tags
     container.style.display = 'none';
 
-    // Create button
-    let showTagsButton = 
-        <button className="caption" style="background: transparent; border: none; cursor: pointer;">
-            Show
-        </button>;
+    function ShowTagsButton() {
+        let btn = <button>Show</button>;
+        dom.on(btn, 'click', () => {
+            btn.remove();
+            container.style.display = 'block';
+        })
+        return btn;
+    }
 
-    dom.on(showTagsButton, 'click', () => {
-        showTagsButton.remove();
-        container.style.display = 'block';
-    })
-
-    container.parentNode.appendChild(showTagsButton);
+    container.parentNode.appendChild(
+        <ShowTagsButton className="caption" style="background: transparent; border: none; cursor: pointer;"/>
+    );
 }
