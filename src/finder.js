@@ -52,6 +52,7 @@ let extensions = {
             [`${name}: Submissions`, `${baseURL}/my`],
             [`${name}: Custom Invocation`, `${baseURL}/customtest`],
             [`${name}: Status`, `${baseURL}/status`],
+            [`${name}: Virtual`, `${baseURL}/virtual`],
         ];
     },
 
