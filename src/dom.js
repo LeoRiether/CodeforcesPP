@@ -2,6 +2,10 @@
  * @file Utilities to manipulate the DOM
  */
 
+function isEvent(str) {
+    return str.length > 2 && str[0] == 'o' && str[1] == 'n' && str[2] >= 'A' && str[2] <= 'Z';
+}
+
 module.exports = {
     $(query, element) {
         return (element || document).querySelector(query);
@@ -14,16 +18,45 @@ module.exports = {
     },
 
     /**
-     * @example dom.element('a', { className: "my-class", href: "codeforces.com" }); => Creates <a class="my-class" href="codeforces.com"></a>
+     * Works like React.createElement
+     * Doesn't support a set of features, like dataset attributions, but should work for most purposes
      */
-    element(tag, attrs, ...children) {
+    element(tag, props, ...children) {
         let el;
         if (typeof tag === 'string') {
             el = document.createElement(tag);
+
+            Object.assign(el, props); // Some properties like data-* and onClick won't do anything here...
+            if (props) {
+                // ...so we have to consider them here
+                for (let key in props) {
+                    if (key.startsWith('data-') || key == 'for')
+                        el.setAttribute(key, props[key]);
+                    else if (isEvent(key))
+                        el.addEventListener(key.substr(2).toLowerCase(), props[key]);
+                }
+            }
         } else if (typeof tag === 'function') {
-            el = tag(attrs);
+            el = tag(props);
         }
 
+        if (children) {
+            for (let c of children) {
+                if (typeof c === 'string') {
+                    el.appendChild(document.createTextNode(c));
+                } else if (c instanceof Array) {
+                    el.append(...c);
+                } else {
+                    el.appendChild(c);
+                }
+            }
+        }
+
+        return el;
+    },
+
+    fragment(...children) {
+        let frag = document.createDocumentFragment();
         if (children) {
             for (let c of children) {
                 if (typeof c === 'string') {
@@ -36,17 +69,6 @@ module.exports = {
                 }
             }
         }
-
-        if (attrs && attrs.onClick) {
-            el.addEventListener('click', attrs.onClick);
-            delete attrs.onClick;
-        }
-
-        Object.assign(el, attrs);
-        return el;
-    },
-
-    fragment() {
-        return document.createDocumentFragment();
+        return frag;
     }
 };

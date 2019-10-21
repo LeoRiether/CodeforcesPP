@@ -270,9 +270,9 @@ function applyCommonCSS() {
         border-radius: 6px;
         font-family: '${fontFamily}', 'Roboto', sans-serif;
         font-size: 1.25em;
-        padding: 1em 1.25em;
     }
     .finder-input {
+        padding: 1em 1.25em;
         margin-bottom: 1.5em;
         outline: none;
         transition: box-shadow 0.2s;
@@ -282,6 +282,23 @@ function applyCommonCSS() {
     }
     .finder-results {
         background: white;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 75vh;
+        overflow: auto;
+    }
+    .finder-results a {
+        cursor: pointer;
+        color: #282828;
+        display: block;
+        padding: 1em 1.25em;
+        transition: color, margin-left 0.1s;
+        outline: none;
+    }
+    .finder-results a:focus {
+        color: #2c63d5;
+        margin-left: 0.25em;
     }
 
     `}</style>);

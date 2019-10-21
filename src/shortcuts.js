@@ -45,10 +45,14 @@ let shortcuts = {
 };
 shortcuts[config.get('finder').toLowerCase()] = finder.open;
 
+function isFKey(key) {
+    return key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9';
+}
+
 module.exports = function() {
     dom.on(document, 'keydown', (e) => {
         // Not going to use precious cycles when there's not even a ctrl or shift
-        if (!e.ctrlKey) return;
+        if (!e.ctrlKey && !isFKey(e.key)) return;
         
         // Build the key sequence string (like 'ctrl+shift+p')
         let key = "";
@@ -57,7 +61,7 @@ module.exports = function() {
         if (e.altKey) key += 'alt+';
         if (e.shiftKey) key += 'shift+';
 
-        key += e.key == ' ' ? 'space' : e.key;
+        key += e.key == ' ' ? 'space' : e.key.toLowerCase();
 
         const fn = shortcuts[key];
         if (fn)  {

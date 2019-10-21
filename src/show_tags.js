@@ -13,7 +13,10 @@ module.exports = function () {
     container.style.display = 'none';
 
     function ShowTagsButton() {
-        let btn = <button>Show</button>;
+        let btn =
+            <button className="caption" style="background: transparent; border: none; cursor: pointer;">
+                Show
+            </button>;
         dom.on(btn, 'click', () => {
             btn.remove();
             container.style.display = 'block';
@@ -21,7 +24,5 @@ module.exports = function () {
         return btn;
     }
 
-    container.parentNode.appendChild(
-        <ShowTagsButton className="caption" style="background: transparent; border: none; cursor: pointer;"/>
-    );
+    container.parentNode.appendChild( <ShowTagsButton /> );
 }
