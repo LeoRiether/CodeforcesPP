@@ -18,20 +18,18 @@ function create() {
     }
     
     createPromise = new Promise((res, rej) => {
-        let background = <div className="cfpp-modal-background"/>;
         let input = <input type="text" className="finder-input" placeholder="Search anything"/>;
         let results = <div className="finder-results"></div>;
 
         let modal = 
             <div className="cfpp-modal cfpp-hidden">
-                {background}
+                <div className="cfpp-modal-background" onClick={close}/>
                 <div className="finder-inner">
                     {input}
                     {results}
                 </div>
             </div>;
 
-        dom.on(background, 'click', close);
         dom.on(document, 'keyup', e => {
             if (e.key == 'Escape')
                 close();
@@ -46,7 +44,6 @@ function create() {
 }
 
 async function open() {
-    console.log(`Called`);
     let { modal, input } = await create();
     modal.classList.remove('cfpp-hidden');
     input.focus();

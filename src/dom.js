@@ -37,6 +37,11 @@ module.exports = {
             }
         }
 
+        if (attrs && attrs.onClick) {
+            el.addEventListener('click', attrs.onClick);
+            delete attrs.onClick;
+        }
+
         Object.assign(el, attrs);
         return el;
     },

@@ -138,27 +138,25 @@ function createUI() {
         );
     });
 
-    let background = <div className="cfpp-modal-background"/>;
-    dom.on(background, 'click', closeUI); // clicking on the background closes the UI
-    dom.on(document, 'keyup', keyupEvent => { // pressing ESC also closes the UI
-        if (keyupEvent.key == 'Escape')
-            closeUI();
-    });
-
-    let modal = 
+    let modal = (
         <div className="cfpp-config cfpp-modal cfpp-hidden">
-            {background}
+            <div className="cfpp-modal-background" onClick={closeUI}/>
             <div className="cfpp-modal-inner">
                 {modalProps}
                 Refresh the page to apply changes
             </div>
-        </div>; 
+        </div>
+    );
 
     // Create the button that shows the modal
     let modalBtn = <a className="cfpp-config-btn">[++]</a>
     dom.on(modalBtn, 'click', ev => {
         ev.preventDefault();
         modal.classList.remove('cfpp-hidden');
+    });
+    dom.on(document, 'keyup', keyupEvent => { // pressing ESC also closes the UI
+        if (keyupEvent.key == 'Escape')
+            closeUI();
     });
 
     // Append the created elements to the DOM

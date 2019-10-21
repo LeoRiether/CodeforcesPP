@@ -26,15 +26,13 @@ function loadModal(deadline) {
     modalLoaded = true;
 
     // Create the modal and its children
-    let background = <div className="cfpp-modal-background"/>;
     let modalInner = <div className="cfpp-modal-inner">loading...</div>
     let modal = 
         <div className="cfpp-modal cfpp-tutorial cfpp-hidden">
-            {background}
+            <div className="cfpp-modal-background" onClick={closeModal}/>
             {modalInner}
         </div>;
 
-    dom.on(background, 'click', closeModal);
     dom.on(document, 'keyup', keyupEvent => {
         if (keyupEvent.key == 'Escape') 
         closeModal();
