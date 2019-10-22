@@ -9,6 +9,8 @@ let isOpen = false;
 //! Idea: give every searchable a fuzzy distance number based on the input,
 //! then sort by this criteria and hide every searchable below a certain threshold.
 //! As we've gotta move stuff around, its' probably best to implement a virtual DOM system
+//!
+//! Idea rejected! New, simpler system: filter by subsequence match and sort by last time clicked only once
 
 // TODO: every info I need is pulled from the DOM. Refactor to have a JS model of the search that syncs with the html
 
@@ -36,6 +38,7 @@ let extensions = {
     },
 
     problem() {
+        //! FIXME: clicking on these links doesn't close the popup
         return [
             ["Problem: Tutorial", "javascript:document.querySelector('.cfpp-tutorial-btn').click()"],
             ["Problem: Submit", "javascript:document.querySelector('#sidebar .submit').click()"],
@@ -73,7 +76,7 @@ function bindEvents(input, results) {
     dom.on(input, 'input', () => {
         const value = input.value.toLowerCase();
         for (let r of results.children) {
-            if (r.dataset.search.includes(value)) {
+            if (includesSubseq(r.dataset.search, value)) {
                 r.style.display = "";
             } else {
                 r.style.display = "none";
@@ -90,6 +93,16 @@ function bindEvents(input, results) {
                     break;
                 }
             }
+        } else if (e.key == 'ArrowUp') {
+            let focus = results.children[results.children.length-1];
+            while (focus && focus.style.display != "")
+                focus = focus.previousElementSibling;
+            
+            if (focus !== null) {
+                focus.children[0].focus();
+                focus.children[0].scrollIntoViewIfNeeded();
+            }
+            e.preventDefault();
         } else if (e.key == 'ArrowDown') {
             let focus = results.children[0];
             while (focus && focus.style.display != "")
@@ -127,6 +140,9 @@ function bindEvents(input, results) {
             sibling.children[0].scrollIntoViewIfNeeded();
             e.preventDefault(); // prevent scrolling
         }
+    });
+
+    dom.on(results, 'click', e => {
     });
 }
 
@@ -240,5 +256,24 @@ function putCursorAtEnd(input) {
     }
 }
   
+function includesSubseq(text, pattern) {
+    if (pattern.length == 0) {
+        return true;
+    }
+
+    let p = pattern.length - 1;
+    for (let i = text.length-1; i >= 0; i--) {
+        if (text[i] == pattern[p]) {
+            p--;
+        }
+
+        if (p < 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 
 module.exports = { create, open, close };
