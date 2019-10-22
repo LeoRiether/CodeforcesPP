@@ -17,6 +17,7 @@ First you need a userscript manager, like [Tampermonkey](https://www.tampermonke
 ## Shortcuts
 + Open file picker to submit: `Ctrl+S`
 + Scroll to problem viewport: `Ctrl+Shift+V`/`Ctrl+Alt+V`
++ Finder: `Ctrl+Space` (configurable)
 + Invert images: `Ctrl+I`
 
 # Development
