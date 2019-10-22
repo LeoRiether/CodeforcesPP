@@ -1,8 +1,6 @@
 
 # Codeforces++
-### Codeforces extension pack
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/LeoRiether/CodeforcesPP)
-![GitHub](https://img.shields.io/github/license/LeoRiether/CodeforcesPP)
+### Codeforces extension pack ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/LeoRiether/CodeforcesPP) ![GitHub](https://img.shields.io/github/license/LeoRiether/CodeforcesPP)
 
 # Installing
 First you need a userscript manager, like [Tampermonkey](https://www.tampermonkey.net) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/). Then, go to the latest [release](https://github.com/LeoRiether/CodeforcesPP/releases/), download `script.user.js` and add it as as userscript.
