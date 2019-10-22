@@ -157,10 +157,6 @@ function applyCustomCSS() {
         transform: translate(-50% , -50%);
     }
 
-    .inverted {
-        filter: invert(1);
-    }
-
     `}
     {customCSS}
     </style>);
@@ -201,6 +197,7 @@ function applyCommonCSS() {
         background: #00000087;
         animation: fadeIn 0.15s forwards;
     }
+    html.cfpp-dark-mode .cfpp-modal-background { background: #ffffff87; }
     .cfpp-modal-inner {
         position: absolute;
         top: 50%;
@@ -299,6 +296,17 @@ function applyCommonCSS() {
     .finder-results a:focus {
         color: #2c63d5;
         margin-left: 0.25em;
+    }
+
+    .inverted {
+        filter: invert(1);
+    }
+    html.cfpp-dark-mode, html.cfpp-dark-mode img {
+        filter: invert(1) hue-rotate(180deg);
+    }
+    #header img { filter: none; }
+    html.cfpp-dark-mode {
+        background: black;
     }
 
     `}</style>);

@@ -18,7 +18,7 @@ First you need a userscript manager, like [Tampermonkey](https://www.tampermonke
 + Open file picker to submit: `Ctrl+S`
 + Scroll to problem viewport: `Ctrl+Shift+V`/`Ctrl+Alt+V`
 + Finder: `Ctrl+Space` (configurable)
-+ Invert images: `Ctrl+I`
++ Dark mode: `Ctrl+I`
 
 # Development
 Run `yarn build` to build with Parcel or `yarn start` to build in watch mode

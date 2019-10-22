@@ -10,6 +10,7 @@ const defaultConfig = {
     style:     true,
     searchBtn: true,
     finder:    'Ctrl+Space',
+    darkMode:  false,
     standingsItv: 0,
     defStandings: 'Common',
 };
@@ -173,7 +174,7 @@ module.exports = {
     createUI,
     closeUI,
     get: key => config[key],
-    set: (key, value) => config[key] = value,
+    set: (key, value) => { config[key] = value; save(); },
     load,
     reset,
     save,

@@ -33,15 +33,24 @@ function scrollToPageContent() {
     document.documentElement.scrollBy(0, -20);
 }
 
-function invertImages() {
-    dom.$$('img').forEach(i => i.classList.toggle('inverted'));
+function darkMode() {
+    if (dom.$('.darkreader')) {
+        // Only invert images
+        dom.$$('img').forEach(i => i.classList.toggle('inverted'));
+        return;
+    }
+
+    let html = document.documentElement;
+    let isDark = html.classList.contains('cfpp-dark-mode');
+    html.classList.toggle('cfpp-dark-mode');
+    config.set('darkMode', !isDark);
 }
 
 let shortcuts = {
     'ctrl+s': submit,
     'ctrl+shift+v': scrollToPageContent, // V => view
     'ctrl+alt+v': scrollToPageContent,
-    'ctrl+i': invertImages,
+    'ctrl+i': darkMode,
 };
 shortcuts[config.get('finder').toLowerCase()] = finder.open;
 
@@ -70,4 +79,8 @@ module.exports = function() {
             fn();
         }
     });
+
+    if (config.get('darkMode')) {
+        darkMode();
+    }
 };
