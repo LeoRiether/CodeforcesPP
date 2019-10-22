@@ -1,3 +1,6 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/LeoRiether/CodeforcesPP)
+![GitHub](https://img.shields.io/github/license/LeoRiether/CodeforcesPP)
+
 # Codeforces++
 ### Codeforces extension pack
 
