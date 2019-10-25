@@ -305,7 +305,7 @@ function applyCommonCSS() {
         filter: invert(1) hue-rotate(180deg);
     }
     html.cfpp-dark-mode .MathJax img, html.cfpp-dark-mode .tex-formula {
-        filter: none;
+        filter: none !important;
     }
     #header img { filter: none; }
     html.cfpp-dark-mode {
