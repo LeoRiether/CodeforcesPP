@@ -133,7 +133,7 @@ function bindEvents(input, results) {
             for (let r of results.children) {
                 if (r.style.display == "") {
                     r.children[0].click();
-                    increatePriority(r.dataset.key);
+                    increasePriority(r.dataset.key);
                     close();
                     break;
                 }
@@ -188,7 +188,7 @@ function bindEvents(input, results) {
     });
 
     dom.on(results, 'click', e => {       
-        increatePriority(e.target.parentElement.dataset.key);
+        increasePriority(e.target.parentElement.dataset.key);
     });
 }
 
@@ -288,7 +288,7 @@ async function close() {
 /**
  * Increases the priority of a finder key in localStorage.finderPriority
  */
-function increatePriority(key) {
+function increasePriority(key) {
     let fp;
     try {
         fp = JSON.parse(localStorage.finderPriority) || {};
