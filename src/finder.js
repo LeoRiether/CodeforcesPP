@@ -3,6 +3,7 @@
  */
 
 let dom = require('./dom');
+let config = require('./config');
 
 let isOpen = false;
 
@@ -19,50 +20,93 @@ let isOpen = false;
  * I'm basically rolling my own React at this point
  */
 function Result(props) {
-    return (
-        <li data-search={props.text.toLowerCase()}>
-            <a href={props.href}>{props.text}</a>
-        </li>
-    );
+    if (props.href) {
+        return (
+            <li data-key={props.key} data-search={props.title.toLowerCase()}>
+                <a href={props.href}>{props.title}</a>
+            </li>
+        );
+    } else {
+        return (
+            <li data-key={props.key} data-search={props.title.toLowerCase()}>
+                  <a href="#" onClick={props.onClick}>{props.title}</a>
+            </li>
+        );
+    }
 }
 
 let extensions = {
     common(handle) {
         return [
-            ["Contests", "/contests"], ["Problemset", "/problemset"], ["Problemsetting", `/contests/with/${handle}`], 
-            ["Submissions", `/submissions/${handle}`], ["Groups", `/groups/with/${handle}`], ["Profile", `/profile/${handle}`], 
-            ["CfViz", 'https://cfviz.netlify.com'], ["Favourites", '/favourite/problems'], ["Teams", `/teams/with/${handle}`], 
-            ["Status", '/problemset/status'], ["Friends Status", '/problemset/status?friends=on'], ["Gym", '/gyms'], 
-            ["Blog", `/blog/${handle}`], ["Mashups", '/mashups'], ["Rating", '/ratings'],
+            { key: "contests",   title: "Contests",       href: "/contests" },
+            { key: "problemset", title: "Problemset",     href: "/problemset" },
+            { key: "psetting",   title: "Problemsetting", href: `/contests/with/${handle}` },
+            { key: "subms",      title: "Submissions",    href: `/submissions/${handle}` },
+            { key: "groups",     title: "Groups",         href: `/groups/with/${handle}` },
+            { key: "profile",    title: "Profile",        href: `/profile/${handle}` },
+            { key: "cfviz",      title: "CfViz",          href: "https://cfviz.netlify.com" },
+            { key: "favs",       title: "Favourites",     href: "/favourite/problems" },
+            { key: "teams",      title: "Teams",          href: `/teams/with/${handle}` },
+            { key: "status",     title: "Status",         href: "/problemset/status" },
+            { key: "fstatus",    title: "Friends Status", href: "/problemset/status?friends=on" },
+            { key: "gym",        title: "Gym",            href: "/gyms" },
+            { key: "blog",       title: "Blog",           href: `/blog/handle/${handle}` },
+            { key: "mashups",    title: "Mashups",        href: "/mashups" },
+            { key: "rating",     title: "Rating",         href: "/ratings" }
         ];
     },
 
     problem() {
-        //! FIXME: clicking on these links doesn't close the popup
         return [
-            ["Problem: Tutorial", "javascript:document.querySelector('.cfpp-tutorial-btn').click()"],
-            ["Problem: Submit", "javascript:document.querySelector('#sidebar .submit').click()"],
+            { 
+                key: "tutorial", 
+                title: "Problem: Tutorial", 
+                onClick() {
+                    close();
+                    dom.$('.cfpp-tutorial-btn').click();  
+                }
+            },
+            {
+                key: "submit",
+                title: "Problem: Submit",
+                onClick() {
+                    close();
+                    dom.$('#sidebar .submit').click()
+                }
+            }
         ];
     },
 
     contest(baseURL, id, isGym) {
         const name = isGym ? 'Gym' : 'Contest';
         baseURL += `${name.toLowerCase()}/${id}`;
+        const standingsFriends = config.get('defStandings') === 'Friends' ? '/friends/true' : '';
         return [
-            [`${name}: Standings`, `${baseURL}/standings/friends/true`], // TODO: make friends: true work with config and within groups
-            [`${name}: Problems`, `${baseURL}`],
-            [`${name}: Submit`, `${baseURL}/submit`],
-            [`${name}: Submissions`, `${baseURL}/my`],
-            [`${name}: Custom Invocation`, `${baseURL}/customtest`],
-            [`${name}: Status`, `${baseURL}/status`],
-            [`${name}: Virtual`, `${baseURL}/virtual`],
+            { key: "cstandings",   title: `${name}: Standings`,         href: `${baseURL}/standings/${standingsFriends}` },
+            { key: "cproblems",    title: `${name}: Problems`,          href: `${baseURL}` },
+            { key: "csubmit",      title: `${name}: Submit`,            href: `${baseURL}/submit` },
+            { key: "csubmissions", title: `${name}: Submissions`,       href: `${baseURL}/my` },
+            { key: "cinvoc",       title: `${name}: Custom Invocation`, href: `${baseURL}/customtest` },
+            { key: "cstatus",      title: `${name}: Status`,            href: `${baseURL}/status` },
+            { key: "virtual",      title: `${name}: Virtual`,           href: `${baseURL}/virtual` }
         ];
     },
 
     groups() {
         try {
             return (JSON.parse(localStorage.userGroups) || [])
-                   .map(([name, href]) => [`Groups: ${name}`, href]);
+                .map(([name, id]) => {
+                    if (!(/^[\d\w]+$/).test(id)) {
+                        // Backwards compatibility with [name, href]
+                        id = id.match(/\/group\/([\d\w]+)/)[1];
+                    }
+
+                    return {
+                        key: `group_${id}`,
+                        title: `Group: ${name}`,
+                        href: `/group/${id}/contests`
+                    }
+                });
         } catch {
             return [];
         }
@@ -88,7 +132,8 @@ function bindEvents(input, results) {
         if (e.key == 'Enter') {
             for (let r of results.children) {
                 if (r.style.display == "") {
-                    location.href = r.children[0].href; // it's an <a>
+                    r.children[0].click();
+                    increatePriority(r.dataset.key);
                     close();
                     break;
                 }
@@ -142,7 +187,8 @@ function bindEvents(input, results) {
         }
     });
 
-    dom.on(results, 'click', e => {
+    dom.on(results, 'click', e => {       
+        increatePriority(e.target.parentElement.dataset.key);
     });
 }
 
@@ -169,17 +215,18 @@ function resultList() {
         data = data.concat(extensions.contest(baseURL, contestMatch[1], true));
     }
 
-    if (location.href.endsWith(`/groups/with/${handle}`)) {
-        // Opportune moment to update the user's groups
-        let groups = [].map.call(
-            dom.$$('.groupName'),
-            el => [el.innerText.trim(), el.href]);
-        localStorage.userGroups = JSON.stringify(groups);
-    }
     data = data.concat(extensions.groups());
-
     data = data.concat(extensions.common(handle));
-        
+
+    // Sort the data by priority
+    let priority;
+    try {
+        priority = JSON.parse(localStorage.finderPriority) || {};
+    } catch {
+        priority = {};
+    }
+    data = data.sort((a, b) => (priority[b.key] || 0) - (priority[a.key] || 0));    
+
     return data;   
 }
 
@@ -209,8 +256,8 @@ function create() {
                 close();
         });
 
-        results.append(...resultList().map(([text, href]) => 
-            <Result text={text} href={href} />
+        results.append(...resultList().map(props => 
+            <Result {...props} />
         ));
 
         bindEvents(input, results);
@@ -236,6 +283,21 @@ async function close() {
     modal.classList.add('cfpp-hidden');
     input.value = "";
     [].forEach.call(results.children, r => r.style.display = "");
+}
+
+/**
+ * Increases the priority of a finder key in localStorage.finderPriority
+ */
+function increatePriority(key) {
+    let fp;
+    try {
+        fp = JSON.parse(localStorage.finderPriority) || {};
+    } catch {
+        fp = {};
+    }
+
+    fp[key] = (fp[key] || 0) + 1;
+    localStorage.finderPriority = JSON.stringify(fp);
 }
 
 /**
@@ -275,5 +337,20 @@ function includesSubseq(text, pattern) {
     return false;
 }
 
+function updateGroups() {
+    const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
+    if (location.href.endsWith(`/groups/with/${handle}`)) {
+        // Opportune moment to update the user's groups
+        const idRegex = /\/group\/([\d\w]+)/
+        let extractID = (group) => {
+            return idRegex.exec(group)[1];
+        };
 
-module.exports = { create, open, close };
+        let groups = [].map.call(
+            dom.$$('.groupName'),
+            el => [el.innerText.trim(), extractID(el.href)]);
+        localStorage.userGroups = JSON.stringify(groups);
+    }
+}
+
+module.exports = { create, open, close, updateGroups };

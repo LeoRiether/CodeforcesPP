@@ -54,6 +54,7 @@ if (config.get('style')) {
 }
 style.common();
 
+require('./finder').updateGroups();
 require('./shortcuts')();
 
 // Exported to a global cfpp variable

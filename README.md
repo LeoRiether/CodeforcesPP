@@ -32,7 +32,6 @@ I probably won't write many tests, if any at all
 
 # TODO
 + [ ] Docs
-+ [ ] Ctrl+Shift+P
 + [ ] Mashup profiles
 + [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think, maybe `<link rel="prerender">`, but that doesn't seem to work)
 + [ ] Zen Mode
