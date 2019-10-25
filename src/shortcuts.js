@@ -36,7 +36,11 @@ function scrollToPageContent() {
 function darkMode() {
     if (dom.$('.darkreader')) {
         // Only invert images
-        dom.$$('img').forEach(i => i.classList.toggle('inverted'));
+        if (dom.$('img.inverted')) {
+            dom.$$('img').forEach(i => i.classList.remove('inverted'));
+        } else {
+            dom.$$('img').forEach(i => i.classList.add('inverted'));
+        }
         return;
     }
 
