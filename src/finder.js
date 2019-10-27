@@ -296,7 +296,8 @@ function increasePriority(key) {
         fp = {};
     }
 
-    fp[key] = (fp[key] || 0) + 1;
+    const maxValue = Object.values(fp).reduce((x, y) => Math.max(x, y), 0);
+    fp[key] = maxValue + 1;
     localStorage.finderPriority = JSON.stringify(fp);
 }
 
