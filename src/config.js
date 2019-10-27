@@ -11,8 +11,9 @@ const defaultConfig = {
     searchBtn: true,
     finder:    'Ctrl+Space',
     darkMode:  false,
-    standingsItv: 0,
-    defStandings: 'Common',
+    standingsItv:   0,
+    defStandings:   'Common',
+    hideTestNumber: false,
 };
     
 function load() {
@@ -56,6 +57,7 @@ function createUI() {
         prop('"Google It" button', 'toggle', 'searchBtn'),
         prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
         prop('Finder keyboard shortcut', 'text', 'finder'),
+        prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber'),
     ];
 
     function makeToggle({id}) {

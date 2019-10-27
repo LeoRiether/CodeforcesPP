@@ -55,6 +55,7 @@ let shortcuts = {
     'ctrl+shift+v': scrollToPageContent, // V => view
     'ctrl+alt+v': scrollToPageContent,
     'ctrl+i': darkMode,
+    'ctrl+shift+h': require('./verdict_test_number').toggle, // H => hard mode | hide test cases
 };
 shortcuts[config.get('finder').toLowerCase()] = finder.open;
 

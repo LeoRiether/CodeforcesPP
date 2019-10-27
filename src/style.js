@@ -304,12 +304,18 @@ function applyCommonCSS() {
     html.cfpp-dark-mode, html.cfpp-dark-mode img {
         filter: invert(1) hue-rotate(180deg);
     }
-    html.cfpp-dark-mode .MathJax img:not(.inverted), html.cfpp-dark-mode .tex-formula:not(.inverted) {
+    html.cfpp-dark-mode .MathJax img:not(.inverted), 
+    html.cfpp-dark-mode .tex-formula:not(.inverted) {
         filter: none !important;
     }
     #header img { filter: none; }
     html.cfpp-dark-mode {
         background: black;
+    }
+
+    .verdict-hide-number .verdict-format-judged, 
+    .verdict-hide-number .diagnosticsHint {
+        display: none;
     }
 
     `}</style>);

@@ -54,6 +54,10 @@ if (config.get('style')) {
 }
 style.common();
 
+if (config.get('hideTestNumber')) {
+    require('./verdict_test_number').hide();
+}
+
 require('./finder').updateGroups();
 require('./shortcuts')();
 
