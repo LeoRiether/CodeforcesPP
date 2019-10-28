@@ -4,7 +4,9 @@
 
 let tries = 0;
 (function run() {
-    if (!window.Codeforces && tries < 30) {
+    Codeforces = unsafeWindow.Codeforces;
+    console.log('Codeforces++ is trying to run...');
+    if (!Codeforces && tries < 15) {
         tries++;
         setTimeout(run, 200);
         return;

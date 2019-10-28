@@ -13,12 +13,14 @@ First you need a userscript manager, like [Tampermonkey](https://www.tampermonke
 + Auto-update standings page
 + Keyboard shortcuts (see below)
 + Choose the default between common/friends-only standings
++ Hide "on test X" in verdicts
 
 ## Shortcuts
-+ Open file picker to submit: `Ctrl+S`
-+ Scroll to problem viewport: `Ctrl+Shift+V`/`Ctrl+Alt+V`
-+ Finder: `Ctrl+Space` (configurable)
-+ Dark mode: `Ctrl+I`
++ `Ctrl+S`: Open file picker to submit
++ `Ctrl+Shift+V`/`Ctrl+Alt+V`: Scroll to the problem viewport
++ `Ctrl+Space`: Finder (configurable shortcut)
++ `Ctrl+I`: Dark mode
++ `Ctrl+Shift+H`: Toggle "on test X" in verdicts
 
 # Development
 Run `yarn build` to build with Parcel or `yarn start` to build in watch mode
