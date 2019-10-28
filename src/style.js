@@ -315,7 +315,7 @@ function applyCommonCSS() {
 
     .verdict-hide-number .verdict-format-judged, 
     .verdict-hide-number .diagnosticsHint {
-        display: none;
+        display: none !important;
     }
 
     `}</style>);
