@@ -37,9 +37,9 @@ function init() {
     }
 
     // Subscribe to Codeforces submisions pubsub
-    if (window.submissionsEventCatcher) {
-        const channel = window.submissionsEventCatcher.channels[0];
-        window.submissionsEventCatcher.subscribe(channel, data => {
+    if (unsafeWindow.submissionsEventCatcher) {
+        const channel = unsafeWindow.submissionsEventCatcher.channels[0];
+        unsafeWindow.submissionsEventCatcher.subscribe(channel, data => {
             if (!config.get('hideTestNumber')) return;
 
             if (data.t === 's') {
