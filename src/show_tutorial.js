@@ -84,7 +84,7 @@ function loadModal(deadline) {
  * Creates a "Tutorial" button. 
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
-module.exports = function createBtn(url) {
+module.exports = function createBtn() {
     let btn = <a className="cfpp-tutorial-btn" style="cursor: pointer;"> Tutorial </a>;
     dom.on(btn, 'click', () => {
         loadModal();

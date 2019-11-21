@@ -7,10 +7,8 @@ let config = require('./config');
 
 // Replaces /members by /contests on the groups page
 function groups() {
-    let links = dom.$$('.datatable a.groupName');
-    for (let link of links) {
-        link.href = link.href.replace("/members", "/contests");
-    }
+    dom.$$('.datatable a.groupName')
+        .forEach(link => link.href = link.href.replace('/members', '/contests'));
 }
 
 

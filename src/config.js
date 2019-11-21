@@ -3,6 +3,7 @@
  */
 
 let dom = require('./dom');
+const { safe } = require('./Functional');
 
 let config = {};
 const defaultConfig = {
@@ -17,12 +18,7 @@ const defaultConfig = {
 };
     
 function load() {
-    config = localStorage.cfpp;
-    try {
-        config = JSON.parse(config) || {};
-    } catch {
-        config = {};
-    }
+    config = safe(JSON.parse, {})(localStorage.cfpp);
 
     // Settings auto-extend when more are added in the script
     config = Object.assign({}, defaultConfig, config);

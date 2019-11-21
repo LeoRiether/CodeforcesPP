@@ -4,14 +4,11 @@
 
 let dom = require('./dom');
 let config = require('./config');
+const F = require('./Functional');
 
 let isOpen = false;
 
-//! Idea: give every searchable a fuzzy distance number based on the input,
-//! then sort by this criteria and hide every searchable below a certain threshold.
-//! As we've gotta move stuff around, its' probably best to implement a virtual DOM system
-//!
-//! Idea rejected! New, simpler system: filter by subsequence match and sort by last time clicked only once
+const safeJSONParse = F.safe(JSON.parse, {});
 
 // TODO: every info I need is pulled from the DOM. Refactor to have a JS model of the search that syncs with the html
 
@@ -20,19 +17,13 @@ let isOpen = false;
  * I'm basically rolling my own React at this point
  */
 function Result(props) {
-    if (props.href) {
-        return (
-            <li data-key={props.key} data-search={props.title.toLowerCase()}>
-                <a href={props.href}>{props.title}</a>
-            </li>
-        );
-    } else {
-        return (
-            <li data-key={props.key} data-search={props.title.toLowerCase()}>
-                  <a href="#" onClick={props.onClick}>{props.title}</a>
-            </li>
-        );
-    }
+    return (
+        <li data-key={props.key} data-search={props.title.toLowerCase()}>
+            { props.href ?
+                    <a href={props.href}>{props.title}</a> :
+                    <a href="#" onClick={props.onClick}>{props.title}</a> }
+        </li>
+    )
 }
 
 let extensions = {
@@ -45,6 +36,7 @@ let extensions = {
             { key: "groups",     title: "Groups",         href: `/groups/with/${handle}` },
             { key: "profile",    title: "Profile",        href: `/profile/${handle}` },
             { key: "cfviz",      title: "CfViz",          href: "https://cfviz.netlify.com" },
+            { key: "a2oj",       title: "A2Oj",           href: "https://a2oj.com" },
             { key: "favs",       title: "Favourites",     href: "/favourite/problems" },
             { key: "teams",      title: "Teams",          href: `/teams/with/${handle}` },
             { key: "status",     title: "Status",         href: "/problemset/status" },
@@ -71,7 +63,7 @@ let extensions = {
                 title: "Problem: Submit",
                 onClick() {
                     close();
-                    dom.$('#sidebar .submit').click()
+                    dom.$('#sidebar .submit').click();
                 }
             }
         ];
@@ -93,23 +85,24 @@ let extensions = {
     },
 
     groups() {
-        try {
-            return (JSON.parse(localStorage.userGroups) || [])
-                .map(([name, id]) => {
-                    if (!(/^[\d\w]+$/).test(id)) {
-                        // Backwards compatibility with [name, href]
-                        id = id.match(/\/group\/([\d\w]+)/)[1];
-                    }
+        function makeRecordFromGroup([name, id]) {
+            if (!(/^[\d\w]+$/).test(id)) {
+                // Convert [name, href], used in previous versions, to [name, id]
+                id = id.match(/\/group\/([\d\w]+)/)[1];
+            }
 
-                    return {
-                        key: `group_${id}`,
-                        title: `Group: ${name}`,
-                        href: `/group/${id}/contests`
-                    }
-                });
-        } catch {
-            return [];
+            return {
+                key: `group_${id}`,
+                title: `Group: ${name}`,
+                href: `/group/${id}/contests`
+            };
         }
+
+        const makeGroups = F.pipe(
+            F.safe(JSON.parse, []),
+            F.map(makeRecordFromGroup)
+        );
+        return makeGroups(localStorage.userGroups);
     },
 };
 
@@ -117,15 +110,14 @@ let extensions = {
  * Bind search and navigation events (Input, ArrowDown, ArrowUp, ...)
  */
 function bindEvents(input, results) {
+    function updateDisplay(value) {
+        value = value.toLowerCase();
+        return result => 
+            result.style.display = includesSubseq(result.dataset.search, value) ? "" : "none";
+    }
+
     dom.on(input, 'input', () => {
-        const value = input.value.toLowerCase();
-        for (let r of results.children) {
-            if (includesSubseq(r.dataset.search, value)) {
-                r.style.display = "";
-            } else {
-                r.style.display = "none";
-            }
-        }
+        [].forEach.call(results.children, updateDisplay(input.value));
     });
 
     dom.on(input, 'keydown', e => {
@@ -219,13 +211,8 @@ function resultList() {
     data = data.concat(extensions.common(handle));
 
     // Sort the data by priority
-    let priority;
-    try {
-        priority = JSON.parse(localStorage.finderPriority) || {};
-    } catch {
-        priority = {};
-    }
-    data = data.sort((a, b) => (priority[b.key] || 0) - (priority[a.key] || 0));    
+    let priority = safeJSONParse(localStorage.finderPriority);
+    data = data.sort((a, b) => (priority[b.key] || 0) - (priority[a.key] || 0));
 
     return data;   
 }
@@ -289,12 +276,7 @@ async function close() {
  * Increases the priority of a finder key in localStorage.finderPriority
  */
 function increasePriority(key) {
-    let fp;
-    try {
-        fp = JSON.parse(localStorage.finderPriority) || {};
-    } catch {
-        fp = {};
-    }
+    let fp = safeJSONParse(localStorage.finderPriority);
 
     const maxValue = Object.values(fp).reduce((x, y) => Math.max(x, y), 0);
     fp[key] = maxValue + 1;
@@ -318,7 +300,7 @@ function putCursorAtEnd(input) {
         range.select();
     }
 }
-  
+
 function includesSubseq(text, pattern) {
     if (pattern.length == 0) {
         return true;
