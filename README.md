@@ -3,7 +3,7 @@
 ### Codeforces extension pack [![CodeFactor](https://www.codefactor.io/repository/github/leoriether/codeforcespp/badge)](https://www.codefactor.io/repository/github/leoriether/codeforcespp) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/LeoRiether/CodeforcesPP) ![GitHub](https://img.shields.io/github/license/LeoRiether/CodeforcesPP)
 
 # Installing
-First you need a userscript manager, like [Tampermonkey](https://www.tampermonkey.net) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/). Then, download [dist/script.user.js](dist/script.user.js);
+First you need a userscript manager, like [Tampermonkey](https://www.tampermonkey.net) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/). Then, download [dist/script.user.js](https://github.com/LeoRiether/CodeforcesPP/raw/master/dist/script.user.js);
 
 # Features
 + Navbar dropdowns for easier navigation
