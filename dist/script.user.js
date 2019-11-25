@@ -1,17 +1,23 @@
 // ==UserScript==
 // @name         Codeforces++
 // @namespace    cfpp
-// @version      1.5.4
+// @version      1.5.5
 // @description  Codeforces extension pack
 // @author       LeoRiether
 // @source       https://github.com/LeoRiether/CodeforcesPP
 // @icon         https://github.com/LeoRiether/CodeforcesPP/raw/master/assets/cf%2B%2B%20logo.png
 // @match        *://codeforces.com/*
 // @grant        unsafeWindow
-// @updateURL    https://github.com/LeoRiether/CodeforcesPP/raw/master/dist/script.meta.js
-// @downloadURL  https://github.com/LeoRiether/CodeforcesPP/raw/master/dist/script.user.js
+// @updateURL    https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/script.meta.js
+// @downloadURL  https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/script.user.js
 // @run-at       document-end
 // ==/UserScript==
+
+////////////////////////////// ESSE UPDATE É IMPORTANTE //////////////////////////////////
+// Dê update agora ou nunca mais! Mudei o downloadURL pro que era antes e quem não aceitar
+// esse update vai parar de receber atualizações até reinstalar o cf++
+// You have been warned
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // modules are defined as an array
 // [ module function, map of requires ]
@@ -244,7 +250,7 @@ module.exports = {
 
   /**
    * Returns a new function that, when called, will try to call `fn`.
-   * If `fn` throws, `def` will be returned instead 
+   * If `fn` throws, `def` will be returned instead
    * @param {Function} fn The function to try executing
    * @param {any} def The default value to return if `fn` throws
    * @return {Function}
@@ -602,7 +608,7 @@ function loadModal(deadline) {
   xhr.send(`problemCode=${pcode}&csrf_token=${csrf}`);
 }
 /**
- * Creates a "Tutorial" button. 
+ * Creates a "Tutorial" button.
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
 
@@ -669,7 +675,7 @@ module.exports = function () {
 
     let newItem = dom.element("div", {
       className: "cfpp-navbar-item"
-    }, link); // Add dropdown menu, if needed 
+    }, link); // Add dropdown menu, if needed
 
     const href = link.getAttribute('href');
 
@@ -781,7 +787,6 @@ module.exports = function () {
  * @file Updates the standings page automatically after some given interval
  */
 let dom = require('./dom'); // FIXME: cf-predictor deltas dissapear after reloading standings
-// FIXME: "open hacking phase open" countdown stops
 
 
 function update() {
@@ -794,7 +799,7 @@ function update() {
       return console.log("Codeforces++ wasn't able to reload the standings. Please your internet connection");
     }
 
-    dom.$('#pageContent').replaceWith(dom.$('#pageContent', xhr.response));
+    dom.$('#pageContent .standings').replaceWith(dom.$('#pageContent .standings', xhr.response));
     const scripts = dom.$$('#pageContent script');
 
     for (const script of scripts) {
@@ -1121,7 +1126,7 @@ function applyCommonCSS() {
     html.cfpp-dark-mode, html.cfpp-dark-mode img {
         filter: invert(1) hue-rotate(180deg);
     }
-    html.cfpp-dark-mode .MathJax img:not(.inverted), 
+    html.cfpp-dark-mode .MathJax img:not(.inverted),
     html.cfpp-dark-mode .tex-formula:not(.inverted) {
         filter: none !important;
     }
@@ -1130,7 +1135,7 @@ function applyCommonCSS() {
         background: black;
     }
 
-    .verdict-hide-number .verdict-format-judged, 
+    .verdict-hide-number .verdict-format-judged,
     .verdict-hide-number .diagnosticsHint {
         display: none !important;
     }
@@ -1149,19 +1154,21 @@ module.exports = {
 let dom = require('./dom');
 
 let config = require('./config');
-/**
- * "Wrong answer on test " => "Wrong answer"
- * @param e - a text node
- */
 
+let {
+  safe
+} = require('./Functional');
 
-function isolateVerdict(e) {
-  const idx = e.nodeValue.indexOf(' on test');
+const pluckVerdictRegex = / on (pre)?test ?\d*$/;
 
-  if (idx !== -1) {
-    e.nodeValue = e.nodeValue.substring(0, idx);
-  }
+const pluckVerdict = s => s.replace(pluckVerdictRegex, '');
+
+function pluckVerdictOnNode(n) {
+  let c = n.childNodes[0];
+  c.nodeValue = pluckVerdict(c.nodeValue);
 }
+
+pluckVerdictOnNode = safe(pluckVerdictOnNode, ''); // so it doesn't throw if something is undefined
 
 let ready = false;
 
@@ -1174,11 +1181,7 @@ function init() {
 
     Codeforces.showMessage = function (message) {
       if (config.get('hideTestNumber')) {
-        const index = message.indexOf(' on test');
-
-        if (index !== -1) {
-          message = message.substring(0, index);
-        }
+        message = pluckVerdict(message);
       }
 
       _showMessage(message);
@@ -1193,7 +1196,7 @@ function init() {
 
       if (data.t === 's') {
         const el = dom.$(`[data-a='${data.d[0]}'] .status-verdict-cell span`);
-        if (el) isolateVerdict(el.childNodes[0]);
+        pluckVerdictOnNode(el);
       }
     });
   }
@@ -1203,7 +1206,7 @@ function hide() {
   init();
   config.set('hideTestNumber', true);
   document.documentElement.classList.add('verdict-hide-number');
-  dom.$$('.verdict-rejected,.verdict-waiting').forEach(e => isolateVerdict(e.childNodes[0]));
+  dom.$$('.verdict-rejected,.verdict-waiting').forEach(pluckVerdictOnNode);
 }
 
 function show() {
@@ -1229,7 +1232,7 @@ module.exports = {
   toggle,
   init
 };
-},{"./dom":"fRxd","./config":"itQ5"}],"EYnA":[function(require,module,exports) {
+},{"./dom":"fRxd","./config":"itQ5","./Functional":"gzCE"}],"EYnA":[function(require,module,exports) {
 /**
  * @file Adds a search pop-up to navigate Codeforces
  */
@@ -1248,6 +1251,10 @@ const safeJSONParse = F.safe(JSON.parse, {}); // TODO: every info I need is pull
  */
 
 function Result(props) {
+  if (!props.href && !props.onClick) {
+    console.error(`Codeforces++ Error!\n` + `Please report this on the GitHub: github.com/LeoRiether/CodeforcesPP\n` + `<Result> was created without any action attached. title=${props.title}.`);
+  }
+
   return dom.element("li", {
     "data-key": props.key,
     "data-search": props.title.toLowerCase()
@@ -1261,6 +1268,7 @@ function Result(props) {
 
 let extensions = {
   common(handle) {
+    // TODO: consider changing to JSON.parse for performance reasons
     return [{
       key: "contests",
       title: "Contests",
@@ -1344,7 +1352,7 @@ let extensions = {
 
       onClick() {
         close();
-        dom.$('#sidebar .submit').click();
+        dom.$('#sidebar [name=sourceFile]').click();
       }
 
     }];
@@ -1783,7 +1791,7 @@ let tries = 0;
       config.save();
 
       if (Codeforces && Codeforces.showMessage) {
-        Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}! 
+        Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}!
                 Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">changelog</a>`);
       }
     }
