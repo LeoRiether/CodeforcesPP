@@ -17,6 +17,12 @@ const safeJSONParse = F.safe(JSON.parse, {});
  * I'm basically rolling my own React at this point
  */
 function Result(props) {
+    if (!props.href && !props.onClick) {
+        console.error(`Codeforces++ Error!\n` +
+                      `Please report this on the GitHub: github.com/LeoRiether/CodeforcesPP\n` +
+                      `<Result> was created without any action attached. title=${props.title}.`);
+    }
+
     return (
         <li data-key={props.key} data-search={props.title.toLowerCase()}>
             { props.href ?
@@ -28,6 +34,7 @@ function Result(props) {
 
 let extensions = {
     common(handle) {
+        // TODO: consider changing to JSON.parse for performance reasons
         return [
             { key: "contests",   title: "Contests",       href: "/contests" },
             { key: "problemset", title: "Problemset",     href: "/problemset" },
@@ -50,12 +57,12 @@ let extensions = {
 
     problem() {
         return [
-            { 
-                key: "tutorial", 
-                title: "Problem: Tutorial", 
+            {
+                key: "tutorial",
+                title: "Problem: Tutorial",
                 onClick() {
                     close();
-                    dom.$('.cfpp-tutorial-btn').click();  
+                    dom.$('.cfpp-tutorial-btn').click();
                 }
             },
             {
@@ -63,7 +70,7 @@ let extensions = {
                 title: "Problem: Submit",
                 onClick() {
                     close();
-                    dom.$('#sidebar .submit').click();
+                    dom.$('#sidebar [name=sourceFile]').click();
                 }
             }
         ];
@@ -112,7 +119,7 @@ let extensions = {
 function bindEvents(input, results) {
     function updateDisplay(value) {
         value = value.toLowerCase();
-        return result => 
+        return result =>
             result.style.display = includesSubseq(result.dataset.search, value) ? "" : "none";
     }
 
@@ -134,7 +141,7 @@ function bindEvents(input, results) {
             let focus = results.children[results.children.length-1];
             while (focus && focus.style.display != "")
                 focus = focus.previousElementSibling;
-            
+
             if (focus !== null) {
                 focus.children[0].focus();
                 focus.children[0].scrollIntoViewIfNeeded();
@@ -144,7 +151,7 @@ function bindEvents(input, results) {
             let focus = results.children[0];
             while (focus && focus.style.display != "")
                 focus = focus.nextElementSibling;
-            
+
             if (focus !== null) {
                 focus.children[0].focus();
                 focus.children[0].scrollIntoViewIfNeeded();
@@ -179,7 +186,7 @@ function bindEvents(input, results) {
         }
     });
 
-    dom.on(results, 'click', e => {       
+    dom.on(results, 'click', e => {
         increasePriority(e.target.parentElement.dataset.key);
     });
 }
@@ -199,7 +206,7 @@ function resultList() {
         const baseURL = location.href.substring(0, location.href.indexOf('contest'));
         data = data.concat(extensions.contest(baseURL, contestMatch[1], false));
     }
-    
+
     // Is it a gym contest?
     contestMatch = location.href.match(/\/gym\/(\d+)/i);
     if (contestMatch) {
@@ -214,7 +221,7 @@ function resultList() {
     let priority = safeJSONParse(localStorage.finderPriority);
     data = data.sort((a, b) => (priority[b.key] || 0) - (priority[a.key] || 0));
 
-    return data;   
+    return data;
 }
 
 // Create can be called many times, but will only create the finder once
@@ -224,12 +231,12 @@ function create() {
     if (createPromise !== undefined) {
         return createPromise;
     }
-    
+
     createPromise = new Promise((res, rej) => {
         let input = <input type="text" className="finder-input" placeholder="Search anything"/>;
         let results = <ul className="finder-results" />;
 
-        let modal = 
+        let modal =
             <div className="cfpp-modal cfpp-hidden" tabindex="0">
                 <div className="cfpp-modal-background" onClick={close}/>
                 <div className="finder-inner" tabindex="0">
@@ -243,7 +250,7 @@ function create() {
                 close();
         });
 
-        results.append(...resultList().map(props => 
+        results.append(...resultList().map(props =>
             <Result {...props} />
         ));
 

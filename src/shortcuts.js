@@ -13,7 +13,7 @@ let config = require('./config');
 // Opens the file picker and focuses the submit button
 function submit() {
     // Try getting the [choose a file] input
-    let fileInput = document.getElementsByName('sourceFile'); 
+    let fileInput = document.getElementsByName('sourceFile');
     if (fileInput.length == 0) return;
 
     fileInput = fileInput[0];
@@ -67,7 +67,7 @@ module.exports = function() {
     dom.on(document, 'keydown', (e) => {
         // Not going to use precious cycles when there's not even a ctrl or shift
         if (!e.ctrlKey && !isFKey(e.key)) return;
-        
+
         // Build the key sequence string (like 'ctrl+shift+p')
         let key = "";
         if (e.metaKey) key += 'meta+';

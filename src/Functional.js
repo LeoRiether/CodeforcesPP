@@ -34,7 +34,7 @@ module.exports = {
 
     /**
      * Returns a new function that, when called, will try to call `fn`.
-     * If `fn` throws, `def` will be returned instead 
+     * If `fn` throws, `def` will be returned instead
      * @param {Function} fn The function to try executing
      * @param {any} def The default value to return if `fn` throws
      * @return {Function}

@@ -22,19 +22,19 @@ function loadModal(deadline) {
 
     if (deadline && deadline.timeRemaining() <= 0)
         return;
-    
+
     modalLoaded = true;
 
     // Create the modal and its children
     let modalInner = <div className="cfpp-modal-inner">loading...</div>
-    let modal = 
+    let modal =
         <div className="cfpp-modal cfpp-tutorial cfpp-hidden">
             <div className="cfpp-modal-background" onClick={closeModal}/>
             {modalInner}
         </div>;
 
     dom.on(document, 'keyup', keyupEvent => {
-        if (keyupEvent.key == 'Escape') 
+        if (keyupEvent.key == 'Escape')
         closeModal();
     });
     document.body.appendChild(modal);
@@ -81,7 +81,7 @@ function loadModal(deadline) {
 }
 
 /**
- * Creates a "Tutorial" button. 
+ * Creates a "Tutorial" button.
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
 module.exports = function createBtn() {
@@ -95,6 +95,6 @@ module.exports = function createBtn() {
     if ('requestIdleCallback' in window) {
         window.requestIdleCallback(loadModal, { timeout: 10000 });
     }
-    
+
     dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> );
 }

@@ -44,7 +44,7 @@ module.exports = function() {
 
         let newItem = <div className="cfpp-navbar-item">{link}</div>
 
-        // Add dropdown menu, if needed 
+        // Add dropdown menu, if needed
         const href = link.getAttribute('href');
         if (keys[href]) {
             let dropdown = <div className="cfpp-dropdown"/>

@@ -16,7 +16,7 @@ const defaultConfig = {
     defStandings:   'Common',
     hideTestNumber: false,
 };
-    
+
 function load() {
     config = safe(JSON.parse, {})(localStorage.cfpp);
 
@@ -57,9 +57,9 @@ function createUI() {
     ];
 
     function makeToggle({id}) {
-        let checkbox = 
+        let checkbox =
             <input id={id}
-                   checked={config[id]} 
+                   checked={config[id]}
                    type="checkbox"/>;
 
         dom.on(checkbox, 'change', () => {
@@ -86,7 +86,7 @@ function createUI() {
     function makeSelect({id, data}) {
         let input = <select id={id}/>;
         data
-            .map(option => 
+            .map(option =>
                 <option value={option}
                         selected={option == config[id]}>
                     {option}
@@ -128,7 +128,7 @@ function createUI() {
         } else {
             node = document.createTextNode(`${p.type} does not have a make function! Please check the createUI function on config.js`);
         }
-        
+
         return (
             <div>
                 <label for={p.id}>{p.title}</label>

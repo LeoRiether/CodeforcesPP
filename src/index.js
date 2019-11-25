@@ -11,7 +11,7 @@ let tries = 0;
         setTimeout(run, 200);
         return;
     }
-    
+
     console.log("Codeforces++ is running!");
 
     let dom = require('./dom');
@@ -26,7 +26,7 @@ let tries = 0;
             config.set('version', GM_info.script.version);
             config.save();
             if (Codeforces && Codeforces.showMessage) {
-                Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}! 
+                Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}!
                 Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">changelog</a>`);
             }
         }
