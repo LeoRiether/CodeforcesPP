@@ -9,11 +9,10 @@ let { safe } = require('./Functional');
 const pluckVerdictRegex = / on (pre)?test ?\d*$/;
 const pluckVerdict = s => s.replace(pluckVerdictRegex, '');
 
-function pluckVerdictOnNode(n) {
+const pluckVerdictOnNode = safe(n => {
     let c = n.childNodes[0];
     c.nodeValue = pluckVerdict(c.nodeValue);
-}
-pluckVerdictOnNode = safe(pluckVerdictOnNode, ''); // so it doesn't throw if something is undefined
+}, '');
 
 let ready = false;
 function init() {
