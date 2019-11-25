@@ -5,7 +5,6 @@
 let dom = require('./dom');
 
 // FIXME: cf-predictor deltas dissapear after reloading standings
-// FIXME: "open hacking phase open" countdown stops
 
 function update() {
     let xhr = new XMLHttpRequest();
@@ -17,7 +16,7 @@ function update() {
             return console.log("Codeforces++ wasn't able to reload the standings. Please your internet connection");
         }
         
-        dom.$('#pageContent').replaceWith(dom.$('#pageContent', xhr.response));  
+        dom.$('#pageContent .standings').replaceWith(dom.$('#pageContent .standings', xhr.response));  
         const scripts = dom.$$('#pageContent script');
         for (const script of scripts) {
             eval(script.innerHTML); // Might not work in some browsers
