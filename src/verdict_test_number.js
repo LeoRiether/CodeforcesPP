@@ -4,17 +4,16 @@
 
 let dom = require('./dom');
 let config = require('./config');
+let { safe } = require('./Functional');
 
-/**
- * "Wrong answer on test " => "Wrong answer"
- * @param e - a text node
- */
-function isolateVerdict(e) {
-    const idx = e.nodeValue.indexOf(' on test');
-    if (idx !== -1) {
-        e.nodeValue = e.nodeValue.substring(0, idx);
-    }
+const pluckVerdictRegex = / on (pre)?test ?\d*$/;
+const pluckVerdict = s => s.replace(pluckVerdictRegex, '');
+
+function pluckVerdictOnNode(n) {
+    let c = n.childNodes[0];
+    c.nodeValue = pluckVerdict(c.nodeValue);
 }
+pluckVerdictOnNode = safe(pluckVerdictOnNode, ''); // so it doesn't throw if something is undefined
 
 let ready = false;
 function init() {
@@ -27,10 +26,7 @@ function init() {
 
         Codeforces.showMessage = function (message) {
             if (config.get('hideTestNumber')) {
-                const index = message.indexOf(' on test');
-                if (index !== -1) {
-                    message = message.substring(0, index);
-                }    
+                message = pluckVerdict(message);
             }
             _showMessage(message);
         };
@@ -44,8 +40,7 @@ function init() {
 
             if (data.t === 's') {
                 const el = dom.$(`[data-a='${data.d[0]}'] .status-verdict-cell span`);
-                if (el)
-                    isolateVerdict(el.childNodes[0]);
+                pluckVerdictOnNode(el);
             }
         });
     }
@@ -60,12 +55,12 @@ function hide() {
     document.documentElement.classList.add('verdict-hide-number');
 
     dom.$$('.verdict-rejected,.verdict-waiting')
-        .forEach(e => isolateVerdict(e.childNodes[0]));
+        .forEach(pluckVerdictOnNode);
 }
 
 function show() {
     config.set('hideTestNumber', false);
-    
+
     if (!document.documentElement.classList.contains('verdict-hide-number')) return;
     document.documentElement.classList.remove('verdict-hide-number');
 
