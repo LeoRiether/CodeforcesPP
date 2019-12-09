@@ -200,7 +200,7 @@ function resultList() {
     }
 
     const contestMatch = location.href.match(/\/contest\/(\d+)/i);
-    const gymMatch     = location.href.match(/\/gym\/(\d+)/i);
+    const gymMatch = contestMatch || location.href.match(/\/gym\/(\d+)/i); // only executes if contest didn't match
     if (contestMatch) {
         // Is it a contest?
         const baseURL = location.href.substring(0, location.href.indexOf('contest'));
@@ -208,7 +208,7 @@ function resultList() {
     } else if (gymMatch) {
         // Is it a gym contest?
         const baseURL = location.href.substring(0, location.href.indexOf('gym'));
-        data = data.concat(extensions.contest(baseURL, contestMatch[1], true));
+        data = data.concat(extensions.contest(baseURL, gymMatch[1], true));
     } else {
         // If it's neither, we have to put the problemset's Custom Invocation in the data
         data.append({ key: "invoc", title: "Custom Invocation", href: "/problemset/customtest" });
