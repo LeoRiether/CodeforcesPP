@@ -36,22 +36,21 @@ let extensions = {
     common(handle) {
         // TODO: consider changing to JSON.parse for performance reasons
         return [
-            { key: "contests",   title: "Contests",       href: "/contests" },
-            { key: "problemset", title: "Problemset",     href: "/problemset" },
-            { key: "psetting",   title: "Problemsetting", href: `/contests/with/${handle}` },
-            { key: "subms",      title: "Submissions",    href: `/submissions/${handle}` },
-            { key: "groups",     title: "Groups",         href: `/groups/with/${handle}` },
-            { key: "profile",    title: "Profile",        href: `/profile/${handle}` },
-            { key: "cfviz",      title: "CfViz",          href: "https://cfviz.netlify.com" },
-            { key: "a2oj",       title: "A2Oj",           href: "https://a2oj.com" },
-            { key: "favs",       title: "Favourites",     href: "/favourite/problems" },
-            { key: "teams",      title: "Teams",          href: `/teams/with/${handle}` },
-            { key: "status",     title: "Status",         href: "/problemset/status" },
-            { key: "fstatus",    title: "Friends Status", href: "/problemset/status?friends=on" },
-            { key: "gym",        title: "Gym",            href: "/gyms" },
-            { key: "blog",       title: "Blog",           href: `/blog/handle/${handle}` },
-            { key: "mashups",    title: "Mashups",        href: "/mashups" },
-            { key: "rating",     title: "Rating",         href: "/ratings" }
+            { key: "contests",   title: "Contests",         href: "/contests" },
+            { key: "problemset", title: "Problemset",       href: "/problemset" },
+            { key: "psetting",   title: "Problemsetting",   href: `/contests/with/${handle}` },
+            { key: "subms",      title: "Submissions",      href: `/submissions/${handle}` },
+            { key: "groups",     title: "Groups",           href: `/groups/with/${handle}` },
+            { key: "profile",    title: "Profile",          href: `/profile/${handle}` },
+            { key: "cfviz",      title: "CfViz",            href: "https://cfviz.netlify.com" },
+            { key: "favs",       title: "Favourites",       href: "/favourite/problems" },
+            { key: "teams",      title: "Teams",            href: `/teams/with/${handle}` },
+            { key: "status",     title: "Status",           href: "/problemset/status" },
+            { key: "fstatus",    title: "Friends Status",   href: "/problemset/status?friends=on" },
+            { key: "gym",        title: "Gym",              href: "/gyms" },
+            { key: "blog",       title: "Blog",             href: `/blog/handle/${handle}` },
+            { key: "mashups",    title: "Mashups",          href: "/mashups" },
+            { key: "rating",     title: "Rating",           href: "/ratings" }
         ];
     },
 
@@ -85,7 +84,7 @@ let extensions = {
             { key: "cproblems",    title: `${name}: Problems`,          href: `${baseURL}` },
             { key: "csubmit",      title: `${name}: Submit`,            href: `${baseURL}/submit` },
             { key: "csubmissions", title: `${name}: Submissions`,       href: `${baseURL}/my` },
-            { key: "cinvoc",       title: `${name}: Custom Invocation`, href: `${baseURL}/customtest` },
+            { key: "invoc",        title: `${name}: Custom Invocation`, href: `${baseURL}/customtest` },
             { key: "cstatus",      title: `${name}: Status`,            href: `${baseURL}/status` },
             { key: "virtual",      title: `${name}: Virtual`,           href: `${baseURL}/virtual` }
         ];
@@ -200,18 +199,19 @@ function resultList() {
         data = data.concat(extensions.problem());
     }
 
-    // Is it a contest?
-    let contestMatch = location.href.match(/\/contest\/(\d+)/i);
+    const contestMatch = location.href.match(/\/contest\/(\d+)/i);
+    const gymMatch     = location.href.match(/\/gym\/(\d+)/i);
     if (contestMatch) {
+        // Is it a contest?
         const baseURL = location.href.substring(0, location.href.indexOf('contest'));
         data = data.concat(extensions.contest(baseURL, contestMatch[1], false));
-    }
-
-    // Is it a gym contest?
-    contestMatch = location.href.match(/\/gym\/(\d+)/i);
-    if (contestMatch) {
+    } else if (gymMatch) {
+        // Is it a gym contest?
         const baseURL = location.href.substring(0, location.href.indexOf('gym'));
         data = data.concat(extensions.contest(baseURL, contestMatch[1], true));
+    } else {
+        // If it's neither, we have to put the problemset's Custom Invocation in the data
+        data.append({ key: "invoc", title: "Custom Invocation", href: "/problemset/customtest" });
     }
 
     data = data.concat(extensions.groups());
