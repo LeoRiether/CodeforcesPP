@@ -41,7 +41,7 @@ function install() {
     if (standingsItv <= 0 || !/\/standings/i.test(location.pathname)) return;
 
     intervalID = setInterval(update, standingsItv * 1000);
-};
+}
 
 function uninstall() {
     clearInterval(intervalID);

@@ -94,7 +94,7 @@ function install() {
     if (config.get('darkMode')) {
         darkMode();
     }
-};
+}
 
 function uninstall() { }
 

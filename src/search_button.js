@@ -20,7 +20,7 @@ function install() {
             <a href={href} target="_blank" className="searchBtn"> Google It </a>
         </li>
     );
-};
+}
 
 function uninstall() {
     let btn = dom.$('.searchBtn');
