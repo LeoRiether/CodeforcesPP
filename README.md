@@ -31,13 +31,3 @@ Think there's something missing from Codeforces++ or some feature could be bette
 # Tests
 `yarn test`
 I probably won't write many tests, if any at all
-
-# TODO
-+ [ ] Docs
-+ [ ] Mashup profiles
-+ [ ] Load pages with ajax so the script doesn't have to load every time (Hard, I think, maybe `<link rel="prerender">`, but that doesn't seem to work)
-+ [ ] Zen Mode
-+ [ ] More shortcuts
-+ [ ] Move navbar to the top
-+ [ ] Finder actions
-+ [ ] Style settings, integrate fontawesome
