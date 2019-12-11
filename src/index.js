@@ -58,7 +58,7 @@ let tries = 0;
 
     modules.forEach(([m, configID]) => {
         m.install();
-        if (configName) {
+        if (configID) {
             registerConfigCallback(m, configID);
         }
     });
