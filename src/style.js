@@ -3,6 +3,7 @@
  */
 
 const dom = require("./dom");
+let config = require('./config');
 
 const fontFamily = 'Libre Franklin';
 
@@ -321,7 +322,20 @@ function applyCommonCSS() {
     `}</style>);
 }
 
+// Applies only to custom css, which is configurable.
+function install() {
+    if (config.get('style')) {
+        applyCustomCSS();
+    }
+}
+
+function uninstall() {
+    let custom = dom.$('.cfpp-style');
+    if (custom) custom.remove();
+}
+
 module.exports  = {
-    custom: applyCustomCSS,
-    common: applyCommonCSS
+    common: applyCommonCSS,
+
+    install, uninstall
 };

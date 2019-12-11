@@ -1,11 +1,10 @@
 /**
- * @file Calls the appropriate modules according to the current page
+ * @file Installs the modules
  */
 
 let tries = 0;
 (function run() {
     Codeforces = unsafeWindow.Codeforces;
-    console.log('Codeforces++ is trying to run...');
     if (!Codeforces && tries < 15) {
         tries++;
         setTimeout(run, 200);
@@ -13,8 +12,6 @@ let tries = 0;
     }
 
     console.log("Codeforces++ is running!");
-
-    let dom = require('./dom');
 
     let config = require('./config');
     config.load();
@@ -34,49 +31,49 @@ let tries = 0;
         // gracefully do nothing
     }
 
-    // Execute features according to the current page
-    if (config.get('showTags') && dom.$('.tag-box')) {
-        require('./show_tags')();
-    } else if (config.get('showTags') && dom.$('.problems')) {
-        require('./problemset')();
+    // ParcelJS doesn't bundle correctly without all of the requires...
+    let modules = [
+        [require('./show_tags')          , 'showTags'],
+        [require('./problemset')         , 'showTags'],
+        [require('./search_button')      , 'searchBtn'],
+        [require('./show_tutorial')      , ''],
+        [require('./navbar')             , ''],
+        [require('./redirector')         , ''],
+        [require('./update_standings')   , 'standingsItv'],
+        [require('./style')              , 'style'],
+        [require('./verdict_test_number'), 'hideTestNumber'],
+        [require('./shortcuts')          , '']
+    ];
+
+    function registerConfigCallback(m, id) {
+        config.listen(id, value => {
+            if (value === true || value === false) {
+                value ? m.install() : m.uninstall();
+            } else {
+                m.uninstall();
+                m.install(value);
+            }
+        });
     }
 
-    let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i; // Maches a problem on a /gym or /group page
-    if (config.get('searchBtn') && searchableRegex.test(location.pathname))
-        require('./search_button')();
+    modules.forEach(([m, configID]) => {
+        m.install();
+        if (configName) {
+            registerConfigCallback(m, configID);
+        }
+    });
 
-    // Regex matches a page of a problem in the problemset (most of these have tutorials)
-    let problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
-    if (problemRegex.test(location.pathname))
-        require('./show_tutorial')();
-
-
-    require('./navbar')();
-    require('./redirector')();
-
-    const standingsItv = +config.get('standingsItv');
-    if (standingsItv > 0 && /\/standings/i.test(location.pathname))
-        require('./update_standings')(standingsItv);
-
-    const style = require('./style');
-    if (config.get('style')) {
-        style.custom();
-    }
-    style.common();
-
-    if (config.get('hideTestNumber')) {
-        require('./verdict_test_number').hide();
-    }
-
+    require('./style').common();
     require('./finder').updateGroups();
-    require('./shortcuts')();
 
     // Exported to a global cfpp variable
     module.exports = {
         debug: {
             resetConfig: config.reset
         },
-        dom: dom,
-        version: config.get('version')
+        version: config.get('version'),
+
+        listen: config.listen,
+        fire: config.fire,
     };
 })()

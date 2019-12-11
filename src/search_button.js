@@ -4,8 +4,12 @@
  */
 
 let dom = require('./dom');
+let config = require('./config');
 
-module.exports = function() {
+function install() {
+    let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i; // Maches a problem on a /gym or /group page
+    if (!config.get('searchBtn') || !searchableRegex.test(location.pathname)) return;
+
     let problemName = dom.$('.problem-statement .title').innerText;
     problemName = problemName.split('.').slice(1).join('.');
     problemName += ' codeforces';
@@ -13,7 +17,14 @@ module.exports = function() {
     const href = `https://google.com/search?q=${problemName.replace(/ /g, '+')}`;
     dom.$('.second-level-menu-list').appendChild(
         <li>
-            <a href={href} target="_blank"> Google It </a>
+            <a href={href} target="_blank" className="searchBtn"> Google It </a>
         </li>
     );
 };
+
+function uninstall() {
+    let btn = dom.$('.searchBtn');
+    if (btn) btn.remove();
+}
+
+module.exports = { install, uninstall };

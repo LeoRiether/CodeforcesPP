@@ -84,7 +84,10 @@ function loadModal(deadline) {
  * Creates a "Tutorial" button.
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
-module.exports = function createBtn() {
+function install() {
+    const problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
+    if (!problemRegex.test(location.pathname)) return;
+
     let btn = <a className="cfpp-tutorial-btn" style="cursor: pointer;"> Tutorial </a>;
     dom.on(btn, 'click', () => {
         loadModal();
@@ -98,3 +101,7 @@ module.exports = function createBtn() {
 
     dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> );
 }
+
+function uninstall() { }
+
+module.exports = { install, uninstall };

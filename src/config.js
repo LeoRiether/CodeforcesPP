@@ -4,6 +4,7 @@
 
 let dom = require('./dom');
 const { safe } = require('./Functional');
+let events = require('./events');
 
 let config = {};
 const defaultConfig = {
@@ -32,6 +33,11 @@ function reset() {
 
 function save() {
     localStorage.cfpp = JSON.stringify(config);
+}
+
+function commit(id) {
+    events.fire(id, config[id]);
+    save();
 }
 
 /**
@@ -65,7 +71,7 @@ function createUI() {
         dom.on(checkbox, 'change', () => {
             // Update property value when the checkbox is toggled
             config[id] = checkbox.checked;
-            save();
+            commit(id);
         });
 
         return checkbox;
@@ -77,14 +83,14 @@ function createUI() {
         dom.on(input, 'input', () => {
             // Update property value when the number changes
             config[id] = +input.value;
-            save();
+            commit(id);
         });
 
         return input;
     }
 
     function makeSelect({id, data}) {
-        let input = <select id={id}/>;
+        let select = <select id={id}/>;
         data
             .map(option =>
                 <option value={option}
@@ -92,22 +98,22 @@ function createUI() {
                     {option}
                 </option>
             )
-            .forEach(opt => input.appendChild(opt));
+            .forEach(opt => select.appendChild(opt));
 
-        dom.on(input, 'change', () => {
+        dom.on(select, 'change', () => {
             // Update property value when the number changes
-            config[id] = input.value;
-            save();
+            config[id] = select.value;
+            commit(id);
         });
 
-        return input;
+        return select;
     }
 
     function makeText({id}) {
         let input = <input id={id} value={config[id]} type="text"/>
         dom.on(input, 'change', () => {
             config[id] = input.value;
-            save();
+            commit(id);
         });
 
         return input;
@@ -142,7 +148,6 @@ function createUI() {
             <div className="cfpp-modal-background" onClick={closeUI}/>
             <div className="cfpp-modal-inner">
                 {modalProps}
-                Refresh the page to apply changes
             </div>
         </div>
     );
@@ -172,8 +177,12 @@ module.exports = {
     createUI,
     closeUI,
     get: key => config[key],
-    set: (key, value) => { config[key] = value; save(); },
+    set: (key, value) => { config[key] = value; commit(key); },
     load,
     reset,
     save,
+
+    // Events stuff
+    listen: events.listen,
+    fire: events.fire,
 };

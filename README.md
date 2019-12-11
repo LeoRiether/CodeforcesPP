@@ -40,5 +40,4 @@ I probably won't write many tests, if any at all
 + [ ] More shortcuts
 + [ ] Move navbar to the top
 + [ ] Finder actions
-+ [ ] Style settings
-+ [ ] Fix update_standings bugs
++ [ ] Style settings, integrate fontawesome

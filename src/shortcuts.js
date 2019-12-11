@@ -57,13 +57,19 @@ let shortcuts = {
     'ctrl+i': darkMode,
     'ctrl+shift+h': require('./verdict_test_number').toggle, // H => hard mode | hide test cases
 };
-shortcuts[config.get('finder').toLowerCase()] = finder.open;
 
-function isFKey(key) {
-    return key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9';
-}
+let isFKey = key =>
+    (key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9');
 
-module.exports = function() {
+function install() {
+    let finderValue = config.get('finder').toLowerCase();
+    shortcuts[finderValue] = finder.open;
+    config.listen('finder', newValue => {
+        delete shortcuts[finderValue];
+        finderValue = newValue.toLowerCase();
+        shortcuts[finderValue] = finder.open;
+    });
+
     dom.on(document, 'keydown', (e) => {
         // Not going to use precious cycles when there's not even a ctrl or shift
         if (!e.ctrlKey && !isFKey(e.key)) return;
@@ -89,3 +95,7 @@ module.exports = function() {
         darkMode();
     }
 };
+
+function uninstall() { }
+
+module.exports = { install, uninstall };

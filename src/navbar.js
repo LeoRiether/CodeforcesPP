@@ -4,7 +4,7 @@
 
 let dom = require('./dom');
 
-module.exports = function() {
+function install() {
     // Get user handle
     const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
 
@@ -71,3 +71,7 @@ module.exports = function() {
         logo.setAttribute('src', 'https://github.com/LeoRiether/CodeforcesPP/raw/master/assets/codeforcespp.png');
     }
 };
+
+function uninstall() {}
+
+module.exports = { install, uninstall };

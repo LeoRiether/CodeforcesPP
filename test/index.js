@@ -2,8 +2,8 @@ const test = require('tape');
 const tapDiff = require('tap-diff');
 
 test.createStream()
-  .pipe(tapDiff())
-  .pipe(process.stdout);
+    .pipe(tapDiff())
+    .pipe(process.stdout);
 
 test('Tape works', t => {
     t.equal(1 + 1, 2);
@@ -11,21 +11,15 @@ test('Tape works', t => {
     t.end();
 });
 
-global.document = {
-  createElement(tag) {
-    return { tag, style: {} };
-  }
-};
+test('events.js works', t => {
+  let events = require('../src/events');
+  t.plan(3);
+  events.listen('event_id', data =>
+    t.equal(data, 123, "Events fire correctly 1"));
+  events.listen('creative event name', data =>
+    t.equal(data, 'creative data', "Events fire correctly 2"));
 
-// TODO: check if the tests broke after injecting jsx
-test("dom.js works", t => {
-  let dom = require('../src/dom');
-  let props = {
-    href: 'codeforces.com',
-    className: 'cfpp-link'
-  };
-  
-  t.deepEqual(<a {...props}/>, { ...props, 'tag': 'a', style: {} });
-  
-  t.end();
+  events.fire('event_id', 123);
+  events.fire('creative event name', 'creative data');
+  events.fire('event_id', 123);
 });

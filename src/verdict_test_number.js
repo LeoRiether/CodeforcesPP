@@ -46,10 +46,10 @@ function init() {
 }
 
 
-function hide() {
-    init();
+function install() {
+    if (!config.get('hideTestNumber')) return;
 
-    config.set('hideTestNumber', true);
+    init();
 
     document.documentElement.classList.add('verdict-hide-number');
 
@@ -57,9 +57,7 @@ function hide() {
         .forEach(pluckVerdictOnNode);
 }
 
-function show() {
-    config.set('hideTestNumber', false);
-
+function uninstall() {
     if (!document.documentElement.classList.contains('verdict-hide-number')) return;
     document.documentElement.classList.remove('verdict-hide-number');
 
@@ -70,11 +68,7 @@ function show() {
 }
 
 function toggle() {
-    if (config.get('hideTestNumber')) {
-        show();
-    } else {
-        hide();
-    }
+    config.set('hideTestNumber', !config.get('hideTestNumber'));
 }
 
-module.exports = { hide, show, toggle, init };
+module.exports = { install, uninstall, toggle, init };

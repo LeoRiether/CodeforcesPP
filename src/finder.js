@@ -211,7 +211,7 @@ function resultList() {
         data = data.concat(extensions.contest(baseURL, gymMatch[1], true));
     } else {
         // If it's neither, we have to put the problemset's Custom Invocation in the data
-        data.append({ key: "invoc", title: "Custom Invocation", href: "/problemset/customtest" });
+        data.push({ key: "invoc", title: "Custom Invocation", href: "/problemset/customtest" });
     }
 
     data = data.concat(extensions.groups());
