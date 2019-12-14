@@ -5,8 +5,6 @@
 const dom = require("./dom");
 let config = require('./config');
 
-const fontFamily = 'Libre Franklin';
-
 function applyCustomCSS() {
     let customCSS = '';
 
@@ -32,7 +30,7 @@ function applyCustomCSS() {
     }
 
     p, span:not(.tex-span), a, div {
-        font-family: '${fontFamily}', 'Roboto', sans-serif !important;
+        font-family: 'Libre Franklin', 'Roboto', sans-serif !important;
     }
 
     /* Put smallcaps on the navbar */
@@ -48,7 +46,7 @@ function applyCustomCSS() {
         display: none;
     }
     /* Replace them by real borders */
-    .roundbox {
+    .roundbox, #pageContent {
         border-radius: 6px;
         overflow: hidden;
         border: none;
@@ -125,12 +123,6 @@ function applyCustomCSS() {
     .problem-statement .property-title {
         display: none;
     }
-    /*.problem-statement .header .title {
-        font-size: 180%;
-    }
-    .problem-statement .header {
-        margin: 2em 0;
-    }*/
     .problem-statement .header .title {
         font-size: 200%;
         margin-bottom: 0;
@@ -174,10 +166,14 @@ function applyCustomCSS() {
     #pageContent {
         background: white;
         padding: 1.5em !important;
-        border-radius: 6px;
     }
     .problem-statement .header, div.ttypography {
-        margin: 0 !important;
+        margin: 0 0 1em 0 !important;
+    }
+
+    ::selection {
+        background: ${['#fbca4a', '#1e8dcc', '#b81f24'][~~(Math.random()*3)]};
+        color: white;
     }
 
     `}
@@ -252,7 +248,7 @@ function applyCommonCSS() {
         margin-right: 1.5em;
     }
     .cfpp-navbar-item>a {
-        color: #212121;
+        color: #212121 !important;
     }
     .cfpp-dropdown {
         position: absolute;
@@ -267,7 +263,7 @@ function applyCommonCSS() {
     }
     .cfpp-dropdown a {
         display: block;
-        color: #E0E0E0;
+        color: #E0E0E0 !important;
     }
     .cfpp-navbar-item:hover .cfpp-dropdown,
     .cfpp-navbar-item:focus-within .cfpp-dropdown {
@@ -288,7 +284,7 @@ function applyCommonCSS() {
         width: 100%;
         border: none;
         border-radius: 6px;
-        font-family: '${fontFamily}', 'Roboto', sans-serif;
+        font-family: 'Libre Franklin', 'Roboto', sans-serif;
         font-size: 1.25em;
     }
     .finder-input {
@@ -343,9 +339,9 @@ function applyCommonCSS() {
 
     /* Sidebar Box */
     .boxRow a, .boxRow input {
-        color: black;
-        border: none;
-        background: transparent;
+        color: black !important;
+        border: none !important;
+        background: transparent !important;
         padding: 0 !important;
     }
     .boxRow form {
