@@ -10,6 +10,15 @@ const fontFamily = 'Libre Franklin';
 function applyCustomCSS() {
     let customCSS = '';
 
+    // Contenders for the new background:
+
+    // background: url('https://resources.urionlinejudge.com.br/judge/img/5.0/background.jpg') top left #f5f5f5;
+    // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/embossed-diamond.png;
+    // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/morocco.png;
+    // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/stripes-light.png") #f5f5f5;
+    // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/dust_scratches.png") #f2f2f2;
+
+
     document.body.appendChild(<style className="cfpp-style">{`
     @import url('https://fonts.googleapis.com/css?family=Libre+Franklin&display=swap');
 
@@ -156,6 +165,19 @@ function applyCustomCSS() {
         top: 50% !important;
         left: 50% !important;
         transform: translate(-50% , -50%);
+    }
+
+    /* Background */
+    body {
+        background: url("https://www.toptal.com/designers/subtlepatterns/patterns/dust_scratches.png") #f2f2f2;
+    }
+    #pageContent {
+        background: white;
+        padding: 1.5em !important;
+        border-radius: 6px;
+    }
+    .problem-statement .header, div.ttypography {
+        margin: 0 !important;
     }
 
     `}
@@ -319,6 +341,16 @@ function applyCommonCSS() {
         display: none !important;
     }
 
+    /* Sidebar Box */
+    .boxRow a, .boxRow input {
+        color: black;
+        border: none;
+        background: transparent;
+        padding: 0 !important;
+    }
+    .boxRow form {
+        margin: 0 !important;
+    }
     `}</style>);
 }
 

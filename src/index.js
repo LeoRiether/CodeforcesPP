@@ -42,7 +42,8 @@ let tries = 0;
         [require('./update_standings')   , 'standingsItv'],
         [require('./style')              , 'style'],
         [require('./verdict_test_number'), 'hideTestNumber'],
-        [require('./shortcuts')          , '']
+        [require('./shortcuts')          , ''],
+        [require('./sidebar')            , 'sidebarBox']
     ];
 
     function registerConfigCallback(m, id) {

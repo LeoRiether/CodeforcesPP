@@ -46,7 +46,7 @@ module.exports = {
                     el.appendChild(document.createTextNode(c));
                 } else if (c instanceof Array) {
                     el.append(...c);
-                } else {
+                } else if (c) {
                     el.appendChild(c);
                 }
             }
@@ -60,12 +60,12 @@ module.exports = {
         if (children) {
             for (let c of children) {
                 if (typeof c === 'string') {
-                    el.appendChild(document.createTextNode(c));
+                    frag.appendChild(document.createTextNode(c));
                 } else if (c instanceof Array) {
                     for (let cc of c)
-                        el.appendChild(cc);
-                } else {
-                    el.appendChild(c);
+                        frag.appendChild(cc);
+                } else if (c) {
+                    frag.appendChild(c);
                 }
             }
         }

@@ -16,6 +16,7 @@ const defaultConfig = {
     standingsItv:   0,
     defStandings:   'Common',
     hideTestNumber: false,
+    sidebarBox:     true
 };
 
 function load() {
@@ -54,6 +55,7 @@ function createUI() {
 
     let modalProps = [
         prop('"Show Tags" button', 'toggle', 'showTags'),
+        prop('Sidebar Action Box', 'toggle', 'sidebarBox'),
         prop('Default standings', 'select', 'defStandings', ['Common', 'Friends']),
         prop('Custom Style', 'toggle', 'style'),
         prop('"Google It" button', 'toggle', 'searchBtn'),

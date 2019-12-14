@@ -63,7 +63,25 @@ module.exports = {
     /**
      * Curried version of Array.prototype.map
      */
-    map(fn) {
-        return arr => [].map.call(arr, fn);
+    map: fn => arr => [].map.call(arr, fn),
+
+    /**
+     * Curried version of Array.prototype.forEach
+     */
+    forEach: fn => arr => [].forEach.call(arr, fn),
+
+    /**
+     * @example zipBy2([1,2,3,4,5,6]) == [[1,2], [3,4], [5,6]]
+     * @example zipBy2([1,2,3]) == [[1,2], [3, undefined]]
+     * @return {Array}
+     */
+    zipBy2(list) {
+        let r = [];
+        for (let i = 0; i < list.length; i += 2) {
+            r.push([ list[i], list[i+1] ]);
+        }
+        return r;
     },
+
+    flatten: list => list.reduce((acc, a) => acc.concat([].slice.call(a)), []),
 };

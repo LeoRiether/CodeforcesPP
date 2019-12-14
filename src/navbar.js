@@ -15,6 +15,7 @@ function install() {
     oldNav.parentNode.parentNode.style.overflow = 'visible';
 
     let keys = {
+        "/": {},
         "/groups": {
             "My Groups": `/groups/with/${handle}`,
             "My Teams": `/teams/with/${handle}`,
@@ -38,6 +39,11 @@ function install() {
         },
     };
 
+    let other = <div className="cfpp-navbar-item">
+                    <a href="#">Other</a>
+                </div>;
+    let ddOther = <div className="cfpp-dropdown" />;
+
     // Iterate over all nav items and include them the new navbar
     for (let item of oldNav.children) {
         let link = item.children[0]; // <a> tag
@@ -57,11 +63,17 @@ function install() {
                 );
             }
 
-            newItem.appendChild(dropdown);
+            if (dropdown.children.length) {
+                newItem.appendChild(dropdown);
+            }
+            newNav.appendChild(newItem);
+        } else {
+            ddOther.appendChild(<a href={href}>{link}</a>);
         }
-
-        newNav.appendChild(newItem);
     }
+
+    other.appendChild(ddOther);
+    newNav.appendChild(other);
 
     oldNav.replaceWith(newNav);
 
