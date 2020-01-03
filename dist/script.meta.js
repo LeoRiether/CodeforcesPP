@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Codeforces++
 // @namespace    cfpp
-// @version      1.5.5
+// @version      1.6.0
 // @description  Codeforces extension pack
 // @author       LeoRiether
 // @source       https://github.com/LeoRiether/CodeforcesPP

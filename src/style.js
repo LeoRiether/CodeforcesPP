@@ -46,7 +46,7 @@ function applyCustomCSS() {
         display: none;
     }
     /* Replace them by real borders */
-    .roundbox, #pageContent {
+    .roundbox {
         border-radius: 6px;
         overflow: hidden;
         border: none;
@@ -166,6 +166,8 @@ function applyCustomCSS() {
     #pageContent {
         background: white;
         padding: 1.5em !important;
+        border-radius: 6px;
+        box-shadow: 1px 1px 5px rgba(108, 108, 108, 0.17);
     }
     .problem-statement .header, div.ttypography {
         margin: 0 0 1em 0 !important;
@@ -186,6 +188,10 @@ function applyCommonCSS() {
     @keyframes fadeIn {
         from { opacity: 0; }
         to   { opacity: 1; }
+    }
+
+    body {
+        margin: 0;
     }
 
     /** Config **/

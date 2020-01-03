@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Codeforces++
 // @namespace    cfpp
-// @version      1.5.5
+// @version      1.6.0
 // @description  Codeforces extension pack
 // @author       LeoRiether
 // @source       https://github.com/LeoRiether/CodeforcesPP
@@ -12,12 +12,6 @@
 // @downloadURL  https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/script.user.js
 // @run-at       document-end
 // ==/UserScript==
-
-////////////////////////////// ESSE UPDATE É IMPORTANTE //////////////////////////////////
-// Dê update agora ou nunca mais! Mudei o downloadURL pro que era antes e quem não aceitar
-// esse update vai parar de receber atualizações até reinstalar o cf++
-// You have been warned
-//////////////////////////////////////////////////////////////////////////////////////////
 
 // modules are defined as an array
 // [ module function, map of requires ]
@@ -138,7 +132,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"fRxd":[function(require,module,exports) {
+})({"dom.js":[function(require,module,exports) {
 /**
  * @file Utilities to manipulate the DOM
  */
@@ -186,7 +180,7 @@ module.exports = {
           el.appendChild(document.createTextNode(c));
         } else if (c instanceof Array) {
           el.append(...c);
-        } else {
+        } else if (c) {
           el.appendChild(c);
         }
       }
@@ -201,11 +195,11 @@ module.exports = {
     if (children) {
       for (let c of children) {
         if (typeof c === 'string') {
-          el.appendChild(document.createTextNode(c));
+          frag.appendChild(document.createTextNode(c));
         } else if (c instanceof Array) {
-          for (let cc of c) el.appendChild(cc);
-        } else {
-          el.appendChild(c);
+          for (let cc of c) frag.appendChild(cc);
+        } else if (c) {
+          frag.appendChild(c);
         }
       }
     }
@@ -214,7 +208,7 @@ module.exports = {
   }
 
 };
-},{}],"gzCE":[function(require,module,exports) {
+},{}],"Functional.js":[function(require,module,exports) {
 /**
  * @file Experimental functional library, kinda like Ramda, but not as sound
  */
@@ -278,12 +272,51 @@ module.exports = {
   /**
    * Curried version of Array.prototype.map
    */
-  map(fn) {
-    return arr => [].map.call(arr, fn);
+  map: fn => arr => [].map.call(arr, fn),
+
+  /**
+   * Curried version of Array.prototype.forEach
+   */
+  forEach: fn => arr => [].forEach.call(arr, fn),
+
+  /**
+   * @example zipBy2([1,2,3,4,5,6]) == [[1,2], [3,4], [5,6]]
+   * @example zipBy2([1,2,3]) == [[1,2], [3, undefined]]
+   * @return {Array}
+   */
+  zipBy2(list) {
+    let r = [];
+
+    for (let i = 0; i < list.length; i += 2) {
+      r.push([list[i], list[i + 1]]);
+    }
+
+    return r;
+  },
+
+  flatten: list => list.reduce((acc, a) => acc.concat([].slice.call(a)), [])
+};
+},{}],"events.js":[function(require,module,exports) {
+/**
+ * @file Minimalistic event-bus
+ */
+let {
+  safe
+} = require('./Functional');
+
+let listeners = {};
+module.exports = {
+  listen(event, callback) {
+    if (!listeners[event]) listeners[event] = [];
+    listeners[event].push(safe(callback));
+  },
+
+  async fire(event, data) {
+    (listeners[event] || []).forEach(cb => cb(data));
   }
 
 };
-},{}],"itQ5":[function(require,module,exports) {
+},{"./Functional":"Functional.js"}],"config.js":[function(require,module,exports) {
 /**
  * @file Manages CF++ configuration with localStorage and creates the settings UI
  */
@@ -292,6 +325,8 @@ let dom = require('./dom');
 const {
   safe
 } = require('./Functional');
+
+let events = require('./events');
 
 let config = {};
 const defaultConfig = {
@@ -302,7 +337,8 @@ const defaultConfig = {
   darkMode: false,
   standingsItv: 0,
   defStandings: 'Common',
-  hideTestNumber: false
+  hideTestNumber: false,
+  sidebarBox: true
 };
 
 function load() {
@@ -319,6 +355,11 @@ function reset() {
 
 function save() {
   localStorage.cfpp = JSON.stringify(config);
+}
+
+function commit(id) {
+  events.fire(id, config[id]);
+  save();
 }
 /**
  * Creates the interface to change the settings.
@@ -339,7 +380,7 @@ function createUI() {
     };
   }
 
-  let modalProps = [prop('"Show Tags" button', 'toggle', 'showTags'), prop('Default standings', 'select', 'defStandings', ['Common', 'Friends']), prop('Custom Style', 'toggle', 'style'), prop('"Google It" button', 'toggle', 'searchBtn'), prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'), prop('Finder keyboard shortcut', 'text', 'finder'), prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber')];
+  let modalProps = [prop('"Show Tags" button', 'toggle', 'showTags'), prop('Sidebar Action Box', 'toggle', 'sidebarBox'), prop('Default standings', 'select', 'defStandings', ['Common', 'Friends']), prop('Custom Style', 'toggle', 'style'), prop('"Google It" button', 'toggle', 'searchBtn'), prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'), prop('Finder keyboard shortcut', 'text', 'finder'), prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber')];
 
   function makeToggle({
     id
@@ -352,7 +393,7 @@ function createUI() {
     dom.on(checkbox, 'change', () => {
       // Update property value when the checkbox is toggled
       config[id] = checkbox.checked;
-      save();
+      commit(id);
     });
     return checkbox;
   }
@@ -368,7 +409,7 @@ function createUI() {
     dom.on(input, 'input', () => {
       // Update property value when the number changes
       config[id] = +input.value;
-      save();
+      commit(id);
     });
     return input;
   }
@@ -377,19 +418,19 @@ function createUI() {
     id,
     data
   }) {
-    let input = dom.element("select", {
+    let select = dom.element("select", {
       id: id
     });
     data.map(option => dom.element("option", {
       value: option,
       selected: option == config[id]
-    }, option)).forEach(opt => input.appendChild(opt));
-    dom.on(input, 'change', () => {
+    }, option)).forEach(opt => select.appendChild(opt));
+    dom.on(select, 'change', () => {
       // Update property value when the number changes
-      config[id] = input.value;
-      save();
+      config[id] = select.value;
+      commit(id);
     });
-    return input;
+    return select;
   }
 
   function makeText({
@@ -402,7 +443,7 @@ function createUI() {
     });
     dom.on(input, 'change', () => {
       config[id] = input.value;
-      save();
+      commit(id);
     });
     return input;
   }
@@ -434,7 +475,7 @@ function createUI() {
     onClick: closeUI
   }), dom.element("div", {
     className: "cfpp-modal-inner"
-  }, modalProps, "Refresh the page to apply changes")); // Create the button that shows the modal
+  }, modalProps)); // Create the button that shows the modal
 
   let modalBtn = dom.element("a", {
     className: "cfpp-config-btn"
@@ -463,20 +504,26 @@ module.exports = {
   get: key => config[key],
   set: (key, value) => {
     config[key] = value;
-    save();
+    commit(key);
   },
   load,
   reset,
-  save
+  save,
+  // Events stuff
+  listen: events.listen,
+  fire: events.fire
 };
-},{"./dom":"fRxd","./Functional":"gzCE"}],"D31m":[function(require,module,exports) {
+},{"./dom":"dom.js","./Functional":"Functional.js","./events":"events.js"}],"show_tags.js":[function(require,module,exports) {
 /**
  * @file Adds a "Show Tags" button to a problem's page
  */
 let dom = require('./dom');
 
-module.exports = function () {
-  // If the user has already AC'd this problem, there's no need to hide the tags
+let config = require('./config');
+
+function install() {
+  if (!config.get('showTags') || !dom.$('.tag-box')) return; // If the user has already AC'd this problem, there's no need to hide the tags
+
   let hasAC = dom.$('.verdict-accepted');
 
   if (hasAC) {
@@ -491,25 +538,40 @@ module.exports = function () {
 
   function ShowTagsButton() {
     let btn = dom.element("button", {
-      className: "caption",
+      className: "caption showTagsBtn",
       style: "background: transparent; border: none; cursor: pointer;"
     }, "Show");
-    dom.on(btn, 'click', () => {
-      btn.remove();
-      container.style.display = 'block';
-    });
+    dom.on(btn, 'click', uninstall);
     return btn;
   }
 
   container.parentNode.appendChild(dom.element(ShowTagsButton, null));
+}
+
+function uninstall() {
+  let btn = dom.$('.showTagsBtn');
+
+  if (btn) {
+    btn.remove();
+    let container = dom.$('.tag-box').parentNode.parentNode; // container for all the tags
+
+    container.style.display = 'block';
+  }
+}
+
+module.exports = {
+  install,
+  uninstall
 };
-},{"./dom":"fRxd"}],"Dd2r":[function(require,module,exports) {
+},{"./dom":"dom.js","./config":"config.js"}],"problemset.js":[function(require,module,exports) {
 /**
  * @file Hides tags on the /problemset page for the problems you didn't solve yet
  */
 let dom = require('./dom');
 
-module.exports = function () {
+let config = require('./config');
+
+function changeNoACsDisplay(display) {
   // Get problems that don't have an AC
   let noACs = dom.$$('.problems tr:not(.accepted-problem)');
 
@@ -517,27 +579,53 @@ module.exports = function () {
     // Hide them hackfully!
     let k = p.children[1].children[1] || {};
     k = k.style || {};
-    k.display = 'none';
+    k.display = display;
   }
+}
+
+function install() {
+  if (config.get('showTags') && dom.$('.problems')) changeNoACsDisplay('none');
+}
+
+let uninstall = changeNoACsDisplay.bind(null, 'block');
+module.exports = {
+  install,
+  uninstall
 };
-},{"./dom":"fRxd"}],"ZTd0":[function(require,module,exports) {
+},{"./dom":"dom.js","./config":"config.js"}],"search_button.js":[function(require,module,exports) {
 /**
  * @file Adds a button to query for the problem on a search engine
  * Used on /gym and /group pages
  */
 let dom = require('./dom');
 
-module.exports = function () {
+let config = require('./config');
+
+function install() {
+  let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i; // Maches a problem on a /gym or /group page
+
+  if (!config.get('searchBtn') || !searchableRegex.test(location.pathname)) return;
   let problemName = dom.$('.problem-statement .title').innerText;
   problemName = problemName.split('.').slice(1).join('.');
   problemName += ' codeforces';
   const href = `https://google.com/search?q=${problemName.replace(/ /g, '+')}`;
   dom.$('.second-level-menu-list').appendChild(dom.element("li", null, dom.element("a", {
     href: href,
-    target: "_blank"
+    target: "_blank",
+    className: "searchBtn"
   }, " Google It ")));
+}
+
+function uninstall() {
+  let btn = dom.$('.searchBtn');
+  if (btn) btn.remove();
+}
+
+module.exports = {
+  install,
+  uninstall
 };
-},{"./dom":"fRxd"}],"h9M9":[function(require,module,exports) {
+},{"./dom":"dom.js","./config":"config.js"}],"show_tutorial.js":[function(require,module,exports) {
 /**
  * @file Adds a button to easily check the editorial/tutorial for a problem
  */
@@ -613,7 +701,9 @@ function loadModal(deadline) {
  */
 
 
-module.exports = function createBtn() {
+function install() {
+  const problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
+  if (!problemRegex.test(location.pathname)) return;
   let btn = dom.element("a", {
     className: "cfpp-tutorial-btn",
     style: "cursor: pointer;"
@@ -630,14 +720,21 @@ module.exports = function createBtn() {
   }
 
   dom.$('.second-level-menu-list').appendChild(dom.element("li", null, btn));
+}
+
+function uninstall() {}
+
+module.exports = {
+  install,
+  uninstall
 };
-},{"./dom":"fRxd"}],"JhvP":[function(require,module,exports) {
+},{"./dom":"dom.js"}],"navbar.js":[function(require,module,exports) {
 /**
  * @file Provides drowdown menus for the main navbar, for better site navigation
  */
 let dom = require('./dom');
 
-module.exports = function () {
+function install() {
   // Get user handle
   const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
   let oldNav = dom.$('.main-menu-list');
@@ -647,6 +744,7 @@ module.exports = function () {
 
   oldNav.parentNode.parentNode.style.overflow = 'visible';
   let keys = {
+    "/": {},
     "/groups": {
       "My Groups": `/groups/with/${handle}`,
       "My Teams": `/teams/with/${handle}`
@@ -668,7 +766,15 @@ module.exports = function () {
     "/ratings": {
       "Friends": "/ratings/friends/true"
     }
-  }; // Iterate over all nav items and include them the new navbar
+  };
+  let other = dom.element("div", {
+    className: "cfpp-navbar-item"
+  }, dom.element("a", {
+    href: "#"
+  }, "Other"));
+  let ddOther = dom.element("div", {
+    className: "cfpp-dropdown"
+  }); // Iterate over all nav items and include them the new navbar
 
   for (let item of oldNav.children) {
     let link = item.children[0]; // <a> tag
@@ -690,12 +796,20 @@ module.exports = function () {
         }, ddText));
       }
 
-      newItem.appendChild(dropdown);
-    }
+      if (dropdown.children.length) {
+        newItem.appendChild(dropdown);
+      }
 
-    newNav.appendChild(newItem);
+      newNav.appendChild(newItem);
+    } else {
+      ddOther.appendChild(dom.element("a", {
+        href: href
+      }, link));
+    }
   }
 
+  other.appendChild(ddOther);
+  newNav.appendChild(other);
   oldNav.replaceWith(newNav); // Change Codeforces logo to Codeforces++
 
   let logo = dom.$('#header img');
@@ -703,8 +817,15 @@ module.exports = function () {
   if (logo && logo.getAttribute('src').endsWith('codeforces-logo-with-telegram.png')) {
     logo.setAttribute('src', 'https://github.com/LeoRiether/CodeforcesPP/raw/master/assets/codeforcespp.png');
   }
+}
+
+function uninstall() {}
+
+module.exports = {
+  install,
+  uninstall
 };
-},{"./dom":"fRxd"}],"aNBT":[function(require,module,exports) {
+},{"./dom":"dom.js"}],"redirector.js":[function(require,module,exports) {
 /**
  * @file Replaces links to pages you often don't want to go to. e.g. '/members' in the groups page, where you'd rather go directly to '/contests'
  */
@@ -757,7 +878,7 @@ function gymVirtual() {
     `);
 }
 
-module.exports = function () {
+function install() {
   if (/\/groups\/with\//i.test(location.pathname)) {
     groups();
   } // Always do this *before* friendsStandings() because of endsWith('/problemset/standings')
@@ -781,12 +902,21 @@ module.exports = function () {
   if (/gym\/\d+$/i.test(location.pathname) || /group\/[a-zA-Z0-9]+\/contest\/\d+$/i.test(location.pathname)) {
     gymVirtual();
   }
+}
+
+function uninstall() {}
+
+module.exports = {
+  install,
+  uninstall
 };
-},{"./dom":"fRxd","./config":"itQ5"}],"W2EC":[function(require,module,exports) {
+},{"./dom":"dom.js","./config":"config.js"}],"update_standings.js":[function(require,module,exports) {
 /**
  * @file Updates the standings page automatically after some given interval
  */
-let dom = require('./dom'); // FIXME: cf-predictor deltas dissapear after reloading standings
+let dom = require('./dom');
+
+let config = require('./config'); // FIXME: cf-predictor deltas dissapear after reloading standings
 
 
 function update() {
@@ -813,24 +943,41 @@ function update() {
 
   xhr.send();
 }
-/**
- * @param delay - Interval to the update function in seconds
- */
 
+let intervalID = 0;
 
-module.exports = function (delay) {
-  if (delay > 0) setInterval(update, delay * 1000);
+function install() {
+  if (intervalID) uninstall();
+  const standingsItv = +config.get('standingsItv');
+  if (standingsItv <= 0 || !/\/standings/i.test(location.pathname)) return;
+  intervalID = setInterval(update, standingsItv * 1000);
+}
+
+function uninstall() {
+  clearInterval(intervalID);
+  intervalID = 0;
+}
+
+module.exports = {
+  install,
+  uninstall
 };
-},{"./dom":"fRxd"}],"IwUp":[function(require,module,exports) {
+},{"./dom":"dom.js","./config":"config.js"}],"style.js":[function(require,module,exports) {
 /**
  * @file Provides styling for cfpp-created elements as well as a custom Codeforces styling
  */
 const dom = require("./dom");
 
-const fontFamily = 'Libre Franklin';
+let config = require('./config');
 
 function applyCustomCSS() {
-  let customCSS = '';
+  let customCSS = ''; // Contenders for the new background:
+  // background: url('https://resources.urionlinejudge.com.br/judge/img/5.0/background.jpg') top left #f5f5f5;
+  // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/embossed-diamond.png;
+  // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/morocco.png;
+  // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/stripes-light.png") #f5f5f5;
+  // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/dust_scratches.png") #f2f2f2;
+
   document.body.appendChild(dom.element("style", {
     className: "cfpp-style"
   }, `
@@ -846,7 +993,7 @@ function applyCustomCSS() {
     }
 
     p, span:not(.tex-span), a, div {
-        font-family: '${fontFamily}', 'Roboto', sans-serif !important;
+        font-family: 'Libre Franklin', 'Roboto', sans-serif !important;
     }
 
     /* Put smallcaps on the navbar */
@@ -939,12 +1086,6 @@ function applyCustomCSS() {
     .problem-statement .property-title {
         display: none;
     }
-    /*.problem-statement .header .title {
-        font-size: 180%;
-    }
-    .problem-statement .header {
-        margin: 2em 0;
-    }*/
     .problem-statement .header .title {
         font-size: 200%;
         margin-bottom: 0;
@@ -981,6 +1122,25 @@ function applyCustomCSS() {
         transform: translate(-50% , -50%);
     }
 
+    /* Background */
+    body {
+        background: url("https://www.toptal.com/designers/subtlepatterns/patterns/dust_scratches.png") #f2f2f2;
+    }
+    #pageContent {
+        background: white;
+        padding: 1.5em !important;
+        border-radius: 6px;
+        box-shadow: 1px 1px 5px rgba(108, 108, 108, 0.17);
+    }
+    .problem-statement .header, div.ttypography {
+        margin: 0 0 1em 0 !important;
+    }
+
+    ::selection {
+        background: ${['#fbca4a', '#1e8dcc', '#b81f24'][~~(Math.random() * 3)]};
+        color: white;
+    }
+
     `, customCSS));
 }
 
@@ -989,6 +1149,10 @@ function applyCommonCSS() {
     @keyframes fadeIn {
         from { opacity: 0; }
         to   { opacity: 1; }
+    }
+
+    body {
+        margin: 0;
     }
 
     /** Config **/
@@ -1051,7 +1215,7 @@ function applyCommonCSS() {
         margin-right: 1.5em;
     }
     .cfpp-navbar-item>a {
-        color: #212121;
+        color: #212121 !important;
     }
     .cfpp-dropdown {
         position: absolute;
@@ -1066,7 +1230,7 @@ function applyCommonCSS() {
     }
     .cfpp-dropdown a {
         display: block;
-        color: #E0E0E0;
+        color: #E0E0E0 !important;
     }
     .cfpp-navbar-item:hover .cfpp-dropdown,
     .cfpp-navbar-item:focus-within .cfpp-dropdown {
@@ -1087,7 +1251,7 @@ function applyCommonCSS() {
         width: 100%;
         border: none;
         border-radius: 6px;
-        font-family: '${fontFamily}', 'Roboto', sans-serif;
+        font-family: 'Libre Franklin', 'Roboto', sans-serif;
         font-size: 1.25em;
     }
     .finder-input {
@@ -1140,14 +1304,37 @@ function applyCommonCSS() {
         display: none !important;
     }
 
+    /* Sidebar Box */
+    .boxRow a, .boxRow input {
+        color: black !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+    }
+    .boxRow form {
+        margin: 0 !important;
+    }
     `));
+} // Applies only to custom css, which is configurable.
+
+
+function install() {
+  if (config.get('style')) {
+    applyCustomCSS();
+  }
+}
+
+function uninstall() {
+  let custom = dom.$('.cfpp-style');
+  if (custom) custom.remove();
 }
 
 module.exports = {
-  custom: applyCustomCSS,
-  common: applyCommonCSS
+  common: applyCommonCSS,
+  install,
+  uninstall
 };
-},{"./dom":"fRxd"}],"tTEz":[function(require,module,exports) {
+},{"./dom":"dom.js","./config":"config.js"}],"verdict_test_number.js":[function(require,module,exports) {
 /**
  * @file Hides/Shows "on test X" in verdicts
  */
@@ -1163,13 +1350,10 @@ const pluckVerdictRegex = / on (pre)?test ?\d*$/;
 
 const pluckVerdict = s => s.replace(pluckVerdictRegex, '');
 
-function pluckVerdictOnNode(n) {
+const pluckVerdictOnNode = safe(n => {
   let c = n.childNodes[0];
   c.nodeValue = pluckVerdict(c.nodeValue);
-}
-
-pluckVerdictOnNode = safe(pluckVerdictOnNode, ''); // so it doesn't throw if something is undefined
-
+}, '');
 let ready = false;
 
 function init() {
@@ -1202,15 +1386,14 @@ function init() {
   }
 }
 
-function hide() {
+function install() {
+  if (!config.get('hideTestNumber')) return;
   init();
-  config.set('hideTestNumber', true);
   document.documentElement.classList.add('verdict-hide-number');
   dom.$$('.verdict-rejected,.verdict-waiting').forEach(pluckVerdictOnNode);
 }
 
-function show() {
-  config.set('hideTestNumber', false);
+function uninstall() {
   if (!document.documentElement.classList.contains('verdict-hide-number')) return;
   document.documentElement.classList.remove('verdict-hide-number');
   dom.$$('.verdict-rejected,.verdict-waiting').forEach(e => {
@@ -1219,20 +1402,16 @@ function show() {
 }
 
 function toggle() {
-  if (config.get('hideTestNumber')) {
-    show();
-  } else {
-    hide();
-  }
+  config.set('hideTestNumber', !config.get('hideTestNumber'));
 }
 
 module.exports = {
-  hide,
-  show,
+  install,
+  uninstall,
   toggle,
   init
 };
-},{"./dom":"fRxd","./config":"itQ5","./Functional":"gzCE"}],"EYnA":[function(require,module,exports) {
+},{"./dom":"dom.js","./config":"config.js","./Functional":"Functional.js"}],"finder.js":[function(require,module,exports) {
 /**
  * @file Adds a search pop-up to navigate Codeforces
  */
@@ -1297,10 +1476,6 @@ let extensions = {
       key: "cfviz",
       title: "CfViz",
       href: "https://cfviz.netlify.com"
-    }, {
-      key: "a2oj",
-      title: "A2Oj",
-      href: "https://a2oj.com"
     }, {
       key: "favs",
       title: "Favourites",
@@ -1379,7 +1554,7 @@ let extensions = {
       title: `${name}: Submissions`,
       href: `${baseURL}/my`
     }, {
-      key: "cinvoc",
+      key: "invoc",
       title: `${name}: Custom Invocation`,
       href: `${baseURL}/customtest`
     }, {
@@ -1501,22 +1676,26 @@ function resultList() {
 
   if (/\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i.test(location.pathname)) {
     data = data.concat(extensions.problem());
-  } // Is it a contest?
+  }
 
-
-  let contestMatch = location.href.match(/\/contest\/(\d+)/i);
+  const contestMatch = location.href.match(/\/contest\/(\d+)/i);
+  const gymMatch = contestMatch || location.href.match(/\/gym\/(\d+)/i); // only executes if contest didn't match
 
   if (contestMatch) {
+    // Is it a contest?
     const baseURL = location.href.substring(0, location.href.indexOf('contest'));
     data = data.concat(extensions.contest(baseURL, contestMatch[1], false));
-  } // Is it a gym contest?
-
-
-  contestMatch = location.href.match(/\/gym\/(\d+)/i);
-
-  if (contestMatch) {
+  } else if (gymMatch) {
+    // Is it a gym contest?
     const baseURL = location.href.substring(0, location.href.indexOf('gym'));
-    data = data.concat(extensions.contest(baseURL, contestMatch[1], true));
+    data = data.concat(extensions.contest(baseURL, gymMatch[1], true));
+  } else {
+    // If it's neither, we have to put the problemset's Custom Invocation in the data
+    data.push({
+      key: "invoc",
+      title: "Custom Invocation",
+      href: "/problemset/customtest"
+    });
   }
 
   data = data.concat(extensions.groups());
@@ -1666,7 +1845,7 @@ module.exports = {
   close,
   updateGroups
 };
-},{"./dom":"fRxd","./config":"itQ5","./Functional":"gzCE"}],"YDQW":[function(require,module,exports) {
+},{"./dom":"dom.js","./config":"config.js","./Functional":"Functional.js"}],"shortcuts.js":[function(require,module,exports) {
 /**
  * @file Defines keyboards shortcuts to be used on all codeforces pages
  */
@@ -1729,13 +1908,17 @@ let shortcuts = {
   'ctrl+shift+h': require('./verdict_test_number').toggle // H => hard mode | hide test cases
 
 };
-shortcuts[config.get('finder').toLowerCase()] = finder.open;
 
-function isFKey(key) {
-  return key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9';
-}
+let isFKey = key => key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9';
 
-module.exports = function () {
+function install() {
+  let finderValue = config.get('finder').toLowerCase();
+  shortcuts[finderValue] = finder.open;
+  config.listen('finder', newValue => {
+    delete shortcuts[finderValue];
+    finderValue = newValue.toLowerCase();
+    shortcuts[finderValue] = finder.open;
+  });
   dom.on(document, 'keydown', e => {
     // Not going to use precious cycles when there's not even a ctrl or shift
     if (!e.ctrlKey && !isFKey(e.key)) return; // Build the key sequence string (like 'ctrl+shift+p')
@@ -1758,16 +1941,113 @@ module.exports = function () {
   if (config.get('darkMode')) {
     darkMode();
   }
+}
+
+function uninstall() {}
+
+module.exports = {
+  install,
+  uninstall
 };
-},{"./dom":"fRxd","./finder":"EYnA","./config":"itQ5","./verdict_test_number":"tTEz"}],"Focm":[function(require,module,exports) {
+},{"./dom":"dom.js","./finder":"finder.js","./config":"config.js","./verdict_test_number":"verdict_test_number.js"}],"sidebar.js":[function(require,module,exports) {
 /**
- * @file Calls the appropriate modules according to the current page
+ * @file Creates an action box on the sidebar (like URI has for submitting, ranking, ...)
+ */
+let dom = require('./dom');
+
+let config = require('./config');
+
+let {
+  zipBy2,
+  flatten,
+  pipe,
+  forEach,
+  map
+} = require('./Functional');
+
+let addToBox = box => cols => {
+  // Note: each col is *moved* into the box, there's no cloneNode here.
+  // This is done to keep event listeners attached, but prevents uninstall() from ever existing
+  let row = dom.element("div", {
+    style: "display: flex;"
+  });
+  cols.map(col => dom.element("div", {
+    style: "display: inline-block; flex: 1;"
+  }, col || dom.element("span", null))).forEach(div => row.appendChild(div));
+  box.appendChild(dom.element("tr", {
+    className: "boxRow"
+  }, " ", dom.element("td", null, row), " "));
+};
+
+function fixStyling(sidebar, forms, menu) {
+  let pageContent = dom.$('#pageContent'); // Hide containers that will have it's links moved to the sidebar
+
+  menu.style.display = 'none';
+  forms.forEach(e => e.closest('.sidebox').style.display = 'none'); // Fix alignment issues
+
+  sidebar.style.marginTop = 0;
+  pageContent.style.paddingTop = 0;
+} // Move the "favourite problem" star to after the contest name
+
+
+function moveStar() {
+  let star = dom.$('.toggle-favourite', sidebar),
+      starRow = star && star.closest('tr');
+  if (!star) return;
+  star.style.height = "14px";
+  dom.$('tr a', sidebar).appendChild(star);
+  starRow.remove();
+}
+
+let installed = false;
+
+function install() {
+  if (!config.get('sidebarBox')) return; // TODO: try to remove this in production, or at least make a good whitelist
+
+  if (!/\/(problem|gym)\//.test(location.href)) return;
+  let sidebar = dom.$('#sidebar'),
+      box = dom.$('.sidebox .rtable tbody', sidebar),
+      forms = [].slice.call(dom.$$('.sidebox form', sidebar)),
+      menu = dom.$('.second-level-menu'),
+      menuLinks = dom.$$('.second-level-menu-list li>a', menu);
+  if (!sidebar || !box || !menu) return;
+  if (installed) return notifyPageNeedsRefresh(); // can't install twice
+
+  installed = true;
+  fixStyling(sidebar, forms, menu);
+  let submitForm;
+
+  if (forms.length && dom.$('.submit', forms[forms.length - 1])) {
+    submitForm = forms.pop();
+  }
+
+  const addAllToBox = pipe(flatten, // zipBy2,
+  map(e => [e]), forEach(addToBox(box)));
+  addAllToBox([menuLinks, forms]);
+  if (submitForm) addToBox(box)([submitForm]);
+  moveStar();
+}
+
+function uninstall() {
+  notifyPageNeedsRefresh();
+}
+
+function notifyPageNeedsRefresh() {
+  Codeforces && Codeforces.showMessage("Please refresh the page to see changes");
+}
+
+module.exports = {
+  install,
+  uninstall
+};
+},{"./dom":"dom.js","./config":"config.js","./Functional":"Functional.js"}],"index.js":[function(require,module,exports) {
+/**
+ * @file Installs the modules
  */
 let tries = 0;
 
 (function run() {
   Codeforces = unsafeWindow.Codeforces;
-  console.log('Codeforces++ is trying to run...');
 
   if (!Codeforces && tries < 15) {
     tries++;
@@ -1776,8 +2056,6 @@ let tries = 0;
   }
 
   console.log("Codeforces++ is running!");
-
-  let dom = require('./dom');
 
   let config = require('./config');
 
@@ -1796,52 +2074,246 @@ let tries = 0;
       }
     }
   } catch {} // gracefully do nothing
-  // Execute features according to the current page
+  // ParcelJS doesn't bundle correctly without all of the requires...
 
 
-  if (config.get('showTags') && dom.$('.tag-box')) {
-    require('./show_tags')();
-  } else if (config.get('showTags') && dom.$('.problems')) {
-    require('./problemset')();
+  let modules = [[require('./show_tags'), 'showTags'], [require('./problemset'), 'showTags'], [require('./search_button'), 'searchBtn'], [require('./show_tutorial'), ''], [require('./navbar'), ''], [require('./redirector'), ''], [require('./update_standings'), 'standingsItv'], [require('./style'), 'style'], [require('./verdict_test_number'), 'hideTestNumber'], [require('./shortcuts'), ''], [require('./sidebar'), 'sidebarBox']];
+
+  function registerConfigCallback(m, id) {
+    config.listen(id, value => {
+      if (value === true || value === false) {
+        value ? m.install() : m.uninstall();
+      } else {
+        m.uninstall();
+        m.install(value);
+      }
+    });
   }
 
-  let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i; // Maches a problem on a /gym or /group page
+  modules.forEach(([m, configID]) => {
+    m.install();
 
-  if (config.get('searchBtn') && searchableRegex.test(location.pathname)) require('./search_button')(); // Regex matches a page of a problem in the problemset (most of these have tutorials)
+    if (configID) {
+      registerConfigCallback(m, configID);
+    }
+  });
 
-  let problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
-  if (problemRegex.test(location.pathname)) require('./show_tutorial')();
+  require('./style').common();
 
-  require('./navbar')();
-
-  require('./redirector')();
-
-  const standingsItv = +config.get('standingsItv');
-  if (standingsItv > 0 && /\/standings/i.test(location.pathname)) require('./update_standings')(standingsItv);
-
-  const style = require('./style');
-
-  if (config.get('style')) {
-    style.custom();
-  }
-
-  style.common();
-
-  if (config.get('hideTestNumber')) {
-    require('./verdict_test_number').hide();
-  }
-
-  require('./finder').updateGroups();
-
-  require('./shortcuts')(); // Exported to a global cfpp variable
+  require('./finder').updateGroups(); // Exported to a global cfpp variable
 
 
   module.exports = {
     debug: {
       resetConfig: config.reset
     },
-    dom: dom,
-    version: config.get('version')
+    version: config.get('version'),
+    listen: config.listen,
+    fire: config.fire
   };
 })();
-},{"./dom":"fRxd","./config":"itQ5","./show_tags":"D31m","./problemset":"Dd2r","./search_button":"ZTd0","./show_tutorial":"h9M9","./navbar":"JhvP","./redirector":"aNBT","./update_standings":"W2EC","./style":"IwUp","./verdict_test_number":"tTEz","./finder":"EYnA","./shortcuts":"YDQW"}]},{},["Focm"], "cfpp")
+},{"./config":"config.js","./show_tags":"show_tags.js","./problemset":"problemset.js","./search_button":"search_button.js","./show_tutorial":"show_tutorial.js","./navbar":"navbar.js","./redirector":"redirector.js","./update_standings":"update_standings.js","./style":"style.js","./verdict_test_number":"verdict_test_number.js","./shortcuts":"shortcuts.js","./sidebar":"sidebar.js","./finder":"finder.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var global = arguments[3];
+var OVERLAY_ID = '__parcel__error__overlay__';
+var OldModule = module.bundle.Module;
+
+function Module(moduleName) {
+  OldModule.call(this, moduleName);
+  this.hot = {
+    data: module.bundle.hotData,
+    _acceptCallbacks: [],
+    _disposeCallbacks: [],
+    accept: function (fn) {
+      this._acceptCallbacks.push(fn || function () {});
+    },
+    dispose: function (fn) {
+      this._disposeCallbacks.push(fn);
+    }
+  };
+  module.bundle.hotData = null;
+}
+
+module.bundle.Module = Module;
+var checkedAssets, assetsToAccept;
+var parent = module.bundle.parent;
+
+if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
+  var hostname = "" || location.hostname;
+  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61248" + '/');
+
+  ws.onmessage = function (event) {
+    checkedAssets = {};
+    assetsToAccept = [];
+    var data = JSON.parse(event.data);
+
+    if (data.type === 'update') {
+      var handled = false;
+      data.assets.forEach(function (asset) {
+        if (!asset.isNew) {
+          var didAccept = hmrAcceptCheck(global.parcelRequire, asset.id);
+
+          if (didAccept) {
+            handled = true;
+          }
+        }
+      }); // Enable HMR for CSS by default.
+
+      handled = handled || data.assets.every(function (asset) {
+        return asset.type === 'css' && asset.generated.js;
+      });
+
+      if (handled) {
+        console.clear();
+        data.assets.forEach(function (asset) {
+          hmrApply(global.parcelRequire, asset);
+        });
+        assetsToAccept.forEach(function (v) {
+          hmrAcceptRun(v[0], v[1]);
+        });
+      } else if (location.reload) {
+        // `location` global exists in a web worker context but lacks `.reload()` function.
+        location.reload();
+      }
+    }
+
+    if (data.type === 'reload') {
+      ws.close();
+
+      ws.onclose = function () {
+        location.reload();
+      };
+    }
+
+    if (data.type === 'error-resolved') {
+      console.log('[parcel] ✨ Error resolved');
+      removeErrorOverlay();
+    }
+
+    if (data.type === 'error') {
+      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
+      removeErrorOverlay();
+      var overlay = createErrorOverlay(data);
+      document.body.appendChild(overlay);
+    }
+  };
+}
+
+function removeErrorOverlay() {
+  var overlay = document.getElementById(OVERLAY_ID);
+
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function createErrorOverlay(data) {
+  var overlay = document.createElement('div');
+  overlay.id = OVERLAY_ID; // html encode message and stack trace
+
+  var message = document.createElement('div');
+  var stackTrace = document.createElement('pre');
+  message.innerText = data.error.message;
+  stackTrace.innerText = data.error.stack;
+  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
+  return overlay;
+}
+
+function getParents(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return [];
+  }
+
+  var parents = [];
+  var k, d, dep;
+
+  for (k in modules) {
+    for (d in modules[k][1]) {
+      dep = modules[k][1][d];
+
+      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
+        parents.push(k);
+      }
+    }
+  }
+
+  if (bundle.parent) {
+    parents = parents.concat(getParents(bundle.parent, id));
+  }
+
+  return parents;
+}
+
+function hmrApply(bundle, asset) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (modules[asset.id] || !bundle.parent) {
+    var fn = new Function('require', 'module', 'exports', asset.generated.js);
+    asset.isNew = !modules[asset.id];
+    modules[asset.id] = [fn, asset.deps];
+  } else if (bundle.parent) {
+    hmrApply(bundle.parent, asset);
+  }
+}
+
+function hmrAcceptCheck(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (!modules[id] && bundle.parent) {
+    return hmrAcceptCheck(bundle.parent, id);
+  }
+
+  if (checkedAssets[id]) {
+    return;
+  }
+
+  checkedAssets[id] = true;
+  var cached = bundle.cache[id];
+  assetsToAccept.push([bundle, id]);
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    return true;
+  }
+
+  return getParents(global.parcelRequire, id).some(function (id) {
+    return hmrAcceptCheck(global.parcelRequire, id);
+  });
+}
+
+function hmrAcceptRun(bundle, id) {
+  var cached = bundle.cache[id];
+  bundle.hotData = {};
+
+  if (cached) {
+    cached.hot.data = bundle.hotData;
+  }
+
+  if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
+    cached.hot._disposeCallbacks.forEach(function (cb) {
+      cb(bundle.hotData);
+    });
+  }
+
+  delete bundle.cache[id];
+  bundle(id);
+  cached = bundle.cache[id];
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    cached.hot._acceptCallbacks.forEach(function (cb) {
+      cb();
+    });
+
+    return true;
+  }
+}
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], "cfpp")
