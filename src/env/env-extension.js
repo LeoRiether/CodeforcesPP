@@ -13,9 +13,12 @@ export function inject(fn) {
 
 export const version = browser.runtime.getManifest().version;
 
+(async function (p) {
+    console.log(await p);
+})(browser.storage.sync.get(['cfpp']));
+
 export let storage = {
-    get: key => browser.storage.sync.get([key])
-                .then(([value]) => value),
+    get: key => browser.storage.sync.get([key]),
     set: (key, value) => browser.storage.sync.set({ [key]: value })
 };
 

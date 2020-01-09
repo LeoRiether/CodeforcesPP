@@ -186,7 +186,7 @@ export function custom() {
     </style>);
 }
 
-function common() {
+export function common() {
     if (process.env.TARGET === "extension") return;
 
     document.body.appendChild(<style>{`
