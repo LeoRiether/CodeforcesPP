@@ -2,9 +2,9 @@
  * @file Defines keyboards shortcuts to be used on all codeforces pages
  */
 
-let dom = require('./dom');
+let dom = require('../helpers/dom');
 let finder = require('./finder');
-let config = require('./config');
+let config = require('../env/config');
 
 //
 // Commands

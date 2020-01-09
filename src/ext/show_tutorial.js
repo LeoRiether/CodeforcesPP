@@ -2,7 +2,7 @@
  * @file Adds a button to easily check the editorial/tutorial for a problem
  */
 
-let dom = require('./dom');
+let dom = require('../helpers/dom');
 
 let modalLoaded = false;
 

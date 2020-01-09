@@ -2,10 +2,13 @@
  * @file Provides styling for cfpp-created elements as well as a custom Codeforces styling
  */
 
-const dom = require("./dom");
-let config = require('./config');
+const dom = require("../helpers/dom");
+const config = require('../env/config');
+const env = require('../env/env');
 
-function applyCustomCSS() {
+export function custom() {
+    if (process.env.TARGET === "extension") return;
+
     let customCSS = '';
 
     // Contenders for the new background:
@@ -183,7 +186,9 @@ function applyCustomCSS() {
     </style>);
 }
 
-function applyCommonCSS() {
+function common() {
+    if (process.env.TARGET === "extension") return;
+
     document.body.appendChild(<style>{`
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -357,19 +362,13 @@ function applyCommonCSS() {
 }
 
 // Applies only to custom css, which is configurable.
-function install() {
+export function install() {
     if (config.get('style')) {
-        applyCustomCSS();
+        custom();
     }
 }
 
-function uninstall() {
-    let custom = dom.$('.cfpp-style');
-    if (custom) custom.remove();
+export function uninstall() {
+    let style = dom.$('.cfpp-style');
+    if (style) style.remove();
 }
-
-module.exports  = {
-    common: applyCommonCSS,
-
-    install, uninstall
-};

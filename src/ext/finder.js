@@ -2,9 +2,9 @@
  * @file Adds a search pop-up to navigate Codeforces
  */
 
-let dom = require('./dom');
-let config = require('./config');
-const F = require('./Functional');
+let dom = require('../helpers/dom');
+let config = require('../env/config');
+const F = require('../helpers/Functional');
 
 let isOpen = false;
 

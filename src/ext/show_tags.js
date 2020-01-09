@@ -1,8 +1,8 @@
 /**
  * @file Adds a "Show Tags" button to a problem's page
  */
-let dom = require('./dom');
-let config = require('./config');
+let dom = require('../helpers/dom');
+let config = require('../env/config');
 
 function install() {
     if (!config.get('showTags') || !dom.$('.tag-box')) return;

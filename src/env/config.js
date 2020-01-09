@@ -2,25 +2,26 @@
  * @file Manages CF++ configuration with localStorage and creates the settings UI
  */
 
-let dom = require('./dom');
-const { safe } = require('./Functional');
-let events = require('./events');
+const dom = require('../helpers/dom');
+const { safe } = require('../helpers/Functional');
+const events = require('../helpers/events');
+const env = require('./env');
 
 let config = {};
 const defaultConfig = {
-    showTags:  true,
-    style:     true,
-    searchBtn: true,
-    finder:    'Ctrl+Space',
-    darkMode:  false,
+    showTags:       true,
+    style:          true,
+    searchBtn:      true,
+    finder:         'Ctrl+Space',
+    darkMode:       false,
     standingsItv:   0,
     defStandings:   'Common',
     hideTestNumber: false,
     sidebarBox:     true
 };
 
-function load() {
-    config = safe(JSON.parse, {})(localStorage.cfpp);
+async function load() {
+    config = await env.storage.get('config');
 
     // Settings auto-extend when more are added in the script
     config = Object.assign({}, defaultConfig, config);
@@ -33,7 +34,7 @@ function reset() {
 }
 
 function save() {
-    localStorage.cfpp = JSON.stringify(config);
+    env.storage.set('config', config);
 }
 
 function commit(id) {

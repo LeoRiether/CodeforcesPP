@@ -2,7 +2,7 @@
  * @file Provides drowdown menus for the main navbar, for better site navigation
  */
 
-let dom = require('./dom');
+let dom = require('../helpers/dom');
 
 function install() {
     // Get user handle

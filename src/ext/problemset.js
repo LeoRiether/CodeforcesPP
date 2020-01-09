@@ -2,8 +2,8 @@
  * @file Hides tags on the /problemset page for the problems you didn't solve yet
  */
 
-let dom = require('./dom');
-let config = require('./config');
+let dom = require('../helpers/dom');
+let config = require('../env/config');
 
 function changeNoACsDisplay(display) {
     // Get problems that don't have an AC

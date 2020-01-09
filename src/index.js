@@ -2,79 +2,67 @@
  * @file Installs the modules
  */
 
-let tries = 0;
-(function run() {
-    Codeforces = unsafeWindow.Codeforces;
-    if (!Codeforces && tries < 15) {
-        tries++;
-        setTimeout(run, 200);
-        return;
+const env = require('./env/env');
+
+console.log("Codeforces++ is running!");
+
+let config = require('./env/config');
+config.load();
+config.createUI();
+
+(async function notifyVersionChange() {
+    const v = await config.get('version');
+    if (v != env.version) {
+        config.set('version', env.version);
+        config.save();
+        env.Codeforces('showMessage', `Codeforces++ was updated to version ${config.get('version')}!
+        Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">changelog</a>`);
     }
+})();
 
-    console.log("Codeforces++ is running!");
+// ParcelJS doesn't bundle correctly without all of the requires...
+let modules = [
+    [require('./ext/show_tags')          , 'showTags'],
+    [require('./ext/problemset')         , 'showTags'],
+    [require('./ext/search_button')      , 'searchBtn'],
+    [require('./ext/show_tutorial')      , ''],
+    [require('./ext/navbar')             , ''],
+    [require('./ext/redirector')         , ''],
+    [require('./ext/update_standings')   , 'standingsItv'],
+    [require('./ext/style')              , 'style'],
+    [require('./ext/verdict_test_number'), 'hideTestNumber'],
+    [require('./ext/shortcuts')          , ''],
+    [require('./ext/sidebar')            , 'sidebarBox']
+];
 
-    let config = require('./config');
-    config.load();
-    config.createUI();
-
-    try {
-        // Update version
-        if (GM_info && config.get('version') != GM_info.script.version) {
-            config.set('version', GM_info.script.version);
-            config.save();
-            if (Codeforces && Codeforces.showMessage) {
-                Codeforces.showMessage(`Codeforces++ was updated to version ${config.get('version')}!
-                Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">changelog</a>`);
-            }
-        }
-    } catch {
-        // gracefully do nothing
-    }
-
-    // ParcelJS doesn't bundle correctly without all of the requires...
-    let modules = [
-        [require('./show_tags')          , 'showTags'],
-        [require('./problemset')         , 'showTags'],
-        [require('./search_button')      , 'searchBtn'],
-        [require('./show_tutorial')      , ''],
-        [require('./navbar')             , ''],
-        [require('./redirector')         , ''],
-        [require('./update_standings')   , 'standingsItv'],
-        [require('./style')              , 'style'],
-        [require('./verdict_test_number'), 'hideTestNumber'],
-        [require('./shortcuts')          , ''],
-        [require('./sidebar')            , 'sidebarBox']
-    ];
-
-    function registerConfigCallback(m, id) {
-        config.listen(id, value => {
-            if (value === true || value === false) {
-                value ? m.install() : m.uninstall();
-            } else {
-                m.uninstall();
-                m.install(value);
-            }
-        });
-    }
-
-    modules.forEach(([m, configID]) => {
-        m.install();
-        if (configID) {
-            registerConfigCallback(m, configID);
+function registerConfigCallback(m, id) {
+    config.listen(id, value => {
+        if (value === true || value === false) {
+            value ? m.install() : m.uninstall();
+        } else {
+            m.uninstall();
+            m.install(value);
         }
     });
+}
 
-    require('./style').common();
-    require('./finder').updateGroups();
+modules.forEach(([m, configID]) => {
+    m.install();
+    if (configID) {
+        registerConfigCallback(m, configID);
+    }
+});
 
-    // Exported to a global cfpp variable
-    module.exports = {
-        debug: {
-            resetConfig: config.reset
-        },
-        version: config.get('version'),
+require('./ext/style').common();
+require('./ext/finder').updateGroups();
 
-        listen: config.listen,
-        fire: config.fire,
-    };
-})()
+// Exported to a global cfpp variable
+module.exports = {
+    debug: {
+        resetConfig: config.reset
+    },
+    version: env.version,
+
+    listen: config.listen,
+    fire: config.fire,
+};

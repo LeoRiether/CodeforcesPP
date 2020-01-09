@@ -2,8 +2,8 @@
  * @file Updates the standings page automatically after some given interval
  */
 
-let dom = require('./dom');
-let config = require('./config');
+let dom = require('../helpers/dom');
+let config = require('../env/config');
 
 // FIXME: cf-predictor deltas dissapear after reloading standings
 

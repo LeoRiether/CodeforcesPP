@@ -2,9 +2,9 @@
  * @file Hides/Shows "on test X" in verdicts
  */
 
-let dom = require('./dom');
-let config = require('./config');
-let { safe } = require('./Functional');
+const dom = require('../helpers/dom');
+const config = require('../env/config');
+const { safe } = require('../helpers/Functional');
 
 const pluckVerdictRegex = / on (pre)?test ?\d*$/;
 const pluckVerdict = s => s.replace(pluckVerdictRegex, '');
@@ -15,7 +15,11 @@ const pluckVerdictOnNode = safe(n => {
 }, '');
 
 let ready = false;
-function init() {
+export function init() {
+    // !
+    // TODO: this doesn't work on the browser extension!!!
+    // !
+
     if (ready) return;
     ready = true;
 
@@ -46,7 +50,7 @@ function init() {
 }
 
 
-function install() {
+export function install() {
     if (!config.get('hideTestNumber')) return;
 
     init();
@@ -57,7 +61,7 @@ function install() {
         .forEach(pluckVerdictOnNode);
 }
 
-function uninstall() {
+export function uninstall() {
     if (!document.documentElement.classList.contains('verdict-hide-number')) return;
     document.documentElement.classList.remove('verdict-hide-number');
 
@@ -67,8 +71,6 @@ function uninstall() {
         });
 }
 
-function toggle() {
+export function toggle() {
     config.set('hideTestNumber', !config.get('hideTestNumber'));
 }
-
-module.exports = { install, uninstall, toggle, init };

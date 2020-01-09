@@ -84,4 +84,9 @@ module.exports = {
     },
 
     flatten: list => list.reduce((acc, a) => acc.concat([].slice.call(a)), []),
+
+    once(fn) {
+        let result, ran = false;
+        return (...args) => ran ? result : fn(...args);
+    },
 };

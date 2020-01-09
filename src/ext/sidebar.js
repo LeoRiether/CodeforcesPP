@@ -2,24 +2,20 @@
  * @file Creates an action box on the sidebar (like URI has for submitting, ranking, ...)
  */
 
-let dom = require('./dom');
-let config = require('./config');
-let { zipBy2, flatten, pipe, forEach, map } = require('./Functional');
+let dom = require('../helpers/dom');
+let config = require('../env/config');
+let { flatten, pipe, forEach } = require('../helpers/Functional');
 
-let addToBox = box => cols => {
-    // Note: each col is *moved* into the box, there's no cloneNode here.
-    // This is done to keep event listeners attached, but prevents uninstall() from ever existing
-
-    let row = <div style="display: flex;" />;
-    cols
-        .map(col =>
-            <div style="display: inline-block; flex: 1;">
-                {col || <span></span>}
-            </div>)
-        .forEach(div => row.appendChild(div));
-
-    box.appendChild(<tr className="boxRow"> <td>{row}</td> </tr>);
-};
+// Note: each col is *moved* into the box, there's no cloneNode here.
+// This is done to keep event listeners attached, but prevents uninstall() from ever existing
+let addToBox = box => col =>
+    box.appendChild(
+        <tr className="boxRow"><td>
+            <div style="display: flex;">
+                <div style="display: inline-block; flex: 1;"> {col} </div>
+            </div>
+        </td></tr>
+    );
 
 function fixStyling(sidebar, forms, menu) {
     let pageContent = dom.$('#pageContent');
@@ -70,13 +66,11 @@ function install() {
 
     const addAllToBox = pipe(
         flatten,
-        // zipBy2,
-        map(e => [e]),
-        forEach(addToBox(box))
+        forEach (addToBox(box))
     );
 
     addAllToBox([ menuLinks, forms ]);
-    if (submitForm) addToBox(box)([submitForm]);
+    if (submitForm) addToBox (box) (submitForm);
 
     moveStar();
 }

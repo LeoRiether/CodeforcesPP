@@ -3,8 +3,8 @@
  * Used on /gym and /group pages
  */
 
-let dom = require('./dom');
-let config = require('./config');
+let dom = require('../helpers/dom');
+let config = require('../env/config');
 
 function install() {
     let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i; // Maches a problem on a /gym or /group page

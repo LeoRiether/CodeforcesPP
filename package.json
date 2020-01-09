@@ -1,6 +1,6 @@
 {
   "name": "cfpp",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "Codeforces extension pack",
   "main": "src/index.js",
   "author": "Leonardo Riether<riether.leonardo@gmail.com>",
@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node bundler.js --development",
     "build": "node bundler.js --production",
+    "build-script": "node bundler.js --production --userscript",
     "test": "tape test/"
   },
   "devDependencies": {
@@ -16,12 +17,14 @@
     "@babel/preset-react": "^7.6.3",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
+    "hjson": "^3.2.1",
     "parcel": "^1.12.3",
     "parcel-bundler": "^1.12.3",
     "tap-diff": "^0.1.1",
     "tape": "^4.11.0"
   },
   "dependencies": {
-    "diff": "^3.5.0"
+    "diff": "^3.5.0",
+    "webextension-polyfill": "^0.6.0"
   }
 }

@@ -1,0 +1,21 @@
+{
+    name: Codeforces++
+    description: Codeforces extension pack
+    version: will be replaced by the package.json version when bundled
+    manifest_version: 2
+
+    permissions: [
+        storage
+        activeTab
+        http://fonts.googleapis.com/*
+        https://fonts.googleapis.com/*
+    ]
+
+    content_scripts: [
+        {
+          matches: [ "*://codeforces.com/*" ]
+          css: [ "custom.css" ]
+          js: [ "contentScript.js" ]
+        }
+    ]
+}
