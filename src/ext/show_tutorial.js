@@ -2,7 +2,8 @@
  * @file Adds a button to easily check the editorial/tutorial for a problem
  */
 
-let dom = require('../helpers/dom');
+const dom = require('../helpers/dom');
+const env = require('../env/env');
 
 let modalLoaded = false;
 
@@ -14,7 +15,8 @@ function closeModal() {
     dom.$('.cfpp-tutorial').classList.add('cfpp-hidden');
 }
 
-function loadModal(deadline) {
+// TODO: refactor, this function is huge
+async function loadModal(deadline) {
     if (modalLoaded && !deadline) {
         showModal();
         return;
@@ -52,7 +54,7 @@ function loadModal(deadline) {
     }
 
     // Get the CSRF Token
-    const csrf = (Codeforces && Codeforces.getCsrfToken()) || document.querySelector('.csrf-token').dataset.csrf;
+    const csrf = await env.csrf();
 
     // Finally, load the tutorial
     let xhr = new XMLHttpRequest();
@@ -84,7 +86,7 @@ function loadModal(deadline) {
  * Creates a "Tutorial" button.
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
-function install() {
+export function install() {
     const problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
     if (!problemRegex.test(location.pathname)) return;
 
@@ -102,6 +104,4 @@ function install() {
     dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> );
 }
 
-function uninstall() { }
-
-module.exports = { install, uninstall };
+export function uninstall() { }

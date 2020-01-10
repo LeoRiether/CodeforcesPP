@@ -89,4 +89,6 @@ module.exports = {
         let result, ran = false;
         return (...args) => ran ? result : fn(...args);
     },
+
+    pluck: key => obj => obj[key],
 };

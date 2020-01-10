@@ -19,6 +19,7 @@ export function init() {
     // !
     // TODO: this doesn't work on the browser extension!!!
     // !
+    return;
 
     if (ready) return;
     ready = true;

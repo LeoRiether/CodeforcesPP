@@ -67,5 +67,6 @@ const env = require('./env/env');
 
         listen: config.listen,
         fire: config.fire,
+        env: env
     };
 })();

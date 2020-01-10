@@ -12,10 +12,16 @@
     ]
 
     content_scripts: [
+        // The CSS runs on document_start, but the script can only run on document_end
         {
           matches: [ "*://codeforces.com/*" ]
           css: [ "custom.css" ]
+          run_at: document_start
+        }
+        {
+          matches: [ "*://codeforces.com/*" ]
           js: [ "contentScript.js" ]
+          run_at: document_end
         }
     ]
 }

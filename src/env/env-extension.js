@@ -2,8 +2,8 @@
 // require('env.js') instead
 
 const browser = require('webextension-polyfill');
-const messages = require('./messages');
 const dom = require('../helpers/dom');
+const { pluck } = require('../helpers/Functional');
 
 export function inject(fn) {
     (document.body || document.head || document.documentElement).appendChild(
@@ -11,17 +11,25 @@ export function inject(fn) {
     );
 }
 
-export const version = browser.runtime.getManifest().version;
-
-(async function (p) {
-    console.log(await p);
-})(browser.storage.sync.get(['cfpp']));
-
 export let storage = {
-    get: key => browser.storage.sync.get([key]),
+    get: key => browser.storage.sync.get([key])
+                .then (pluck(key)),
     set: (key, value) => browser.storage.sync.set({ [key]: value })
 };
 
 export function Codeforces(fn, ...args) {
-    return messages.post('CF::call', {  });
+    const cf = require('./cf_injection');
+    return cf.run(fn, args);
+}
+
+export const version = browser.runtime.getManifest().version;
+
+// shorter, unreadable version:
+// export const csrf = (value => () => value = value || Codeforces.getCsrfToken())();
+let csrf_cached;
+export async function csrf() {
+    if (!csrf_cached)
+        csrf_cached = await Codeforces('getCsrfToken');
+
+    return csrf_cached;
 }
