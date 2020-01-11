@@ -17,7 +17,7 @@ function closeModal() {
 
 // TODO: refactor, this function is huge
 async function loadModal(deadline) {
-    if (modalLoaded && !deadline) {
+    if (modalLoaded || !deadline) {
         showModal();
         return;
     }
@@ -69,7 +69,9 @@ async function loadModal(deadline) {
     xhr.onload = () => {
         if (xhr.response && xhr.response.success) {
             modalInner.innerHTML = xhr.response.html;
-            MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner));
+            env.inject(function typesetMath() {
+                MathJax.Hub.Queue(() => MathJax.Hub.Typeset(document.querySelector('.cfpp-modal-inner')[0]));
+            });
         } else {
             modalInner.innerText = "Something went wrong!";
         }
