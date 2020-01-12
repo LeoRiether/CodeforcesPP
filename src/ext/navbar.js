@@ -6,7 +6,7 @@ const dom = require('../helpers/dom');
 const env = require('../env/env');
 
 export async function install() {
-    const handle = await env.userHandle();
+    const handle = await env.userHandle;
 
     let oldNav = dom.$('.main-menu-list');
     let newNav = <nav className="cfpp-navbar"/>;
