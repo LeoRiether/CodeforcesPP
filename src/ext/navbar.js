@@ -2,11 +2,11 @@
  * @file Provides drowdown menus for the main navbar, for better site navigation
  */
 
-let dom = require('../helpers/dom');
+const dom = require('../helpers/dom');
+const env = require('../env/env');
 
-function install() {
-    // Get user handle
-    const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
+export async function install() {
+    const handle = await env.userHandle();
 
     let oldNav = dom.$('.main-menu-list');
     let newNav = <nav className="cfpp-navbar"/>;
@@ -84,6 +84,4 @@ function install() {
     }
 }
 
-function uninstall() {}
-
-module.exports = { install, uninstall };
+export function uninstall() {}

@@ -8,6 +8,8 @@ const env = require('./env/env');
 
     console.log("Codeforces++ is running!");
 
+    env.Codeforces('showMessage', 'Welcome to youkoso Codeforces++');
+
     let config = require('./env/config');
     await config.load();
     config.createUI();
@@ -16,9 +18,9 @@ const env = require('./env/env');
         const v = await config.get('version');
         if (v != env.version) {
             config.set('version', env.version);
-            config.save();
             env.Codeforces('showMessage', `Codeforces++ was updated to version ${config.get('version')}!
-            Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">changelog</a>`);
+            Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">
+            changelog</a>`);
         }
     })();
 

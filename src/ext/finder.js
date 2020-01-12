@@ -2,9 +2,10 @@
  * @file Adds a search pop-up to navigate Codeforces
  */
 
-let dom = require('../helpers/dom');
-let config = require('../env/config');
+const dom = require('../helpers/dom');
+const config = require('../env/config');
 const F = require('../helpers/Functional');
+const env = require('../env/env');
 
 let isOpen = false;
 
@@ -190,9 +191,8 @@ function bindEvents(input, results) {
     });
 }
 
-function resultList() {
-    // Get user handle
-    const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
+async function resultList() {
+    const handle = await env.userHandle();
 
     let data = [];
     if (/\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i.test(location.pathname)) {
@@ -232,7 +232,7 @@ function create() {
         return createPromise;
     }
 
-    createPromise = new Promise((res, rej) => {
+    createPromise = new Promise(async (res, rej) => {
         let input = <input type="text" className="finder-input" placeholder="Search anything"/>;
         let results = <ul className="finder-results" />;
 
@@ -250,7 +250,8 @@ function create() {
                 close();
         });
 
-        results.append(...resultList().map(props =>
+        const list = await resultList();
+        results.append(...list.map(props =>
             <Result {...props} />
         ));
 
@@ -282,12 +283,12 @@ async function close() {
 /**
  * Increases the priority of a finder key in localStorage.finderPriority
  */
-function increasePriority(key) {
-    let fp = safeJSONParse(localStorage.finderPriority);
+async function increasePriority(key) {
+    let fp = safeJSONParse(await env.storage.get('finderPriority'));
 
     const maxValue = Object.values(fp).reduce((x, y) => Math.max(x, y), 0);
     fp[key] = maxValue + 1;
-    localStorage.finderPriority = JSON.stringify(fp);
+    env.storage.set('finderPriority', fp);
 }
 
 /**
@@ -327,8 +328,8 @@ function includesSubseq(text, pattern) {
     return false;
 }
 
-function updateGroups() {
-    const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
+async function updateGroups() {
+    const handle = await env.userHandle();
     if (location.href.endsWith(`/groups/with/${handle}`)) {
         // Opportune moment to update the user's groups
         const idRegex = /\/group\/([\d\w]+)/
