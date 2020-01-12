@@ -26,3 +26,15 @@ export async function csrf() {
 
     return csrf_cached;
 }
+
+const _handle = () => dom.$('.lang-chooser').children[1].children[0].innerText.trim();
+export const userHandle = new Promise(resolve => {
+    const resolver = function() {
+        let handle = _handle();
+        resolve(handle == 'Enter' ? 'tourist' : handle);
+    };
+
+    if (document.readyState == 'loading')
+        return dom.on(document, 'DOMContentLoaded', resolver);
+    resolver();
+});

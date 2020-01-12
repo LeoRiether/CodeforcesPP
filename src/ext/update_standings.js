@@ -43,7 +43,7 @@ export function install() {
         uninstall();
 
     const standingsItv = +config.get('standingsItv');
-    if (standingsItv <= 0 || location.pathname.includes('/standings')) return;
+    if (standingsItv <= 0 || !location.pathname.includes('/standings')) return;
 
     intervalID = setInterval(update, standingsItv * 1000);
 }
