@@ -7,9 +7,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "node bundler.js --development",
-    "build": "node bundler.js --production",
-    "build-script": "node bundler.js --production --userscript",
+    "start": "node bundler/bundler.js --development",
+    "build": "node bundler/bundler.js --production",
+    "build-script": "node bundler/bundler.js --production",
     "test": "tape test/"
   },
   "devDependencies": {
@@ -21,6 +21,7 @@
     "hjson": "^3.2.1",
     "parcel": "^1.12.3",
     "parcel-bundler": "^1.12.3",
+    "rollup-plugin-inject-process-env": "^1.1.0",
     "tap-diff": "^0.1.1",
     "tape": "^4.11.0"
   },

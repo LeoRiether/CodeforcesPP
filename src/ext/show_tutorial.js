@@ -39,7 +39,7 @@ async function loadModal(deadline) {
         if (keyupEvent.key == 'Escape')
         closeModal();
     });
-    document.body.appendChild(modal);
+    env.ready(() => document.body.appendChild(modal));
 
     // Get the problem ID
     let matches = location.pathname.match(/\/problemset\/problem\/(\d+)\/(.+)|\/contest\/(\d+)\/problem\/(.+)/i);
@@ -103,7 +103,7 @@ export function install() {
         window.requestIdleCallback(loadModal, { timeout: 10000 });
     }
 
-    dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> );
+    env.ready(() => dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> ));
 }
 
 export function uninstall() { }

@@ -12,3 +12,4 @@
 // @downloadURL  https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/script.user.js
 // @run-at       document-end
 // ==/UserScript==
+

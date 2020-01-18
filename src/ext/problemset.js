@@ -2,10 +2,11 @@
  * @file Hides tags on the /problemset page for the problems you didn't solve yet
  */
 
-let dom = require('../helpers/dom');
-let config = require('../env/config');
+const dom = require('../helpers/dom');
+const config = require('../env/config');
+const env = require('../env/env');
 
-function changeNoACsDisplay(display) {
+const changeNoACsDisplay = env.ready(function (display) {
     // Get problems that don't have an AC
     let noACs = dom.$$('.problems tr:not(.accepted-problem)');
     for (let p of noACs) {
@@ -14,13 +15,11 @@ function changeNoACsDisplay(display) {
         k = k.style || {};
         k.display = display;
     }
-}
+});
 
-function install() {
+export function install() {
     if (config.get('showTags') && dom.$('.problems'))
         changeNoACsDisplay('none');
 }
 
-let uninstall = changeNoACsDisplay.bind(null, 'block');
-
-module.exports = { install, uninstall };
+export const uninstall = changeNoACsDisplay.bind(null, 'block');

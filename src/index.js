@@ -1,10 +1,9 @@
 /**
- * @file Installs the modules
+ * @file Entry-point of the Codeforces++ core code a.k.a. runs the extension modules
  */
 
-const env = require('./env/env');
-
 (async function run() {
+    const env = require('./env/env');
 
     console.log("Codeforces++ is running!");
 
@@ -15,7 +14,7 @@ const env = require('./env/env');
     config.createUI();
 
     (async function notifyVersionChange() {
-        const v = await config.get('version');
+        const v = config.get('version');
         if (v != env.version) {
             config.set('version', env.version);
             env.Codeforces('showMessage', `Codeforces++ was updated to version ${config.get('version')}!
@@ -50,7 +49,12 @@ const env = require('./env/env');
         });
     }
 
-    modules.forEach(([m, configID]) => {
+    modules.forEach(([m, configID], index) => {
+        if (process.env.NODE_ENV == 'development') {
+            if (typeof m.install !== 'function' || typeof m.uninstall !== 'function')
+                return console.error(`Module #${index} needs to have both install() and uninstall() exported methods`);
+        }
+
         m.install();
         if (configID) {
             registerConfigCallback(m, configID);

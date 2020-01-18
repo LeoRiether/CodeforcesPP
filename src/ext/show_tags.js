@@ -1,10 +1,11 @@
 /**
  * @file Adds a "Show Tags" button to a problem's page
  */
-let dom = require('../helpers/dom');
-let config = require('../env/config');
+const dom = require('../helpers/dom');
+const config = require('../env/config');
+const env = require('../env/env');
 
-function install() {
+export const install = env.ready(function () {
     if (!config.get('showTags') || !dom.$('.tag-box')) return;
 
     // If the user has already AC'd this problem, there's no need to hide the tags
@@ -25,15 +26,13 @@ function install() {
     }
 
     container.parentNode.appendChild( <ShowTagsButton /> );
-}
+});
 
-function uninstall() {
+export const uninstall = env.ready(function () {
     let btn = dom.$('.showTagsBtn');
     if (btn) {
         btn.remove();
         let container = dom.$('.tag-box').parentNode.parentNode; // container for all the tags
         container.style.display = 'block';
     }
-}
-
-module.exports = { install, uninstall };
+});
