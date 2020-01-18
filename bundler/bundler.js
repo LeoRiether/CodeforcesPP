@@ -38,6 +38,18 @@ let extensionBundler = new Bundler(
 );
 extensionBundler.on('buildStart', () => process.env.TARGET = 'extension'); // hackish
 
+// fuck this
+// I already implemented this, on hjson_asset and _packager
+// why the fuck doesn't it work
+extensionBundler.on('buildEnd', () => {
+    let Hjson = require('hjson');
+    let fs = require('fs');
+    let manifest = fs.readFileSync('./manifest.hjson');
+    let obj = Hjson.parse(manifest.toString());
+    obj.version = require('../package.json').version;
+    fs.writeFile('./dist/extension/manifest.json', JSON.stringify(obj, null, 4), Function());
+});
+
 // Works, but not always
 // I hate it
 let manifestBundler = new Bundler('./manifest.hjson', {

@@ -6,6 +6,7 @@
     const env = require('./env/env');
 
     console.log("Codeforces++ is running!");
+    console.log(`[index.js]`, typeof chrome === 'undefined' ? '<nil>' : chrome, typeof unsafeWindow === 'undefined' ? '<nil>' : unsafeWindow, typeof Codeforces === 'undefined' ? '<nil>' : Codeforces);
 
     env.Codeforces('showMessage', 'Welcome to youkoso Codeforces++');
 
