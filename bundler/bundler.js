@@ -5,7 +5,7 @@ const Bundler = require('parcel-bundler');
 const production = process.env.NODE_ENV === 'production' || process.argv.indexOf('--production') !== -1;
 process.env.NODE_ENV = production ? 'production' : 'development';
 
-console.log(`Running in ${process.env.NODE_ENV} mode`);
+console.log(`Running in ${process.env.NODE_ENV} mode\n`);
 
 const options = {
     minify: production,
@@ -19,6 +19,7 @@ const options = {
 // Register bundlers
 let userscriptBundler = new Bundler('./src/index.js', {
     ...options,
+    outDir: './dist/userscript',
     minify: false,
     outFile: 'script.user.js'
 });
@@ -30,13 +31,19 @@ let extensionBundler = new Bundler(
         './src/index.js', './src/contentScript.js',
         './src/background.js', './src/background.html',
     ],
-    options
+    {
+        ...options,
+        outDir: './dist/extension',
+    }
 );
 extensionBundler.on('buildStart', () => process.env.TARGET = 'extension'); // hackish
 
 // Works, but not always
 // I hate it
-let manifestBundler = new Bundler('./manifest.hjson', options);
+let manifestBundler = new Bundler('./manifest.hjson', {
+    ...options,
+    outDir: './dist/extension'
+});
 manifestBundler.addAssetType('hjson', require.resolve('./hjson_asset'));
 manifestBundler.addPackager('json', require.resolve('./hjson_packager'));
 

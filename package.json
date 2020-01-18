@@ -3,13 +3,14 @@
   "version": "2.0.0",
   "description": "Codeforces extension pack",
   "main": "src/index.js",
-  "author": "Leonardo Riether<riether.leonardo@gmail.com>",
+  "author": "Leonardo Riether <riether.leonardo@gmail.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
     "start": "node bundler/bundler.js --development",
     "build": "node bundler/bundler.js --production",
-    "build-script": "node bundler/bundler.js --production",
+    "build-script": "node bundler/bundler.js --production --userscript",
+    "clean": "rm -r dist/",
     "test": "tape test/"
   },
   "devDependencies": {
