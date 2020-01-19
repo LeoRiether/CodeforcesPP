@@ -7,6 +7,8 @@ import { terser } from 'rollup-plugin-terser';
 import HJSON from 'hjson';
 import fs from 'fs';
 
+let meta;
+
 function copyManifest(from, to) {
     return {
         async buildEnd() {
@@ -17,19 +19,20 @@ function copyManifest(from, to) {
             fs.writeFile(to, out, Function());
         }
     }
-};
+}
 
-function copyMeta(from, to) {
+function copyMeta(to) {
     return {
         async buildEnd() {
-            let meta = fs.readFileSync(from).toString();
-            meta = meta.replace('{{VERSION}}', require('./package.json').version);
             fs.writeFile(to, meta, Function());
+        },
+
+        buildStart() {
+            meta = fs.readFileSync('./meta.js').toString();
+            meta = meta.replace('{{VERSION}}', require('./package.json').version);
         }
     }
 }
-
-console.log(process.env.NODE_ENV);
 
 const plugins = TARGET => [
     babel({
@@ -47,10 +50,11 @@ export default [
         output: {
             format: 'iife',
             file: 'dist/userscript/script.user.js',
+            banner: () => meta,
         },
         plugins: [
             ...plugins('userscript'),
-            copyMeta('meta.js', 'dist/userscript/script.meta.js')
+            copyMeta('dist/userscript/script.meta.js')
         ]
     },
 
