@@ -6,7 +6,7 @@ function isEvent(str) {
     return str.length > 2 && str[0] == 'o' && str[1] == 'n' && str[2] >= 'A' && str[2] <= 'Z';
 }
 
-module.exports = {
+export default {
     $(query, element) {
         return (element || document).querySelector(query);
     },

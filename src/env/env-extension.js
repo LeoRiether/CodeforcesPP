@@ -5,6 +5,8 @@ const browser = require('webextension-polyfill');
 const dom = require('../helpers/dom');
 const { pluck } = require('../helpers/Functional');
 
+export const self = window;
+
 const genID = (id => () => id++)(1); // magic
 
 function injectScript(fn) {

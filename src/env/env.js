@@ -1,11 +1,32 @@
 // Hopefully tree-shaking will do its thing
+// if (process.env.TARGET === 'extension') {
+//     module.exports = require('./env-extension');
+//     module.exports.target = 'extension';
+// } else {
+//     module.exports = require('./env-userscript');
+//     module.exports.target = 'userscript';
+// }
+
+// // Extend exports with shared environment
+// module.exports = Object.create(module.exports, require('./env-shared'));
+
+import * as shared from './env-shared';
+import * as extension from './env-extension';
+import * as userscript from './env-userscript';
+
+let env = {
+    // shared
+    ready: Function(), userHandle: Promise.resolve(),
+
+    // specific
+    self: window, inject: Function(), Codeforces: Function(),
+    storage: {}, version: String(), csrf: Function()
+};
+
 if (process.env.TARGET === 'extension') {
-    module.exports = require('./env-extension');
-    module.exports.target = 'extension';
+    env = { ...shared, ...extension };
 } else {
-    module.exports = require('./env-userscript');
-    module.exports.target = 'userscript';
+    env = { ...shared, ...userscript };
 }
 
-// Extend exports with shared environment
-module.exports = Object.create(module.exports, require('./env-shared'));
+export default env;

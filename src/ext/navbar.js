@@ -2,8 +2,10 @@
  * @file Provides drowdown menus for the main navbar, for better site navigation
  */
 
-const dom = require('../helpers/dom');
-const env = require('../env/env');
+// const dom = require('../helpers/dom');
+// const env = require('../env/env');
+import dom from '../helpers/dom';
+import env from '../env/env';
 
 export async function install() {
     const handle = await env.userHandle;

@@ -344,4 +344,4 @@ async function updateGroups() {
     }
 }
 
-module.exports = { create, open, close, updateGroups };
+export { create, open, close, updateGroups };

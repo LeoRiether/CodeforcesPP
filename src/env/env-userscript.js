@@ -3,6 +3,8 @@
 
 const { safe } = require('../helpers/Functional');
 
+export const self = unsafeWindow;
+
 export function inject(fn, data) {
     return Promise.resolve(fn(data));
 }
