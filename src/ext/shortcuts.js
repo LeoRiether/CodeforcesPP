@@ -5,6 +5,7 @@
 import dom from '../helpers/dom';
 import finder from './finder';
 import config from '../env/config';
+import { toggle as toggleVerdictTestNumber } from './verdict_test_number';
 
 //
 // Commands
@@ -55,13 +56,13 @@ let shortcuts = {
     'ctrl+shift+v': scrollToPageContent, // V => view
     'ctrl+alt+v': scrollToPageContent,
     'ctrl+i': darkMode,
-    'ctrl+shift+h': require('./verdict_test_number').toggle, // H => hard mode | hide test cases
+    'ctrl+shift+h': toggleVerdictTestNumber, // H => hard mode | hide test cases
 };
 
 let isFKey = key =>
     (key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9');
 
-function install() {
+export function install() {
     let finderValue = config.get('finder').toLowerCase();
     shortcuts[finderValue] = finder.open;
     config.listen('finder', newValue => {
@@ -96,6 +97,4 @@ function install() {
     }
 }
 
-function uninstall() { }
-
-module.exports = { install, uninstall };
+export function uninstall() { }

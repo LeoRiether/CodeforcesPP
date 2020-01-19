@@ -17,11 +17,11 @@ import * as sidebar from './ext/sidebar';
 import finder from './ext/finder';
 
 import env from './env/env';
+import config from './env/config';
 
 (async function run() {
     console.log("Codeforces++ is running!");
 
-    let config = require('./env/config');
     await config.load();
     config.createUI();
 
