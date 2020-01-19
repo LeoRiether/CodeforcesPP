@@ -2,18 +2,16 @@
  * @file Minimalistic event-bus
  */
 
-let { safe } = require('./Functional');
+import { safe } from './Functional';
 let listeners = {};
 
-module.exports = {
-    listen(event, callback) {
-        if (!listeners[event])
-            listeners[event] = [];
-        listeners[event].push(safe(callback));
-    },
+export function listen(event, callback) {
+    if (!listeners[event])
+        listeners[event] = [];
+    listeners[event].push(safe(callback));
+}
 
-    async fire(event, data) {
-        (listeners[event] || [])
-            .forEach(cb => cb(data));
-    }
-};
+export async function fire(event, data) {
+    (listeners[event] || [])
+        .forEach(cb => cb(data));
+}

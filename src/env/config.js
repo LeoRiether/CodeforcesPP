@@ -2,10 +2,12 @@
  * @file Manages CF++ configuration with localStorage and creates the settings UI
  */
 
-const dom = require('../helpers/dom');
-const { safe } = require('../helpers/Functional');
-const events = require('../helpers/events');
-const env = require('./env');
+// TODO: needs some refactoring
+
+import dom from '../helpers/dom';
+import { safe } from '../helpers/Functional';
+import * as events from '../helpers/events';
+import env from './env';
 
 let config = {};
 const defaultConfig = {
@@ -176,7 +178,7 @@ function closeUI() {
     save();
 }
 
-module.exports = {
+export default {
     createUI,
     closeUI,
     get: key => config[key],

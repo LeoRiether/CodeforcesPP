@@ -1,11 +1,8 @@
 import importCss from "@atomico/rollup-plugin-import-css";
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
-// import jsx from 'rollup-plugin-jsx';
 import copy from 'rollup-plugin-copy';
 import babel from 'rollup-plugin-babel';
-// import commonjs from '@rollup/plugin-commonjs'; // TODO: someday make all `require`s `import`s
-// import resolve from '@rollup/plugin-node-resolve';
-// import compiler from '@ampproject/rollup-plugin-closure-compiler';
+import { terser } from 'rollup-plugin-terser';
 
 import HJSON from 'hjson';
 import fs from 'fs';
@@ -32,14 +29,14 @@ function copyMeta(from, to) {
     }
 }
 
-const NODE_ENV = process.env.NODE_ENV || (process.argv.includes('--production') ? 'production' : 'development');
+console.log(process.env.NODE_ENV);
 
 const plugins = TARGET => [
     babel({
         exclude: 'node_modules/**',
         babelrc: true,
     }),
-    injectProcessEnv({ NODE_ENV, TARGET }),
+    injectProcessEnv({ NODE_ENV: process.env.NODE_ENV || 'development', TARGET }),
     importCss(),
 ];
 
@@ -62,10 +59,11 @@ export default [
         input: 'src/index.js',
         output: {
             format: 'esm',
-            file: 'dist/extension/index.js'
+            file: 'dist/extension/index.js',
         },
         plugins: [
             ...plugins('extension'),
+            (process.env.NODE_ENV == 'production' ? terser() : {}),
             copy({
                 targets: [
                     { src: 'src/contentScript.js', dest: 'dist/extension' },

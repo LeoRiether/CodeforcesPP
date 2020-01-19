@@ -2,8 +2,8 @@
  * @file Replaces links to pages you often don't want to go to. e.g. '/members' in the groups page, where you'd rather go directly to '/contests'
  */
 
-let dom = require('../helpers/dom');
-let config = require('../env/config');
+import dom from '../helpers/dom';
+import config from '../env/config';
 
 // Replaces /members by /contests on the groups page
 function groups() {

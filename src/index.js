@@ -14,7 +14,7 @@ import * as style from './ext/style';
 import * as verdict_test_number from './ext/verdict_test_number';
 import * as shortcuts from './ext/shortcuts';
 import * as sidebar from './ext/sidebar';
-import { updateGroups as updateFinderGroups } from './ext/finder';
+import finder from './ext/finder';
 
 import env from './env/env';
 
@@ -34,21 +34,6 @@ import env from './env/env';
             changelog</a>`);
         }
     })();
-
-    // old
-    // let modules = [
-    //     [require('./ext/show_tags')          , 'showTags'],
-    //     [require('./ext/problemset')         , 'showTags'],
-    //     [require('./ext/search_button')      , 'searchBtn'],
-    //     [require('./ext/show_tutorial')      , ''],
-    //     [require('./ext/navbar')             , ''],
-    //     [require('./ext/redirector')         , ''],
-    //     [require('./ext/update_standings')   , 'standingsItv'],
-    //     [require('./ext/style')              , 'style'],
-    //     [require('./ext/verdict_test_number'), 'hideTestNumber'],
-    //     [require('./ext/shortcuts')          , ''],
-    //     [require('./ext/sidebar')            , 'sidebarBox']
-    // ];
 
     let modules = [
         [show_tags          , 'showTags'],
@@ -87,20 +72,7 @@ import env from './env/env';
         }
     });
 
-    // require('./ext/style').common();
-    // require('./ext/finder').updateGroups();
     style.common();
-    updateFinderGroups();
+    finder.updateGroups();
 
-    // Exported to a global cfpp variable
-    module.exports = {
-        debug: {
-            resetConfig: config.reset
-        },
-        version: env.version,
-
-        listen: config.listen,
-        fire: config.fire,
-        env: env
-    };
 })();

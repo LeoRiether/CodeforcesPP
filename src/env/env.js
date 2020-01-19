@@ -14,15 +14,7 @@ import * as shared from './env-shared';
 import * as extension from './env-extension';
 import * as userscript from './env-userscript';
 
-let env = {
-    // shared
-    ready: Function(), userHandle: Promise.resolve(),
-
-    // specific
-    self: window, inject: Function(), Codeforces: Function(),
-    storage: {}, version: String(), csrf: Function()
-};
-
+let env = {};
 if (process.env.TARGET === 'extension') {
     env = { ...shared, ...extension };
 } else {

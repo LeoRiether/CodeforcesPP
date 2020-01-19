@@ -2,8 +2,8 @@
  * @file Adds a button to easily check the editorial/tutorial for a problem
  */
 
-const dom = require('../helpers/dom');
-const env = require('../env/env');
+import dom from '../helpers/dom';
+import env from '../env/env';
 
 let modalLoaded = false;
 

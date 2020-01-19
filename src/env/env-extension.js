@@ -2,63 +2,10 @@
 // require('env.js') instead
 
 const browser = require('webextension-polyfill');
-const dom = require('../helpers/dom');
-const { pluck } = require('../helpers/Functional');
+import dom from '../helpers/dom';
+import { pluck } from '../helpers/Functional';
 
-export const self = window;
-
-const genID = (id => () => id++)(1); // magic
-
-function injectScript(fn) {
-    (document.body || document.head || document.documentElement).appendChild(
-        <script>( {fn.toString()} )();</script>
-    );
-}
-
-// resolveFnTable[id] = resolve function for the promise created on inject()
-let resolveFnTable = {};
-
-(function host() {
-    window.addEventListener('message', event => {
-        if (event.origin != window || event.data.for != 'host')
-            return;
-
-        const resolve = resolveFnTable[event.data.id];
-        resolve(event.data.result);
-        delete resolveFnTable[event.data.id];
-    });
-})();
-
-injectScript(function client() {
-    window.addEventListener('message', event => {
-        if (event.origin != window || event.data.for != 'client')
-            return;
-
-        const result = eval(event.data.fn)(event.data.data);
-        window.postMessage({
-            for: 'host',
-            id: event.data.id,
-            result
-        }, '*');
-    });
-});
-
-export const inject = (fn, data) => new Promise(resolve => {
-    const id = genID();
-
-    resolveFnTable[id] = resolve;
-
-    window.postMessage({
-        for: 'client',
-        id,
-        fn: fn.toString(),
-        data
-    }, '*');
-});
-
-export function Codeforces(fname, ...args) {
-    return inject(data => Codeforces[data.fname](...data.args), { fname, args });
-}
+export const global = window;
 
 export let storage = {
     get: key => browser.storage.sync.get([key])
@@ -73,7 +20,7 @@ export const version = browser.runtime.getManifest().version;
 let csrf_cached;
 export async function csrf() {
     if (!csrf_cached)
-        csrf_cached = await Codeforces('getCsrfToken');
+        csrf_cached = global.Codeforces.getCsrfToken();
 
     return csrf_cached;
 }

@@ -1,17 +1,9 @@
 // DO NOT DIRECTLY REQUIRE THIS
 // require('env.js') instead
 
-const { safe } = require('../helpers/Functional');
+import { safe } from '../helpers/Functional';
 
-export const self = unsafeWindow;
-
-export function inject(fn, data) {
-    return Promise.resolve(fn(data));
-}
-
-export function Codeforces(fn, ...args) {
-    return Promise.resolve(unsafeWindow.Codeforces[fn](...args));
-}
+export const global = unsafeWindow;
 
 export const storage = {
     get: key => Promise.resolve(localStorage.getItem(key))
@@ -20,12 +12,4 @@ export const storage = {
 };
 
 export const version = typeof GM_info !== 'undefined' && GM_info.script.version;
-
-let csrf_cached;
-export async function csrf() {
-    if (!csrf_cached)
-        csrf_cached = unsafeWindow.Codeforces.getCsrfToken();
-
-    return csrf_cached;
-}
 

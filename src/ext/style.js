@@ -2,9 +2,8 @@
  * @file Provides styling for cfpp-created elements as well as a custom Codeforces styling
  */
 
-const dom = require("../helpers/dom");
-const config = require('../env/config');
-const env = require('../env/env');
+import dom from '../helpers/dom';
+import config from '../env/config';
 
 export function custom() {
     if (process.env.TARGET === "extension") return;

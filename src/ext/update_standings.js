@@ -2,8 +2,8 @@
  * @file Updates the standings page automatically after some given interval
  */
 
-const dom = require('../helpers/dom');
-const config = require('../env/config');
+import dom from '../helpers/dom';
+import config from '../env/config';
 
 // FIXME: cf-predictor deltas dissapear after reloading standings
 

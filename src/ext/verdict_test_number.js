@@ -2,9 +2,10 @@
  * @file Hides/Shows "on test X" in verdicts
  */
 
-const dom = require('../helpers/dom');
-const config = require('../env/config');
-const { safe } = require('../helpers/Functional');
+import dom from '../helpers/dom';
+import config from '../env/config';
+import { safe } from '../helpers/Functional';
+import env from '../env/env';
 
 const pluckVerdictRegex = / on (pre)?test ?\d*$/;
 const pluckVerdict = s => s.replace(pluckVerdictRegex, '');
@@ -16,11 +17,6 @@ const pluckVerdictOnNode = safe(n => {
 
 let ready = false;
 export function init() {
-    // !
-    // TODO: this doesn't work on the browser extension!!!
-    // !
-    return;
-
     if (ready) return;
     ready = true;
 
@@ -37,9 +33,9 @@ export function init() {
     }
 
     // Subscribe to Codeforces submisions pubsub
-    if (unsafeWindow.submissionsEventCatcher) {
-        const channel = unsafeWindow.submissionsEventCatcher.channels[0];
-        unsafeWindow.submissionsEventCatcher.subscribe(channel, data => {
+    if (env.global.submissionsEventCatcher) {
+        const channel = env.global.submissionsEventCatcher.channels[0];
+        env.global.submissionsEventCatcher.subscribe(channel, data => {
             if (!config.get('hideTestNumber')) return;
 
             if (data.t === 's') {

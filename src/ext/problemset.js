@@ -2,9 +2,9 @@
  * @file Hides tags on the /problemset page for the problems you didn't solve yet
  */
 
-const dom = require('../helpers/dom');
-const config = require('../env/config');
-const env = require('../env/env');
+import dom from '../helpers/dom';
+import config from '../env/config';
+import env from '../env/env';
 
 const changeNoACsDisplay = env.ready(function (display) {
     // Get problems that don't have an AC

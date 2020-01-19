@@ -1,9 +1,9 @@
 /**
  * @file Adds a "Show Tags" button to a problem's page
  */
-const dom = require('../helpers/dom');
-const config = require('../env/config');
-const env = require('../env/env');
+import dom from '../helpers/dom';
+import config from '../env/config';
+import env from '../env/env';
 
 export const install = env.ready(function () {
     if (!config.get('showTags') || !dom.$('.tag-box')) return;

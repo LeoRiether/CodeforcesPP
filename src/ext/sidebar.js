@@ -2,9 +2,9 @@
  * @file Creates an action box on the sidebar (like URI has for submitting, ranking, ...)
  */
 
-let dom = require('../helpers/dom');
-let config = require('../env/config');
-let { flatten, pipe, forEach } = require('../helpers/Functional');
+import dom from '../helpers/dom';
+import config from '../env/config';
+import { flatten, pipe, forEach } from '../helpers/Functional';
 
 // Note: each col is *moved* into the box, there's no cloneNode here.
 // This is done to keep event listeners attached, but prevents uninstall() from ever existing

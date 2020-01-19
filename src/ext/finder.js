@@ -2,14 +2,14 @@
  * @file Adds a search pop-up to navigate Codeforces
  */
 
-const dom = require('../helpers/dom');
-const config = require('../env/config');
-const F = require('../helpers/Functional');
-const env = require('../env/env');
+import dom from '../helpers/dom';
+import config from '../env/config';
+import { safe, pipe, map } from '../helpers/Functional';
+import env from '../env/env';
 
 let isOpen = false;
 
-const safeJSONParse = F.safe(JSON.parse, {});
+const safeJSONParse = safe(JSON.parse, {});
 
 // TODO: every info I need is pulled from the DOM. Refactor to have a JS model of the search that syncs with the html
 
@@ -105,9 +105,9 @@ let extensions = {
             };
         }
 
-        const makeGroups = F.pipe(
-            F.safe(JSON.parse, []),
-            F.map(makeRecordFromGroup)
+        const makeGroups = pipe(
+            safe(JSON.parse, []),
+            map(makeRecordFromGroup)
         );
         return makeGroups(localStorage.userGroups);
     },
@@ -344,4 +344,4 @@ async function updateGroups() {
     }
 }
 
-export { create, open, close, updateGroups };
+export default { create, open, close, updateGroups };
