@@ -14,7 +14,7 @@ import * as style from './ext/style';
 import * as verdict_test_number from './ext/verdict_test_number';
 import * as shortcuts from './ext/shortcuts';
 import * as sidebar from './ext/sidebar';
-import finder from './ext/finder';
+import * as finder from './ext/finder';
 
 import env from './env/env';
 import config from './env/config';
@@ -29,7 +29,7 @@ import config from './env/config';
         const v = config.get('version');
         if (v != env.version) {
             config.set('version', env.version);
-            env.self.Codeforces('showMessage', `Codeforces++ was updated to version ${config.get('version')}!
+            env.global.Codeforces('showMessage', `Codeforces++ was updated to version ${config.get('version')}!
             Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">
             changelog</a>`);
         }

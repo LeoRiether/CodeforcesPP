@@ -344,4 +344,4 @@ async function updateGroups() {
     }
 }
 
-export default { create, open, close, updateGroups };
+export { create, open, close, updateGroups };

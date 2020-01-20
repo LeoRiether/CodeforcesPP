@@ -3,7 +3,7 @@
  */
 
 import dom from '../helpers/dom';
-import finder from './finder';
+import * as finder from './finder';
 import config from '../env/config';
 import { toggle as toggleVerdictTestNumber } from './verdict_test_number';
 
