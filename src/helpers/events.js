@@ -13,5 +13,5 @@ export function listen(event, callback) {
 
 export async function fire(event, data) {
     (listeners[event] || [])
-        .forEach(cb => cb(data));
+        .forEach(async cb => cb(data));
 }
