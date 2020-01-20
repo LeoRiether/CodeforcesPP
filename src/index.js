@@ -25,17 +25,8 @@ import config from './env/config';
     await config.load();
     config.createUI();
 
-    (async function notifyVersionChange() {
-        const v = config.get('version');
-        if (v != env.version) {
-            config.set('version', env.version);
-            env.global.Codeforces('showMessage', `Codeforces++ was updated to version ${config.get('version')}!
-            Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">
-            changelog</a>`);
-        }
-    })();
-
     let modules = [
+        [style              , 'style'],
         [show_tags          , 'showTags'],
         [problemset         , 'showTags'],
         [search_button      , 'searchBtn'],
@@ -43,7 +34,6 @@ import config from './env/config';
         [navbar             , ''],
         [redirector         , ''],
         [update_standings   , 'standingsItv'],
-        [style              , 'style'],
         [verdict_test_number, 'hideTestNumber'],
         [shortcuts          , ''],
         [sidebar            , 'sidebarBox']
@@ -74,5 +64,13 @@ import config from './env/config';
 
     style.common();
     finder.updateGroups();
+
+    const v = config.get('version');
+    if (v != env.version) {
+        config.set('version', env.version);
+        env.global.Codeforces('showMessage', `Codeforces++ was updated to version ${config.get('version')}!
+        Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">
+        changelog</a>`);
+    }
 
 })();
