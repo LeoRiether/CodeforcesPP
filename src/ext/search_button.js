@@ -5,8 +5,9 @@
 
 import dom from '../helpers/dom';
 import config from '../env/config';
+import env from '../env/env';
 
-function install() {
+export const install = env.ready(function() {
     let searchableRegex = /\/(gym|group)\/(.?)+\/problem\/\w$/i; // Maches a problem on a /gym or /group page
     if (!config.get('searchBtn') || !searchableRegex.test(location.pathname)) return;
 
@@ -20,11 +21,9 @@ function install() {
             <a href={href} target="_blank" className="searchBtn"> Google It </a>
         </li>
     );
-}
+});
 
-function uninstall() {
+export function uninstall() {
     let btn = dom.$('.searchBtn');
     if (btn) btn.remove();
 }
-
-module.exports = { install, uninstall };

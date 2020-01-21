@@ -92,18 +92,11 @@ let extensions = {
     },
 
     groups() {
-        function makeRecordFromGroup([name, id]) {
-            if (!(/^[\d\w]+$/).test(id)) {
-                // Convert [name, href], used in previous versions, to [name, id]
-                id = id.match(/\/group\/([\d\w]+)/)[1];
-            }
-
-            return {
-                key: `group_${id}`,
-                title: `Group: ${name}`,
-                href: `/group/${id}/contests`
-            };
-        }
+        const makeRecordFromGroup = ([name, id]) => ({
+            key: `group_${id}`,
+            title: `Group: ${name}`,
+            href: `/group/${id}/contests`
+        });
 
         const makeGroups = pipe(
             safe(JSON.parse, []),
@@ -333,7 +326,7 @@ async function updateGroups() {
     if (location.href.endsWith(`/groups/with/${handle}`)) {
         // Opportune moment to update the user's groups
         const idRegex = /\/group\/([\d\w]+)/
-        let extractID = (group) => {
+        const extractID = group => {
             return idRegex.exec(group)[1];
         };
 

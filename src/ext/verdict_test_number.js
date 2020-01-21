@@ -21,16 +21,14 @@ export function init() {
     ready = true;
 
     // Proxy Codeforces.showMessage to hide the test case
-    if (Codeforces && Codeforces.showMessage) {
-        let _showMessage = Codeforces.showMessage;
+    let _showMessage = env.global.Codeforces.showMessage;
 
-        Codeforces.showMessage = function (message) {
-            if (config.get('hideTestNumber')) {
-                message = pluckVerdict(message);
-            }
-            _showMessage(message);
-        };
-    }
+    env.global.Codeforces.showMessage = function (message) {
+        if (config.get('hideTestNumber')) {
+            message = pluckVerdict(message);
+        }
+        _showMessage(message);
+    };
 
     // Subscribe to Codeforces submisions pubsub
     if (env.global.submissionsEventCatcher) {
@@ -47,7 +45,7 @@ export function init() {
 }
 
 
-export function install() {
+export const install = env.ready(function() {
     if (!config.get('hideTestNumber')) return;
 
     init();
@@ -56,7 +54,7 @@ export function install() {
 
     dom.$$('.verdict-rejected,.verdict-waiting')
         .forEach(pluckVerdictOnNode);
-}
+});
 
 export function uninstall() {
     if (!document.documentElement.classList.contains('verdict-hide-number')) return;

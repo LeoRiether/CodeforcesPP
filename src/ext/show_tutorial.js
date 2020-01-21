@@ -39,7 +39,7 @@ async function loadModal(deadline) {
         if (keyupEvent.key == 'Escape')
         closeModal();
     });
-    env.ready(() => document.body.appendChild(modal));
+    env.run_when_ready(() => document.body.appendChild(modal));
 
     // Get the problem ID
     let matches = location.pathname.match(/\/problemset\/problem\/(\d+)\/(.+)|\/contest\/(\d+)\/problem\/(.+)/i);
@@ -54,7 +54,7 @@ async function loadModal(deadline) {
     }
 
     // Get the CSRF Token
-    const csrf = await env.csrf();
+    const csrf = env.global.Codeforces.getCsrfToken();
 
     // Finally, load the tutorial
     let xhr = new XMLHttpRequest();
@@ -69,9 +69,7 @@ async function loadModal(deadline) {
     xhr.onload = () => {
         if (xhr.response && xhr.response.success) {
             modalInner.innerHTML = xhr.response.html;
-            env.inject(function typesetMath() {
-                MathJax.Hub.Queue(() => MathJax.Hub.Typeset(document.querySelector('.cfpp-modal-inner')[0]));
-            });
+            MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner));
         } else {
             modalInner.innerText = "Something went wrong!";
         }
@@ -103,7 +101,7 @@ export function install() {
         window.requestIdleCallback(loadModal, { timeout: 10000 });
     }
 
-    env.ready(() => dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> ));
+    env.run_when_ready(() => dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> ));
 }
 
 export function uninstall() { }

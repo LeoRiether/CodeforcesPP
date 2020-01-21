@@ -7,7 +7,7 @@
     permissions: [
         storage
         activeTab
-        tabs
+        *://codeforces.com/*
         http://fonts.googleapis.com/*
         https://fonts.googleapis.com/*
     ]
@@ -20,4 +20,21 @@
           run_at: document_start
         }
     ]
+
+    background: {
+        persistent: false
+        scripts: [ "browser-polyfill.min.js", "background.js" ]
+    }
+
+    browser_action: {
+        default_popup: popup.html
+        default_title: Codeforces++
+    }
+
+    icons: {
+        16:  /icons/16x16.png
+        32:  /icons/32x32.png
+        48:  /icons/48x48.png
+        128: /icons/128x128.png
+    }
 }

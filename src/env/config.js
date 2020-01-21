@@ -23,7 +23,7 @@ const defaultConfig = {
 };
 
 async function load() {
-    config = await env.storage.get('config');
+    config = await env.storage.get('cfpp');
 
     // Settings auto-extend when more are added in the script
     config = Object.assign({}, defaultConfig, config);
@@ -36,7 +36,7 @@ function reset() {
 }
 
 function save() {
-    env.storage.set('config', config);
+    env.storage.set('cfpp', config);
 }
 
 function commit(id) {
@@ -47,7 +47,9 @@ function commit(id) {
 /**
  * Creates the interface to change the settings.
  */
-function createUI() {
+const createUI = process.env.TARGET == 'extension'
+                 ? function(){ /* there's no createUI in extension mode */ }
+                 : env.ready(function() {
     // Some pages, like error pages and m2.codeforces, don't have a header
     // As there's no place to put the settings button, just abort
     if (!dom.$('.lang-chooser')) return;
@@ -171,7 +173,7 @@ function createUI() {
     // Append the created elements to the DOM
     document.body.appendChild(modal);
     dom.$('.lang-chooser').children[0].prepend(modalBtn);
-}
+});
 
 function closeUI() {
     dom.$('.cfpp-config').classList.add('cfpp-hidden');

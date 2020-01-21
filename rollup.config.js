@@ -70,11 +70,17 @@ export default [
             (process.env.NODE_ENV == 'production' ? terser() : {}),
             copy({
                 targets: [
-                    { src: 'src/contentScript.js', dest: 'dist/extension' },
-                    { src: 'src/background.js',    dest: 'dist/extension' },
-                    { src: 'src/background.html',  dest: 'dist/extension' },
-                    { src: 'src/custom.css',       dest: 'dist/extension' },
+                    { src: ['src/contentScript.js', 'src/popup.js', 'src/popup.html',
+                            'src/custom.css', 'src/background.js', 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js'],
+                      dest: 'dist/extension' },
                 ]
+            }),
+            copy({
+                targets: [
+                    { src: [ 'assets/icons/**', 'assets/cf++ logo.svg' ],
+                      dest: 'dist/extension/icons' },
+                ],
+                copyOnce: true
             }),
             copyManifest('manifest.hjson', 'dist/extension/manifest.json') // not ideal, when only the manifest changes, no build will be triggered
         ]

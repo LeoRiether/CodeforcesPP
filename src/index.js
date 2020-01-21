@@ -19,6 +19,8 @@ import * as finder from './ext/finder';
 import env from './env/env';
 import config from './env/config';
 
+import { tryCatch } from './helpers/Functional';
+
 (async function run() {
     console.log("Codeforces++ is running!");
 
@@ -39,6 +41,11 @@ import config from './env/config';
         [sidebar            , 'sidebarBox']
     ];
 
+    // It works until you need to change the load order
+    let moduleNames = [ 'style', 'show_tags', 'problemset', 'search_button',
+                        'show_tutorial', 'navbar', 'redirector', 'update_standings',
+                        'verdict_test', 'shortcuts', 'sidebar' ];
+
     function registerConfigCallback(m, id) {
         config.listen(id, value => {
             if (value === true || value === false) {
@@ -53,10 +60,10 @@ import config from './env/config';
     modules.forEach(([m, configID], index) => {
         if (process.env.NODE_ENV == 'development') {
             if (typeof m.install !== 'function' || typeof m.uninstall !== 'function')
-                return console.error(`Module #${index} needs to have both install() and uninstall() exported methods`);
+                return console.error(`Module ${moduleNames[index]} needs to have both install() and uninstall() exported methods`);
         }
 
-        m.install();
+        tryCatch(m.install, e => console.log(`Error installing module #${moduleNames[index]}:`, e)) ();
         if (configID) {
             registerConfigCallback(m, configID);
         }
@@ -65,12 +72,13 @@ import config from './env/config';
     style.common();
     finder.updateGroups();
 
-    const v = config.get('version');
-    if (v != env.version) {
-        config.set('version', env.version);
-        env.global.Codeforces('showMessage', `Codeforces++ was updated to version ${config.get('version')}!
-        Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">
-        changelog</a>`);
-    }
-
+    env.run_when_ready(function() {
+        const v = config.get('version');
+        if (v != env.version) {
+            config.set('version', env.version);
+            env.global.Codeforces.showMessage(`Codeforces++ was updated to version ${env.version}!
+            Read the <a href="https://github.com/LeoRiether/CodeforcesPP/releases/latest" style="text-decoration:underline !important;color:white;">
+            changelog</a>`);
+        }
+    });
 })();

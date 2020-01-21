@@ -1,6 +1,8 @@
 // DO NOT DIRECTLY REQUIRE THIS
 // require('env.js') instead
 
+import dom from '../helpers/dom';
+
 /**
  * Decorates a function so, when called, it only runs when the DOM has loaded
  * @example
@@ -18,7 +20,12 @@ export const ready = fn => (...args) => new Promise(res => {
     }
 });
 
-export const userHandle = ready(function () {
+/**
+ * @type Function -> Promise
+ */
+export const run_when_ready = fn => ready(fn)();
+
+export const userHandle = run_when_ready(function () {
     const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
     return handle == 'Enter' ? 'tourist' : handle;
 });

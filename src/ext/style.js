@@ -5,6 +5,20 @@
 import dom from '../helpers/dom';
 import config from '../env/config';
 
+// TODO: import style instead of having a string
+
+function injectStyle(css) {
+    let style = <style className="cfpp-style">{css}</style>;
+    (document.body || document.head || document.documentElement).appendChild(style);
+    return style;
+}
+
+const addStyle = typeof GM_addStyle === 'function'
+                 ? GM_addStyle
+                 : injectStyle;
+
+let injectedCustomStyle;
+
 export function custom() {
     if (process.env.TARGET === "extension") return;
 
@@ -18,8 +32,7 @@ export function custom() {
     // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/stripes-light.png") #f5f5f5;
     // background: url("https://www.toptal.com/designers/subtlepatterns/patterns/dust_scratches.png") #f2f2f2;
 
-
-    document.body.appendChild(<style className="cfpp-style">{`
+    injectedCustomStyle = addStyle(`
     @import url('https://fonts.googleapis.com/css?family=Libre+Franklin&display=swap');
 
     a, a:visited, .contest-state-phase {
@@ -51,7 +64,7 @@ export function custom() {
     .roundbox {
         border-radius: 6px;
         overflow: hidden;
-        border: none;
+        border: none !important;
         box-shadow: 1px 1px 5px rgba(108, 108, 108, 0.17);
     }
     .titled {
@@ -180,15 +193,13 @@ export function custom() {
         color: white;
     }
 
-    `}
-    {customCSS}
-    </style>);
+    ${customCSS}`);
 }
 
 export function common() {
     if (process.env.TARGET === "extension") return;
 
-    document.body.appendChild(<style>{`
+    addStyle(`
     @keyframes fadeIn {
         from { opacity: 0; }
         to   { opacity: 1; }
@@ -357,7 +368,7 @@ export function common() {
     .boxRow form {
         margin: 0 !important;
     }
-    `}</style>);
+    `);
 }
 
 // Applies only to custom css, which is configurable.
@@ -368,6 +379,5 @@ export function install() {
 }
 
 export function uninstall() {
-    let style = dom.$('.cfpp-style');
-    if (style) style.remove();
+    injectedCustomStyle && injectedCustomStyle.remove();
 }

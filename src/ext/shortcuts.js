@@ -59,7 +59,7 @@ let shortcuts = {
     'ctrl+shift+h': toggleVerdictTestNumber, // H => hard mode | hide test cases
 };
 
-let isFKey = key =>
+const isFKey = key =>
     (key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9');
 
 export function install() {

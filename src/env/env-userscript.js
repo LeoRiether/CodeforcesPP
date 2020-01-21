@@ -3,7 +3,7 @@
 
 import { safe } from '../helpers/Functional';
 
-export const global = unsafeWindow;
+export const global = typeof unsafeWindow !== 'undefined' && unsafeWindow;
 
 export const storage = {
     get: key => Promise.resolve(localStorage.getItem(key))
@@ -12,4 +12,3 @@ export const storage = {
 };
 
 export const version = typeof GM_info !== 'undefined' && GM_info.script.version;
-

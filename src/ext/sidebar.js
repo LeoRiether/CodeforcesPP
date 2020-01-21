@@ -41,7 +41,7 @@ function moveStar() {
 }
 
 let installed = false;
-function install() {
+export function install() {
     if (!config.get('sidebarBox')) return;
 
     // TODO: try to remove this in production, or at least make a good whitelist
@@ -75,12 +75,10 @@ function install() {
     moveStar();
 }
 
-function uninstall() {
+export function uninstall() {
     notifyPageNeedsRefresh();
 }
 
 function notifyPageNeedsRefresh() {
     Codeforces && Codeforces.showMessage("Please refresh the page to see changes");
 }
-
-module.exports = { install, uninstall };

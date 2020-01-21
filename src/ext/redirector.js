@@ -50,7 +50,7 @@ function gymVirtual() {
     `);
 }
 
-function install() {
+export function install() {
     if ((/\/groups\/with\//i).test(location.pathname)) {
         groups();
     }
@@ -75,6 +75,4 @@ function install() {
     }
 }
 
-function uninstall() { }
-
-module.exports = { install, uninstall };
+export function uninstall() { }

@@ -5,7 +5,7 @@
 import dom from '../helpers/dom';
 import env from '../env/env';
 
-export async function install() {
+export const install = env.ready(async function() {
     const handle = await env.userHandle;
 
     let oldNav = dom.$('.main-menu-list');
@@ -82,6 +82,6 @@ export async function install() {
     if (logo && logo.getAttribute('src').endsWith('codeforces-logo-with-telegram.png')) {
         logo.setAttribute('src', 'https://github.com/LeoRiether/CodeforcesPP/raw/master/assets/codeforcespp.png');
     }
-}
+});
 
 export function uninstall() {}
