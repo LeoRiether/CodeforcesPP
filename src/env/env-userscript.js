@@ -3,7 +3,7 @@
 
 import { safe } from '../helpers/Functional';
 
-export const global = typeof unsafeWindow !== 'undefined' && unsafeWindow;
+export const global = process.env.TARGET == 'userscript' && typeof unsafeWindow !== 'undefined' && unsafeWindow;
 
 export const storage = {
     get: key => Promise.resolve(localStorage.getItem(key))
@@ -11,4 +11,4 @@ export const storage = {
     set: (key, value) => Promise.resolve(localStorage.setItem(key, JSON.stringify(value)))
 };
 
-export const version = typeof GM_info !== 'undefined' && GM_info.script.version;
+export const version = process.env.TARGET == 'userscript' && typeof GM_info !== 'undefined' && GM_info.script.version;

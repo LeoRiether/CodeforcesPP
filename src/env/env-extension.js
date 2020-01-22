@@ -4,7 +4,7 @@
 import dom from '../helpers/dom';
 import { safe, pluck } from '../helpers/Functional';
 
-export const global = window;
+export const global = process.env.TARGET == 'extension' && window;
 
 // function query() {
 
