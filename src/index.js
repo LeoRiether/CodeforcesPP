@@ -2,6 +2,10 @@
  * @file Entry-point of the Codeforces++ core code a.k.a. runs the extension modules
  */
 
+// Immediately remove the injected script (only in extension mode, userscript managers already do this for us)
+if (process.env.TARGET == 'extension')
+    document.currentScript.remove();
+
 // Extension modules
 import * as show_tags from './ext/show_tags';
 import * as problemset from './ext/problemset';
