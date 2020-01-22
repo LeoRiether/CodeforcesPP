@@ -15,7 +15,51 @@ function closeModal() {
     dom.$('.cfpp-tutorial').classList.add('cfpp-hidden');
 }
 
-// TODO: refactor, this function is huge
+/**
+ * Queries the tutorial page and resolves with the HTML *string* returned by the Codeforces API
+ * Assumes the document has been loaded completely already (because install() is decorated with env.ready)
+ * @param {String} problemCode - see getProblemCode()
+ * @returns {Promise<String>}
+ */
+const getTutorialHTML = problemCode => new Promise(function(resolve, reject) {
+    const csrf = env.global.Codeforces.getCsrfToken();
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/data/problemTutorial');
+
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+    xhr.setRequestHeader('X-Csrf-Token', csrf);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    xhr.responseType = 'json';
+
+    xhr.onload = () => {
+        if (xhr.response && xhr.response.success) {
+            resolve(xhr.response.html);
+        } else {
+            reject("couldn't query the API");
+        }
+    };
+
+    xhr.onerror = () => reject("couldn't query the API");
+
+    xhr.send(`problemCode=${problemCode}&csrf_token=${csrf}`);
+});
+
+/**
+ * @returns {String} the problem code
+ * @example extractProblemCode("/contest/998/problem/D") //=> "998D"
+ */
+async function extractProblemCode(url) {
+    let matches = url.match(/\/problemset\/problem\/(\d+)\/(.+)|\/contest\/(\d+)\/problem\/(.+)/i);
+    if (matches[1])
+        return matches[1] + matches[2];
+    if (matches[3])
+        return matches[3] + matches[4];
+
+    throw "couldn't get problem code from URL";
+}
+
 async function loadModal(deadline) {
     if (modalLoaded || !deadline) {
         showModal();
@@ -39,54 +83,22 @@ async function loadModal(deadline) {
         if (keyupEvent.key == 'Escape')
         closeModal();
     });
-    env.run_when_ready(() => document.body.appendChild(modal));
+    document.body.appendChild(modal);
 
     // Get the problem ID
-    let matches = location.pathname.match(/\/problemset\/problem\/(\d+)\/(.+)|\/contest\/(\d+)\/problem\/(.+)/i);
-    let pcode;
-    if (matches[1])
-        pcode = matches[1] + matches[2];
-    else if (matches[3])
-        pcode = matches[3] + matches[4];
-    else {
-        modalInner.innerText = `Failed to get the problem code...`;
-        return;
-    }
 
-    // Get the CSRF Token
-    const csrf = env.global.Codeforces.getCsrfToken();
-
-    // Finally, load the tutorial
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/data/problemTutorial');
-
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
-    xhr.setRequestHeader('X-Csrf-Token', csrf);
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-    xhr.responseType = 'json';
-
-    xhr.onload = () => {
-        if (xhr.response && xhr.response.success) {
-            modalInner.innerHTML = xhr.response.html;
-            MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner));
-        } else {
-            modalInner.innerText = "Something went wrong!";
-        }
-    };
-
-    xhr.onerror = () => {
-        modalInner.innerText = `Failed to fetch tutorial! Here's an error code: ${xhr.status}`;
-    };
-
-    xhr.send(`problemCode=${pcode}&csrf_token=${csrf}`);
+    return extractProblemCode(location.pathname)
+          .then (getTutorialHTML)
+          .then (html => modalInner.innerHTML = html)
+          .then (() => MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner)))
+          .catch (err => modalInner.innerText = `Failed to load the tutorial: ${err}`);
 }
 
 /**
  * Creates a "Tutorial" button.
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
-export function install() {
+export const install = env.ready(function() {
     const problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
     if (!problemRegex.test(location.pathname)) return;
 
@@ -101,7 +113,7 @@ export function install() {
         window.requestIdleCallback(loadModal, { timeout: 10000 });
     }
 
-    env.run_when_ready(() => dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> ));
-}
+    dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> );
+});
 
 export function uninstall() { }
