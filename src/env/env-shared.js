@@ -10,15 +10,14 @@ import dom from '../helpers/dom';
  * write_sum(1, 2); // only writes when the DOM has loaded
  * @type (...a -> b) -> ...a -> Promise<b>
  */
-export const ready = fn => (...args) => new Promise(res => {
-    const resolver = () => res(fn(...args));
-
+export const ready = fn => (...args) => {
     if (document.readyState == 'complete') {
-        resolver();
-    } else {
-        document.addEventListener('DOMContentLoaded', resolver, { once: true });
+        return Promise.resolve(fn(...args));
     }
-});
+
+    return new Promise(res =>
+        document.addEventListener('DOMContentLoaded', () => res(fn(...args)), { once: true }));
+};
 
 /**
  * @type Function -> Promise
