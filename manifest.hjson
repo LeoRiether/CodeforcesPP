@@ -21,6 +21,8 @@
         }
     ]
 
+    web_accessible_resources: ["*.js"]
+
     background: {
         persistent: false
         scripts: [ "browser-polyfill.min.js", "background.js" ]
