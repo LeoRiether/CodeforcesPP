@@ -62,7 +62,7 @@ export default [
     {
         input: 'src/index.js',
         output: {
-            format: 'esm',
+            format: 'iife',
             file: 'dist/extension/index.js',
         },
         plugins: [
