@@ -97,7 +97,7 @@ async function loadModal(deadline) {
  * When clicked, the button will create a modal and fill it with the tutorial's content
  */
 export const install = env.ready(function() {
-    const problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i;
+    const problemRegex = /\/problemset\/problem\/|\/contest\/\d+\/problem\/(\w|\d)/i;
     if (!problemRegex.test(location.pathname)) return;
 
     let btn = <a className="cfpp-tutorial-btn" style="cursor: pointer;"> Tutorial </a>;
