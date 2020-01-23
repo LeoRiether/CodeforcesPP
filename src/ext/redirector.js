@@ -4,6 +4,7 @@
 
 import dom from '../helpers/dom';
 import config from '../env/config';
+import env from '../env/env';
 
 // Replaces /members by /contests on the groups page
 function groups() {
@@ -50,7 +51,7 @@ function gymVirtual() {
     `);
 }
 
-export function install() {
+export const install = env.ready(function() {
     if ((/\/groups\/with\//i).test(location.pathname)) {
         groups();
     }
@@ -73,6 +74,6 @@ export function install() {
     if (/gym\/\d+$/i.test(location.pathname) || /group\/[a-zA-Z0-9]+\/contest\/\d+$/i.test(location.pathname)) {
         gymVirtual();
     }
-}
+});
 
 export function uninstall() { }
