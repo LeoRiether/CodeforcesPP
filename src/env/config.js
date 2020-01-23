@@ -15,7 +15,7 @@ const defaultConfig = {
     style:          true,
     searchBtn:      true,
     finder:         'Ctrl+Space',
-    darkMode:       false,
+    darkTheme:      false,
     standingsItv:   0,
     defStandings:   'Common',
     hideTestNumber: false,
@@ -67,6 +67,7 @@ const createUI = process.env.TARGET == 'extension' && false
         prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
         prop('Finder keyboard shortcut', 'text', 'finder'),
         prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber'),
+        prop('Dark Theme', 'toggle', 'darkTheme'),
     ];
 
     if (process.env.NODE_ENV == 'development') {
@@ -86,6 +87,8 @@ const createUI = process.env.TARGET == 'extension' && false
             config[id] = checkbox.checked;
             commit(id);
         });
+
+        events.listen(id, value => checkbox.checked = value);
 
         return checkbox;
     }
@@ -191,6 +194,7 @@ export default {
     closeUI,
     get: key => config[key],
     set: (key, value) => { config[key] = value; commit(key); },
+    toggle: key => { config[key] = !config[key]; commit(key); },
     load,
     reset,
     save,

@@ -65,7 +65,3 @@ export function uninstall() {
             e.childNodes[0].nodeValue += ' on test ';
         });
 }
-
-export function toggle() {
-    config.set('hideTestNumber', !config.get('hideTestNumber'));
-}

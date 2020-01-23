@@ -5,7 +5,6 @@
 import dom from '../helpers/dom';
 import * as finder from './finder';
 import config from '../env/config';
-import { toggle as toggleVerdictTestNumber } from './verdict_test_number';
 
 //
 // Commands
@@ -34,29 +33,12 @@ function scrollToPageContent() {
     document.documentElement.scrollBy(0, -20);
 }
 
-function darkMode() {
-    if (dom.$('.darkreader')) {
-        // Only invert images
-        if (dom.$('img.inverted')) {
-            dom.$$('img').forEach(i => i.classList.remove('inverted'));
-        } else {
-            dom.$$('img').forEach(i => i.classList.add('inverted'));
-        }
-        return;
-    }
-
-    let html = document.documentElement;
-    let isDark = html.classList.contains('cfpp-dark-mode');
-    html.classList.toggle('cfpp-dark-mode');
-    config.set('darkMode', !isDark);
-}
-
 let shortcuts = {
     'ctrl+s': submit,
     'ctrl+shift+v': scrollToPageContent, // V => view
     'ctrl+alt+v': scrollToPageContent,
-    'ctrl+i': darkMode,
-    'ctrl+shift+h': toggleVerdictTestNumber, // H => hard mode | hide test cases
+    'ctrl+i': () => config.toggle('darkTheme'),
+    'ctrl+shift+h': () => config.toggle('verdictTestNumber'), // H => hard mode | hide test cases
 };
 
 const isFKey = key =>
@@ -91,10 +73,6 @@ export function install() {
             fn();
         }
     });
-
-    if (config.get('darkMode')) {
-        darkMode();
-    }
 }
 
 export function uninstall() { }
