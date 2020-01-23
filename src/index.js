@@ -2,7 +2,8 @@
  * @file Entry-point of the Codeforces++ core code a.k.a. runs the extension modules
  */
 
-// Immediately remove the injected script (only in extension mode, userscript managers already do this for us)
+// "Don't inject moz-extension paths directly" https://extensionworkshop.com/documentation/develop/build-a-secure-extension/
+// Immediately remove the injected script to mitigate this issue (only in extension mode, userscript managers already do this for us)
 if (process.env.TARGET == 'extension')
     document.currentScript.remove();
 
