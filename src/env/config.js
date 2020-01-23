@@ -47,7 +47,7 @@ function commit(id) {
 /**
  * Creates the interface to change the settings.
  */
-const createUI = process.env.TARGET == 'extension'
+const createUI = process.env.TARGET == 'extension' && false
                  ? function(){ /* there's no createUI in extension mode */ }
                  : env.ready(function() {
     // Some pages, like error pages and m2.codeforces, don't have a header
@@ -68,6 +68,12 @@ const createUI = process.env.TARGET == 'extension'
         prop('Finder keyboard shortcut', 'text', 'finder'),
         prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber'),
     ];
+
+    if (process.env.NODE_ENV == 'development') {
+        modalProps.push(
+            prop('Version', 'text', 'version')
+        );
+    }
 
     function makeToggle({id}) {
         let checkbox =

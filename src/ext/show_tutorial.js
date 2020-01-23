@@ -85,8 +85,6 @@ async function loadModal(deadline) {
     });
     document.body.appendChild(modal);
 
-    // Get the problem ID
-
     return extractProblemCode(location.pathname)
           .then (getTutorialHTML)
           .then (html => modalInner.innerHTML = html)
