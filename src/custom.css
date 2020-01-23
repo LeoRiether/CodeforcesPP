@@ -159,7 +159,7 @@ div.ttypography p, .sample-test {
 
 /* Background */
 body {
-    background: #f2f2f2;
+    background: #f2f2f2 !important;
 }
 #pageContent {
     background: white;
