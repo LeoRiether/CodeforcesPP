@@ -115,19 +115,19 @@ input[type=submit]:active {
 
 /* Better problem statement */
 .problem-statement {
-    margin: 0; /* why did it have a 4-side margin in first place?? */
-    margin-right: 1.5em; /* better separation */
+    margin: 0 !important; /* why did it have a 4-side margin in first place?? */
+    margin-right: 1.5em !important; /* better separation */
 }
 .problem-statement .property-title {
-    display: none;
+    display: none !important;
 }
 .problem-statement .header .title {
-    font-size: 200%;
-    margin-bottom: 0;
+    font-size: 200% !important;
+    margin-bottom: 0 !important;
 }
 .problem-statement .header {
-    margin: 2.5em 0 1.5em 0;
-    text-align: left;
+    margin: 2.5em 0 1.5em 0 !important;
+    text-align: left !important;
 }
 .problem-statement .header>div {
     display: inline-block !important;
