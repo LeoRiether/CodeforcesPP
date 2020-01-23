@@ -4,11 +4,12 @@
 
 import dom from '../helpers/dom';
 import config from '../env/config';
+import env from '../env/env';
 import { flatten, pipe, forEach } from '../helpers/Functional';
 
 // Note: each col is *moved* into the box, there's no cloneNode here.
 // This is done to keep event listeners attached, but prevents uninstall() from ever existing
-let addToBox = box => col =>
+const addToBox = box => col =>
     box.appendChild(
         <tr className="boxRow"><td>
             <div style="display: flex;">
@@ -41,18 +42,16 @@ function moveStar() {
 }
 
 let installed = false;
-export function install() {
+export const install = env.ready(function() {
     if (!config.get('sidebarBox')) return;
 
-    // TODO: try to remove this in production, or at least make a good whitelist
-    if (!/\/(problem|gym)\//.test(location.href)) return;
-
     let sidebar = dom.$('#sidebar'),
+        rtable = dom.$('#sidebar>:first-child .rtable'),
         box = dom.$('.sidebox .rtable tbody', sidebar),
         forms = [].slice.call(dom.$$('.sidebox form', sidebar)),
         menu = dom.$('.second-level-menu'),
         menuLinks = dom.$$('.second-level-menu-list li>a', menu);
-    if (!sidebar || !box || !menu) return;
+    if (!sidebar || !rtable || !box || !menu) return;
 
     if (installed) return notifyPageNeedsRefresh(); // can't install twice
     installed = true;
@@ -73,12 +72,12 @@ export function install() {
     if (submitForm) addToBox (box) (submitForm);
 
     moveStar();
-}
+});
 
 export function uninstall() {
     notifyPageNeedsRefresh();
 }
 
 function notifyPageNeedsRefresh() {
-    Codeforces && Codeforces.showMessage("Please refresh the page to see changes");
+    env.global.Codeforces.showMessage("Please refresh the page to see changes");
 }
