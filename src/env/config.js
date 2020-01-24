@@ -13,7 +13,6 @@ let config = {};
 const defaultConfig = {
     showTags:       true,
     style:          true,
-    searchBtn:      true,
     finder:         'Ctrl+Space',
     darkTheme:      false,
     standingsItv:   0,
@@ -63,7 +62,6 @@ const createUI = process.env.TARGET == 'extension' && false
         prop('Sidebar Action Box', 'toggle', 'sidebarBox'),
         prop('Default standings', 'select', 'defStandings', ['Common', 'Friends']),
         prop('Custom Style', 'toggle', 'style'),
-        prop('"Google It" button', 'toggle', 'searchBtn'),
         prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
         prop('Finder keyboard shortcut', 'text', 'finder'),
         prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber'),
