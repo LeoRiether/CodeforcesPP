@@ -23,7 +23,7 @@ a, a:visited, .contest-state-phase {
     /* color: #0000EE; */ /* default link color */
     color: #2c63d5;
 }
-.cfpp-modal a:link {
+.cfpp-modal a:link:not(:focus) {
     color: inherit !important;
 }
 .titled, .caption {
