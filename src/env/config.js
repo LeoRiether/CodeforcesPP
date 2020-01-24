@@ -151,6 +151,16 @@ const createUI = process.env.TARGET == 'extension' && false
             node = document.createTextNode(`${p.type} does not have a make function! Please check the createUI function on config.js`);
         }
 
+        if (p.type == 'toggle') {
+            // Toggles come before their labels
+            return (
+                <div>
+                    {node}
+                    <label style="margin-left: 0.5em;" for={p.id}>{p.title}</label>
+                </div>
+            );
+        }
+
         return (
             <div>
                 <label for={p.id}>{p.title}</label>
