@@ -4,8 +4,7 @@
 
 import dom from '../helpers/dom';
 import env from '../env/env';
-
-let modalLoaded = false;
+import { once } from '../helpers/Functional';
 
 function showModal() {
     dom.$('.cfpp-tutorial').classList.remove('cfpp-hidden');
@@ -60,18 +59,7 @@ async function extractProblemCode(url) {
     throw "couldn't get problem code from URL";
 }
 
-async function loadModal(deadline) {
-    if (modalLoaded || !deadline) {
-        showModal();
-        return;
-    }
-
-    if (deadline && deadline.timeRemaining() <= 0)
-        return;
-
-    modalLoaded = true;
-
-    // Create the modal and its children
+function createModalNodes() {
     let modalInner = <div className="cfpp-modal-inner">loading...</div>
     let modal =
         <div className="cfpp-modal cfpp-tutorial cfpp-hidden">
@@ -83,6 +71,15 @@ async function loadModal(deadline) {
         if (keyupEvent.key == 'Escape')
         closeModal();
     });
+
+    return [modal, modalInner];
+}
+
+const loadModal = once(async function(deadline) {
+    if (deadline && deadline.timeRemaining() <= 0)
+        return;
+
+    let [modal, modalInner] = createModalNodes();
     document.body.appendChild(modal);
 
     return extractProblemCode(location.pathname)
@@ -90,7 +87,7 @@ async function loadModal(deadline) {
           .then (html => modalInner.innerHTML = html)
           .then (() => MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner)))
           .catch (err => modalInner.innerText = `Failed to load the tutorial: ${err}`);
-}
+});
 
 /**
  * Creates a "Tutorial" button.

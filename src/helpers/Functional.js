@@ -81,7 +81,13 @@ export const flatten = list => list.reduce((acc, a) => acc.concat([].slice.call(
 
 export function once(fn) {
     let result, ran = false;
-    return (...args) => ran ? result : fn(...args);
+    return function(...args) {
+        if (!ran) {
+            ran = true;
+            result = fn(...args);
+        }
+        return result;
+    };
 }
 
 export const pluck = key => obj => obj[key];
