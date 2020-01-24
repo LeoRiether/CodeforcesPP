@@ -4,7 +4,7 @@
 
 import dom from '../helpers/dom';
 import config from '../env/config';
-import { safe, pipe, map } from '../helpers/Functional';
+import { safe, pipe, map, once } from '../helpers/Functional';
 import env from '../env/env';
 
 let isOpen = false;
@@ -217,44 +217,34 @@ async function resultList() {
     return data;
 }
 
-// Create can be called many times, but will only create the finder once
-// Returns a promise
-let createPromise = undefined;
-function create() {
-    if (createPromise !== undefined) {
-        return createPromise;
-    }
+const create = once(async function() {
+    let input = <input type="text" className="finder-input" placeholder="Search anything"/>;
+    let results = <ul className="finder-results" />;
 
-    createPromise = new Promise(async (res, rej) => {
-        let input = <input type="text" className="finder-input" placeholder="Search anything"/>;
-        let results = <ul className="finder-results" />;
+    let modal =
+        <div className="cfpp-modal cfpp-hidden" tabindex="0">
+            <div className="cfpp-modal-background" onClick={close}/>
+            <div className="finder-inner" tabindex="0">
+                {input}
+                {results}
+            </div>
+        </div>;
 
-        let modal =
-            <div className="cfpp-modal cfpp-hidden" tabindex="0">
-                <div className="cfpp-modal-background" onClick={close}/>
-                <div className="finder-inner" tabindex="0">
-                    {input}
-                    {results}
-                </div>
-            </div>;
-
-        dom.on(document, 'keyup', e => {
-            if (e.key == 'Escape')
-                close();
-        });
-
-        const list = await resultList();
-        results.append(...list.map(props =>
-            <Result {...props} />
-        ));
-
-        bindEvents(input, results);
-
-        document.body.appendChild(modal);
-        res({ modal, input, results });
+    dom.on(document, 'keyup', e => {
+        if (e.key == 'Escape')
+            close();
     });
-    return createPromise;
-}
+
+    const list = await resultList();
+    results.append(...list.map(props =>
+        <Result {...props} />
+    ));
+
+    bindEvents(input, results);
+
+    document.body.appendChild(modal);
+    return { modal, input, results };
+});
 
 async function open() {
     if (isOpen) return;
