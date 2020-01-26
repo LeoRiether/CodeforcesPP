@@ -1,5 +1,5 @@
-// DO NOT DIRECTLY REQUIRE THIS
-// require('env.js') instead
+// DO NOT DIRECTLY IMPORT THIS
+// import 'env.js' instead
 
 import { safe } from '../helpers/Functional';
 
@@ -10,5 +10,3 @@ export const storage = {
                 .then (safe(JSON.parse, {})),
     set: (key, value) => Promise.resolve(localStorage.setItem(key, JSON.stringify(value)))
 };
-
-export const version = process.env.TARGET == 'userscript' && typeof GM_info !== 'undefined' && GM_info.script.version;

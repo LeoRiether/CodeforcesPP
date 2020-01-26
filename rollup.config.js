@@ -39,7 +39,11 @@ const plugins = TARGET => [
         exclude: 'node_modules/**',
         babelrc: true,
     }),
-    injectProcessEnv({ NODE_ENV: process.env.NODE_ENV || 'development', TARGET }),
+    injectProcessEnv({
+        NODE_ENV: process.env.NODE_ENV || 'development',
+        VERSION: require('./package.json').version,
+        TARGET
+    }),
     importCss(),
 ];
 
@@ -70,8 +74,8 @@ export default [
             (process.env.NODE_ENV == 'production' ? terser() : {}),
             copy({
                 targets: [
-                    { src: ['src/contentScript.js', 'src/popup.js', 'src/popup.html',
-                            'src/custom.css', 'src/background.js', 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js'],
+                    { src: [/*'src/contentScript.js',*/ 'src/popup.js', 'src/popup.html',
+                            'src/custom.css', /*'src/background.js',*/ 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js'],
                       dest: 'dist/extension' },
                 ]
             }),
@@ -84,5 +88,21 @@ export default [
             }),
             copyManifest('manifest.hjson', 'dist/extension/manifest.json') // not ideal, when only the manifest changes, no build will be triggered
         ]
+    },
+    {
+        input: 'src/contentScript.js',
+        output: {
+            format: 'esm',
+            file: 'dist/extension/contentScript.js',
+        },
+        plugins: plugins('extension'),
+    },
+    {
+        input: 'src/background.js',
+        output: {
+            format: 'esm',
+            file: 'dist/extension/background.js',
+        },
+        plugins: plugins('extension'),
     }
 ];

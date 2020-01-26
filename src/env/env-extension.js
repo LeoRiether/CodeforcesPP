@@ -1,28 +1,44 @@
 // DO NOT DIRECTLY REQUIRE THIS
 // require('env.js') instead
 
-import dom from '../helpers/dom';
-import { safe, pluck } from '../helpers/Functional';
+import { pluck } from '../helpers/Functional';
 
 export const global = process.env.TARGET == 'extension' && window;
 
-// function query() {
+// Stands for Message-Passing Hell and helps us to send and receive messages
+let mph = {
+    resolvers: {},
+    genID: (id => () => id++)(1),
 
-// }
+    send(message) {
+        return new Promise((resolve, reject) => {
+            let id = this.genID();
+            message.id = id;
+            message.to = 'cs';
+            this.resolvers[id] = resolve;
+            console.log('Posting message', message);
 
-// TODO: fix these
-// export let storage = {
-//     get: key => browser.storage.sync.get([key])
-//                 .then (pluck(key)),
-//     set: (key, value) => browser.storage.sync.set({ [key]: value })
-// };
+            window.postMessage(message, '*');
+            setTimeout(() => reject('Failed to get configuration: timeout'), 20000); // 20s timeout
+        });
+    },
 
-// export const version = browser.runtime.getManifest().version;
+    init() {
+        window.addEventListener('message', e => {
+            console.log("[mph] Got", e.data);
+            if (e.origin !== window.origin || e.data.type !== 'bg result')
+                return;
 
-export const storage = {
-    get: key => Promise.resolve(localStorage.getItem(key))
-                .then (safe(JSON.parse, {})),
-    set: (key, value) => Promise.resolve(localStorage.setItem(key, JSON.stringify(value)))
+            this.resolvers[e.data.id](e.data.result);
+            delete this.resolvers[e.data.id];
+        });
+    }
 };
 
-export const version = '0.1.2';
+mph.init();
+
+export const storage = {
+    get: key => mph.send({ type: 'get storage', key })
+                .then (pluck(key)),
+    set: (key, value) => mph.send({ type: 'set storage', key, value })
+};

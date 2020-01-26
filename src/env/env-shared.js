@@ -1,5 +1,5 @@
-// DO NOT DIRECTLY REQUIRE THIS
-// require('env.js') instead
+// DO NOT DIRECTLY IMPORT THIS
+// import 'env.js' instead
 
 import dom from '../helpers/dom';
 
@@ -28,3 +28,5 @@ export const userHandle = run_when_ready(function () {
     const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
     return handle == 'Enter' ? 'tourist' : handle;
 });
+
+export const version = process.env.VERSION;

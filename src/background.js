@@ -1,21 +1,25 @@
-browser.runtime.onMessage.addListener(function(message, sender) {
+browser.runtime.onMessage.addListener(data => {
+    console.log('Got message', data);
 
-    if (message === 'inject') {
-        browser.tabs.executeScript(sender.tab.id, {
-            file: '/index.js',
-            runAt: 'document_start'
-        });
-        return;
+    if (data.to !== 'bg') return false;
+
+    let resultPromise = false;
+
+    // { type: 'get storage', key: 'cfpp' }
+    if (data.type === 'get storage') {
+        resultPromise = browser.storage.sync.get([data.key]);
     }
 
-    // { type: 'load config', key: 'cfpp' }
-    if (message.type === 'load config') {
-        return browser.storage.sync.get([message.key]);
+    // { type: 'set storage', key: 'cfpp', value: 'some string' }
+    if (data.type === 'set storage') {
+        resultPromise = browser.storage.sync.set({ [data.key]: data.value });
     }
 
-    // { type: 'load config', key: 'cfpp', value: 'some string' }
-    if (message.type === 'save config') {
-        return browser.storage.sync.set({ [message.key]: message.value });
-    }
+    if (resultPromise === false) return false;
 
+    return resultPromise.then(r => ({
+        type: 'bg result',
+        id: data.id,
+        result: r
+    }));
 });
