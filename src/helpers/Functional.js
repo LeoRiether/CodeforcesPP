@@ -93,7 +93,7 @@ export function once(fn) {
 export const pluck = key => obj => obj[key];
 
 export async function time(fn) {
-    if (process.env.NODE_ENV == 'development') return fn();
+    if (process.env.NODE_ENV == 'production') return fn();
     const start = performance.now();
     await fn();
     const delta = performance.now() - start;
