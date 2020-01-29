@@ -154,16 +154,21 @@ div.ttypography p, .sample-test {
     border: none;
 }
 #facebox {
-    position: fixed;
+    position: fixed !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50% , -50%);
 }
 
 /* Background */
-body {
-    background: #f2f2f2 !important;
+html {
+    background: #f2f2f2;
 }
+body {
+    background: inherit !important;
+    margin: 0;
+}
+
 #pageContent {
     background: white;
     padding: 1.5em !important;
@@ -177,10 +182,6 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; }
     to   { opacity: 1; }
-}
-
-body {
-    margin: 0;
 }
 
 /** Config **/
@@ -324,7 +325,10 @@ html.cfpp-dark-mode .tex-formula:not(.inverted) {
 }
 #header img { filter: none; }
 html.cfpp-dark-mode {
-    background: black;
+    background: hsl(0, 0%, 7%) !important;
+}
+html.cfpp-dark-mode body {
+    background: hsl(0, 0%, 93%) !important;
 }
 
 .verdict-hide-number .verdict-format-judged,
