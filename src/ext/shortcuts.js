@@ -38,7 +38,7 @@ let shortcuts = {
     'ctrl+shift+v': scrollToPageContent, // V => view
     'ctrl+alt+v': scrollToPageContent,
     'ctrl+i': () => config.toggle('darkTheme'),
-    'ctrl+shift+h': () => config.toggle('verdictTestNumber'), // H => hard mode | hide test cases
+    'ctrl+shift+h': () => config.toggle('hideTestNumber'), // H => hard mode | hide test cases
 };
 
 const isFKey = key =>
