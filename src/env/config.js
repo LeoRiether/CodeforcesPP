@@ -5,7 +5,7 @@
 // TODO: needs some refactoring
 
 import dom from '../helpers/dom';
-import { safe } from '../helpers/Functional';
+import { safe, time } from '../helpers/Functional';
 import * as events from '../helpers/events';
 import env from './env';
 
@@ -22,7 +22,9 @@ const defaultConfig = {
 };
 
 async function load() {
-    config = await env.storage.get('cfpp');
+    await time(async function loadConfiguration() {
+        config = await env.storage.get('cfpp');
+    });
 
     // Settings auto-extend when more are added in the script
     config = Object.assign({}, defaultConfig, config);

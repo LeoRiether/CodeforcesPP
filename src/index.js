@@ -25,9 +25,11 @@ import * as finder from './ext/finder';
 import env from './env/env';
 import config from './env/config';
 
-import { tryCatch } from './helpers/Functional';
+import { tryCatch, time } from './helpers/Functional';
 
-(async function run() {
+time(run);
+
+async function run() {
     console.log("Codeforces++ is running!");
 
     await config.load();
@@ -88,4 +90,4 @@ import { tryCatch } from './helpers/Functional';
             changelog</a>`);
         }
     });
-})();
+}

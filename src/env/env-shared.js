@@ -3,6 +3,8 @@
 
 import dom from '../helpers/dom';
 
+export const version = process.env.VERSION;
+
 /**
  * Decorates a function so, when called, it only runs when the DOM has loaded
  * @example
@@ -28,5 +30,3 @@ export const userHandle = run_when_ready(function () {
     const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
     return handle == 'Enter' ? 'tourist' : handle;
 });
-
-export const version = process.env.VERSION;
