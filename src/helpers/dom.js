@@ -40,15 +40,13 @@ export default {
             el = tag(props);
         }
 
-        if (children) {
-            for (let c of children) {
-                if (typeof c === 'string') {
-                    el.appendChild(document.createTextNode(c));
-                } else if (c instanceof Array) {
-                    el.append(...c);
-                } else if (c) {
-                    el.appendChild(c);
-                }
+        for (let c of children) {
+            if (typeof c === 'string') {
+                el.appendChild(document.createTextNode(c));
+            } else if (c instanceof Array) {
+                el.append(...c);
+            } else if (c) {
+                el.appendChild(c);
             }
         }
 
@@ -57,16 +55,14 @@ export default {
 
     fragment(...children) {
         let frag = document.createDocumentFragment();
-        if (children) {
-            for (let c of children) {
-                if (typeof c === 'string') {
-                    frag.appendChild(document.createTextNode(c));
-                } else if (c instanceof Array) {
-                    for (let cc of c)
-                        frag.appendChild(cc);
-                } else if (c) {
-                    frag.appendChild(c);
-                }
+        for (let c of children) {
+            if (typeof c === 'string') {
+                frag.appendChild(document.createTextNode(c));
+            } else if (c instanceof Array) {
+                for (let cc of c)
+                    frag.appendChild(cc);
+            } else if (c) {
+                frag.appendChild(c);
             }
         }
         return frag;

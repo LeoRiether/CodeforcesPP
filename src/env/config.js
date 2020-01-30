@@ -5,7 +5,7 @@
 // TODO: needs some refactoring
 
 import dom from '../helpers/dom';
-import { safe, time } from '../helpers/Functional';
+import { time } from '../helpers/Functional';
 import * as events from '../helpers/events';
 import env from './env';
 

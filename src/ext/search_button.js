@@ -4,7 +4,6 @@
  */
 
 import dom from '../helpers/dom';
-import config from '../env/config';
 import env from '../env/env';
 
 export const install = env.ready(function() {
