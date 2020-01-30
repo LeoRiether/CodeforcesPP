@@ -78,6 +78,7 @@ async function run() {
         }
     });
 
+    style.common();
     finder.updateGroups();
 
     env.run_when_ready(function() {

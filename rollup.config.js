@@ -39,15 +39,12 @@ const plugins = TARGET => [
         exclude: 'node_modules/**',
         babelrc: true,
     }),
-    importCss({
-        include: 'src/*.css',
-        minimize: true,
-    }),
     injectProcessEnv({
         NODE_ENV: process.env.NODE_ENV || 'development',
         VERSION: require('./package.json').version,
         TARGET
     }),
+    importCss(),
 ];
 
 export default [
