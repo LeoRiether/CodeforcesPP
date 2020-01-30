@@ -39,12 +39,15 @@ const plugins = TARGET => [
         exclude: 'node_modules/**',
         babelrc: true,
     }),
+    importCss({
+        include: 'src/*.css',
+        minify: true,
+    }),
     injectProcessEnv({
         NODE_ENV: process.env.NODE_ENV || 'development',
         VERSION: require('./package.json').version,
         TARGET
     }),
-    importCss(),
 ];
 
 export default [
@@ -74,8 +77,8 @@ export default [
             (process.env.NODE_ENV == 'production' ? terser() : {}),
             copy({
                 targets: [
-                    { src: [/*'src/contentScript.js',*/ 'src/popup.js', 'src/popup.html',
-                            'src/custom.css', /*'src/background.js',*/ 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js'],
+                    { src: ['src/popup.js', 'src/popup.html',
+                            'src/custom.css', 'src/common.css', 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js'],
                       dest: 'dist/extension' },
                 ]
             }),
