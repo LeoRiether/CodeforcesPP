@@ -104,8 +104,8 @@ export const install = env.ready(function() {
     });
 
     // Load the tutorial if we're idle
-    if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(loadModal, { timeout: 10000 });
+    if ('requestIdleCallback' in env.global) {
+        env.global.requestIdleCallback(loadModal, { timeout: 10000 });
     }
 
     dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> );
