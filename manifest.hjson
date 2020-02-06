@@ -16,7 +16,7 @@
         {
           matches: [ "*://codeforces.com/*" ]
           js: [ "contentScript.js" ]
-          css: [ "custom.css" ]
+          css: [ "common.css" ]
           run_at: document_start
         }
     ]

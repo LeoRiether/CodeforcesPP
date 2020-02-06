@@ -37,8 +37,12 @@ let mph = {
 
 mph.init();
 
+// export const storage = {
+//     get: key => mph.send({ type: 'get storage', key })
+//                 .then (pluck(key)),
+//     set: (key, value) => mph.send({ type: 'set storage', key, value })
+// };
 export const storage = {
-    get: key => mph.send({ type: 'get storage', key })
-                .then (pluck(key)),
-    set: (key, value) => mph.send({ type: 'set storage', key, value })
+    get: async key => JSON.parse(localStorage.getItem(key)),
+    set: async (key, value) => localStorage.setItem(key, JSON.stringify(value))
 };

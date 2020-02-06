@@ -20,15 +20,13 @@ const addStyle = typeof GM_addStyle === 'function'
 let injectedCustomStyle;
 
 export function custom() {
-    if (process.env.TARGET === "extension") return;
-
     injectedCustomStyle = addStyle(customCSS);
 }
 
 export function common() {
-    if (process.env.TARGET === "extension") return;
-
-    addStyle(commonCSS);
+    if (process.env.TARGET != 'extension') {
+        addStyle(commonCSS);
+    }
 }
 
 // Applies only to custom css, which is configurable.

@@ -8,6 +8,7 @@ import dom from '../helpers/dom';
 import { time } from '../helpers/Functional';
 import * as events from '../helpers/events';
 import env from './env';
+import { prop, configProps as modalProps } from './config_props';
 
 let config = {};
 const defaultConfig = {
@@ -48,27 +49,12 @@ function commit(id) {
 /**
  * Creates the interface to change the settings.
  */
-const createUI = process.env.TARGET == 'extension' && false
+const createUI = process.env.TARGET == 'extension'
                  ? function(){ /* there's no createUI in extension mode */ }
                  : env.ready(function() {
     // Some pages, like error pages and m2.codeforces, don't have a header
     // As there's no place to put the settings button, just abort
     if (!dom.$('.lang-chooser')) return;
-
-    function prop(title, type, id, data) {
-        return { title, type, id, data };
-    }
-
-    let modalProps = [
-        prop('"Show Tags" button', 'toggle', 'showTags'),
-        prop('Sidebar Action Box', 'toggle', 'sidebarBox'),
-        prop('Default standings', 'select', 'defStandings', ['Common', 'Friends']),
-        prop('Custom Style', 'toggle', 'style'),
-        prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
-        prop('Finder keyboard shortcut', 'text', 'finder'),
-        prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber'),
-        prop('Dark Theme', 'toggle', 'darkTheme'),
-    ];
 
     if (process.env.NODE_ENV == 'development') {
         modalProps.push(
@@ -143,12 +129,12 @@ const createUI = process.env.TARGET == 'extension' && false
     };
 
     // Create the actual nodes based on the props
-    modalProps = modalProps.map(p => {
+    let modalInner = modalProps.map(p => {
         let node;
         if (typeof make[p.type] === 'function') {
             node = make[p.type](p);
         } else {
-            node = document.createTextNode(`${p.type} does not have a make function! Please check the createUI function on config.js`);
+            node = document.createTextNode(`${p.type} does not have a make function! Please check the createUIInner function on config.js`);
         }
 
         if (p.type == 'toggle') {
@@ -173,7 +159,7 @@ const createUI = process.env.TARGET == 'extension' && false
         <div className="cfpp-config cfpp-modal cfpp-hidden">
             <div className="cfpp-modal-background" onClick={closeUI}/>
             <div className="cfpp-modal-inner">
-                {modalProps}
+                {modalInner}
             </div>
         </div>
     );
