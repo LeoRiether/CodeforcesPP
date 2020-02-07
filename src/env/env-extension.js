@@ -1,7 +1,7 @@
 // DO NOT DIRECTLY REQUIRE THIS
 // require('env.js') instead
 
-import { pluck } from '../helpers/Functional';
+import { pluck, once } from '../helpers/Functional';
 
 export const global = process.env.TARGET == 'extension' && window;
 
@@ -11,6 +11,7 @@ let mph = {
     genID: (id => () => id++)(1),
 
     send(message) {
+        this.init();
         return new Promise((resolve, reject) => {
             let id = this.genID();
             message.id = id;
@@ -23,7 +24,7 @@ let mph = {
         });
     },
 
-    init() {
+    init: once(function() {
         window.addEventListener('message', e => {
             console.log("[mph] Got", e.data);
             if (e.origin !== window.origin || e.data.type !== 'bg result')
@@ -32,10 +33,8 @@ let mph = {
             this.resolvers[e.data.id](e.data.result);
             delete this.resolvers[e.data.id];
         });
-    }
+    })
 };
-
-mph.init();
 
 // export const storage = {
 //     get: key => mph.send({ type: 'get storage', key })

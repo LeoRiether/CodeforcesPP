@@ -2,6 +2,7 @@
 // import 'env.js' instead
 
 import dom from '../helpers/dom';
+import { once } from '../helpers/Functional';
 
 export const version = process.env.VERSION;
 
@@ -26,7 +27,7 @@ export const ready = fn => (...args) => {
  */
 export const run_when_ready = fn => ready(fn)();
 
-export const userHandle = run_when_ready(function () {
+export const userHandle = once(ready(function () {
     const handle = dom.$('.lang-chooser').children[1].children[0].innerText.trim();
     return handle == 'Enter' ? 'tourist' : handle;
-});
+}));
