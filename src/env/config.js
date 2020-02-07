@@ -11,7 +11,7 @@ import env from './env';
 import { Config } from './config_ui';
 
 let config = {};
-const defaultConfig = {
+export const defaultConfig = {
     showTags:       true,
     style:          true,
     finder:         'Ctrl+Space',
@@ -22,7 +22,7 @@ const defaultConfig = {
     sidebarBox:     true
 };
 
-async function load() {
+export async function load() {
     await time(async function loadConfiguration() {
         config = await env.storage.get('cfpp');
     });
@@ -32,14 +32,14 @@ async function load() {
     save();
 }
 
-function reset() {
+export function reset() {
     config = defaultConfig;
     save();
 }
-function save() {
+export function save() {
     env.storage.set('cfpp', config);
 }
-function commit(id) {
+export function commit(id) {
     events.fire(id, config[id]);
     save();
 }
@@ -47,7 +47,7 @@ function commit(id) {
 /**
  * Creates the interface to change the settings.
  */
-const createUI = process.env.TARGET == 'extension'
+export const createUI = process.env.TARGET == 'extension'
                  ? function(){ /* there's no createUI in extension mode */ }
                  : env.ready(function()
 {
@@ -86,22 +86,11 @@ const createUI = process.env.TARGET == 'extension'
     dom.$('.lang-chooser').children[0].prepend(modalBtn);
 });
 
-function closeUI() {
+export function closeUI() {
     dom.$('.cfpp-config').classList.add('cfpp-hidden');
     save();
 }
 
-export default {
-    createUI,
-    closeUI,
-    get: key => config[key],
-    set: (key, value) => { config[key] = value; commit(key); },
-    toggle: key => { config[key] = !config[key]; commit(key); },
-    load,
-    reset,
-    save,
-
-    // Events stuff
-    listen: events.listen,
-    fire: events.fire,
-};
+export const get = key => config[key];
+export const set = (key, value) => { config[key] = value; commit(key); };
+export const toggle = key => set(key, !config[key]);

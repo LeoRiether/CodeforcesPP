@@ -3,11 +3,11 @@
  */
 
 import dom from '../helpers/dom';
-import config from '../env/config';
+import * as config from '../env/config';
 import commonCSS from '../common.css';
 import customCSS from '../custom.css';
 
-function injectStyle(css) {
+async function injectStyle(css) {
     let style = <style className="cfpp-style">{css}</style>;
     (document.body || document.head || document.documentElement).appendChild(style);
     return style;
@@ -19,11 +19,11 @@ const addStyle = typeof GM_addStyle === 'function'
 
 let injectedCustomStyle;
 
-export function custom() {
-    injectedCustomStyle = addStyle(customCSS);
+export async function custom() {
+    injectedCustomStyle = await addStyle(customCSS);
 }
 
-export function common() {
+export async function common() {
     if (process.env.TARGET != 'extension') {
         addStyle(commonCSS);
     }
@@ -38,4 +38,5 @@ export function install() {
 
 export function uninstall() {
     injectedCustomStyle && injectedCustomStyle.remove();
+    injectedCustomStyle = undefined;
 }

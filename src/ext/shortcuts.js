@@ -4,7 +4,8 @@
 
 import dom from '../helpers/dom';
 import * as finder from './finder';
-import config from '../env/config';
+import * as config from '../env/config';
+import * as events from '../helpers/events';
 
 //
 // Commands
@@ -47,7 +48,7 @@ const isFKey = key =>
 export function install() {
     let finderValue = config.get('finder').toLowerCase();
     shortcuts[finderValue] = finder.open;
-    config.listen('finder', newValue => {
+    events.listen('finder', newValue => {
         delete shortcuts[finderValue];
         finderValue = newValue.toLowerCase();
         shortcuts[finderValue] = finder.open;
