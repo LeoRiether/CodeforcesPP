@@ -94,8 +94,14 @@ export const pluck = key => obj => obj[key];
 
 export async function time(fn) {
     if (process.env.NODE_ENV == 'production') return fn();
-    const start = performance.now();
+    console.time('[CF++] ' + fn.name);
     await fn();
-    const delta = performance.now() - start;
-    console.log(`${fn.name}() took ${delta}ms`);
+    console.timeEnd('[CF++] ' + fn.name);
+}
+
+export async function profile(fn) {
+    if (process.env.NODE_ENV == 'production') return fn();
+    console.profile(fn.name);
+    await time(fn);
+    console.profileEnd(fn.name);
 }

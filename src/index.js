@@ -23,11 +23,12 @@ import * as sidebar from './ext/sidebar';
 import * as finder from './ext/finder';
 
 import env from './env/env';
-import config from './env/config';
+import * as config from './env/config';
+import * as events from './helpers/events';
 
-import { tryCatch, time } from './helpers/Functional';
+import { tryCatch, time, profile } from './helpers/Functional';
 
-time(run);
+profile(run);
 
 async function run() {
     console.log("Codeforces++ is running!");
@@ -56,7 +57,7 @@ async function run() {
                         'verdict_test', 'shortcuts', 'sidebar' ];
 
     function registerConfigCallback(m, id) {
-        config.listen(id, value => {
+        events.listen(id, value => {
             if (value === true || value === false) {
                 value ? m.install() : m.uninstall();
             } else {
