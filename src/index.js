@@ -33,7 +33,7 @@ profile(run);
 async function run() {
     console.log("Codeforces++ is running!");
 
-    await config.load();
+    config.load();
     config.createUI();
 
     let modules = [

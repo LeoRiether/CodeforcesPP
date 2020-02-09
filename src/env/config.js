@@ -5,7 +5,7 @@
 // TODO: needs some refactoring
 
 import dom from '../helpers/dom';
-import { time } from '../helpers/Functional';
+import { objectDelta, safe } from '../helpers/Functional';
 import * as events from '../helpers/events';
 import env from './env';
 import { Config } from './config_ui';
@@ -22,14 +22,37 @@ export const defaultConfig = {
     sidebarBox:     true
 };
 
-export async function load() {
-    await time(async function loadConfiguration() {
-        config = await env.storage.get('cfpp');
-    });
+export function load() {
+    // Get the data from localStorage because it's fast
+    config = safe (JSON.parse, {}) (localStorage.cfpp);
 
     // Settings auto-extend when more are added in the script
     config = Object.assign({}, defaultConfig, config);
-    save();
+
+    if (process.env.TARGET == 'extension') {
+        // Query the updated data (from browser.storage.sync) when the window is idle
+        // Can be very slow on some browsers (like Opera)
+        if ('requestIdleCallback' in env.global) {
+            env.global.requestIdleCallback(updateFromSync, { timeout: 1000 });
+        } else {
+            updateFromSync();
+        }
+    } else {
+        save();
+    }
+}
+
+function updateFromSync() {
+    return env.storage
+    .get('cfpp')
+    .then(data => {
+        objectDelta(config, data)
+        .forEach(key => {
+            config[key] = data[key];
+            events.fire(key, data[key]);
+        });
+    })
+    .then(save);
 }
 
 export function reset() {
@@ -37,7 +60,10 @@ export function reset() {
     save();
 }
 export function save() {
-    env.storage.set('cfpp', config);
+    localStorage.cfpp = JSON.stringify(config);
+    if (process.env.target == 'extension') {
+        env.storage.set('cfpp', config);
+    }
 }
 export function commit(id) {
     events.fire(id, config[id]);

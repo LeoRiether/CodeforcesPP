@@ -92,6 +92,21 @@ export function once(fn) {
 
 export const pluck = key => obj => obj[key];
 
+/**
+ * Returns a list of keys such that a[key] != b[key]
+ * @param {Object} a
+ * @param {Object} b
+ * @returns {[String]}
+ */
+export function objectDelta(a, b) {
+    let deltas = {};
+    const different = key => a[key] != b[key];
+    const add = key => deltas[key] = true;
+    Object.keys(a).filter(different).forEach(add);
+    Object.keys(b).filter(different).forEach(add); // If a and b have the same structure, this line is redundant. // TODO: maybe just remove this
+    return Object.keys(deltas);
+}
+
 export async function time(fn) {
     if (process.env.NODE_ENV == 'production') return fn();
     console.time('[CF++] ' + fn.name);

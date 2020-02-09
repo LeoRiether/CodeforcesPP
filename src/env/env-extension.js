@@ -24,7 +24,11 @@ let mph = {
         });
     },
 
-    init: once(function() {
+    initialized: false, // not using Functional.once here because it changes `this` to something else
+    init() {
+        if (this.initialized) return;
+        this.initialized = true;
+
         window.addEventListener('message', e => {
             console.log("[mph] Got", e.data);
             if (e.origin !== window.origin || e.data.type !== 'bg result')
@@ -33,15 +37,11 @@ let mph = {
             this.resolvers[e.data.id](e.data.result);
             delete this.resolvers[e.data.id];
         });
-    })
+    }
 };
 
-// export const storage = {
-//     get: key => mph.send({ type: 'get storage', key })
-//                 .then (pluck(key)),
-//     set: (key, value) => mph.send({ type: 'set storage', key, value })
-// };
 export const storage = {
-    get: async key => JSON.parse(localStorage.getItem(key)),
-    set: async (key, value) => localStorage.setItem(key, JSON.stringify(value))
+    get: key => mph.send({ type: 'get storage', key })
+                .then (pluck(key)),
+    set: (key, value) => mph.send({ type: 'set storage', key, value })
 };
