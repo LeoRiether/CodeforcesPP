@@ -79,7 +79,7 @@ export const install = env.ready(async function() {
 
     // Change Codeforces logo to Codeforces++
     let logo = dom.$('#header img');
-    if (logo && logo.getAttribute('src').endsWith('logo-with-upper-gamma.png')) {
+    if (logo && /codeforces-logo/.test(logo.getAttribute('src'))) {
         logo.setAttribute('src', 'https://github.com/LeoRiether/CodeforcesPP/raw/master/assets/codeforcespp.png');
     }
 });
