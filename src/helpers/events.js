@@ -2,7 +2,6 @@
  * @file Minimalistic event-bus
  */
 
-import { safe } from './Functional';
 let listeners = {};
 
 export function listen(event, callback) {

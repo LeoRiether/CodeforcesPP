@@ -61,7 +61,7 @@ export function reset() {
 }
 export function save() {
     localStorage.cfpp = JSON.stringify(config);
-    if (process.env.target == 'extension') {
+    if (process.env.TARGET == 'extension') {
         env.storage.set('cfpp', config);
     }
 }

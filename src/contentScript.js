@@ -18,12 +18,13 @@ window.addEventListener('message', e => {
     if (e.origin != window.origin || e.data.to != 'cs')
         return;
 
+    // TODO: error handling for the promises
     if (e.data.type == 'get storage') {
         browser.storage.sync.get([e.data.key])
         .then(result => respond(e, result));
     }
     else if (e.data.type == 'set storage') {
-        browser.storage.sync.set({ [data.key]: data.value })
+        browser.storage.sync.set({ [e.data.key]: e.data.value })
         .then(result => respond(e, result));
     }
     else {
