@@ -5,7 +5,7 @@
 // TODO: needs some refactoring
 
 import dom from '../helpers/dom';
-import { objectDelta, safe } from '../helpers/Functional';
+import { safe } from '../helpers/Functional';
 import * as events from '../helpers/events';
 import env from './env';
 import { Config } from './config_ui';
@@ -42,14 +42,23 @@ export function load() {
     }
 }
 
+/**
+ * We want to patch an object (set `obj[key] = patch[key]` for every key in patch).
+ * keysToPatch() returns the keys that we need to update to apply this patch.
+ * It does not return any key that has `obj[key] == patch[key]`
+ */
+const keysToPatch = (obj, patch) =>
+    Object.keys(patch)
+          .filter(k => obj[k] != patch[k]);
+
 function updateFromSync() {
     return env.storage
     .get('cfpp')
-    .then(data => {
-        objectDelta(config, data)
+    .then(patch => {
+        keysToPatch(config, patch)
         .forEach(key => {
-            config[key] = data[key];
-            events.fire(key, data[key]);
+            config[key] = patch[key];
+            events.fire(key, patch[key]);
         });
     })
     .then(save);
