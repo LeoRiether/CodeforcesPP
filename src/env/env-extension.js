@@ -1,7 +1,7 @@
 // DO NOT DIRECTLY REQUIRE THIS
 // require('env.js') instead
 
-import { pluck, once } from '../helpers/Functional';
+import { pluck } from '../helpers/Functional';
 
 export const global = process.env.TARGET == 'extension' && window;
 

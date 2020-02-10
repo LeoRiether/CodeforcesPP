@@ -27,7 +27,7 @@ import env from './env/env';
 import * as config from './env/config';
 import * as events from './helpers/events';
 
-import { tryCatch, time, profile } from './helpers/Functional';
+import { tryCatch, profile } from './helpers/Functional';
 
 profile(run);
 
