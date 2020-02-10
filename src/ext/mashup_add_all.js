@@ -30,8 +30,8 @@ export const install = env.ready(function() {
 
     let button = <div style="text-align: center;">
         <input type="submit" onClick={addAll} value="Add all" />
-        <span style={`border-radius: 50%; background: #959595; color: white; margin-left: 0.5em;
-                      display: inline-block; text-align: center; width: 1em; cursor: pointer;`}
+        <span style="border-radius: 50%; background: #959595; color: white; margin-left: 0.5em;
+                      display: inline-block; text-align: center; width: 1em; cursor: pointer;"
               onClick={() => env.global.Codeforces.showMessage(`Input multiple problem codes separated by whitespace (like "123A 123B")
                                                                 and press "Add all" to add all of them at once`)}>
                ?
