@@ -21,6 +21,7 @@ import * as verdict_test_number from './ext/verdict_test_number';
 import * as shortcuts from './ext/shortcuts';
 import * as sidebar from './ext/sidebar';
 import * as finder from './ext/finder';
+import * as mashup_add_all from './ext/mashup_add_all';
 
 import env from './env/env';
 import * as config from './env/config';
@@ -48,13 +49,14 @@ async function run() {
         [update_standings   , 'standingsItv'],
         [verdict_test_number, 'hideTestNumber'],
         [shortcuts          , ''],
-        [sidebar            , 'sidebarBox']
+        [sidebar            , 'sidebarBox'],
+        [mashup_add_all     , ''],
     ];
 
     // It works until you need to change the load order
     let moduleNames = [ 'style', 'dark_theme', 'show_tags', 'problemset', 'search_button',
                         'show_tutorial', 'navbar', 'redirector', 'update_standings',
-                        'verdict_test', 'shortcuts', 'sidebar' ];
+                        'verdict_test', 'shortcuts', 'sidebar', 'mashup_add_all' ];
 
     function registerConfigCallback(m, id) {
         events.listen(id, value => {
