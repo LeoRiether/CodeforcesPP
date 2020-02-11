@@ -6,7 +6,6 @@ import { defaultConfig } from './env/config';
 let config;
 
 async function sendChangeToInjected(id, value) {
-    console.log(`sending change id=<${id}> value=<${value}>`);
     // There are like 3 ways of sending messages around
     // what the fuck
     let tabs = await browser.tabs.query({});
