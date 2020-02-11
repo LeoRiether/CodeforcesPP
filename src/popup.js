@@ -1,77 +1,46 @@
 import dom from './helpers/dom';
-import { prop, configProps } from './env/config_props';
+import * as events from './helpers/events';
+import { Config } from './env/config_ui';
+import { defaultConfig } from './env/config';
 
-function changed(id, value) {
-    console.log(`#${id} changed to ${value}. Notifying clients (not really, not implemented)`);
+let config;
+
+async function sendChangeToInjected(id, value) {
+    console.log(`sending change id=<${id}> value=<${value}>`);
+    // There are like 3 ways of sending messages around
+    // what the fuck
+    let tabs = await browser.tabs.query({});
+    tabs.forEach(t =>
+        browser.tabs.sendMessage(t.id, {
+            type: 'config change',
+            to: 'is',
+            id,
+            value,
+        })
+    );
 }
 
-let config = {}; // meh
-
-const Toggle = ({id}) =>
-    <input id={id}
-            checked={config[id]}
-            type="checkbox"
-            onChange={e => changed(id, e.target.checked)} />;
-
-const Number = ({id}) =>
-    <input id={id}
-           value={config[id] || 0}
-           type="number"
-           onInput={e => changed(id, +e.target.value)}/>;
-
-const Select = ({id, data}) =>
-    <select id={id}
-            onChange={e => changed(id, e.target.value)}>
-        {
-            data.map(option =>
-                <option value={option}
-                        selected={option == config[id]}>
-                    {option}
-                </option>)
-        }
-    </select>;
-
-const Text = ({id}) =>
-    <input id={id}
-           value={config[id]}
-           type="text"
-           onChange={e => changed(id, e.target.value)}/>;
-
-function Prop({ title, type, id, data }) {
-    const table = {
-        toggle: () => <Toggle id={id}/>,
-        number: () => <Number id={id}/>,
-        select: () => <Select id={id} data={data}/>,
-        text:   () => <Text   id={id}/>
-    };
-
-    let el = table[type]();
-
-    if (type == 'toggle') {
-        // Checkbox comes before toggle
-        return <div>
-            {el}
-            <label for={id}>{title}</label>
-        </div>;
-    }
-    return <div>
-        <label for={id}>{title}</label>
-        {el}
-    </div>;
+function pushChange(id, value) {
+    console.log(`#${id} changed to ${value}. Notifying clients.`);
+    config[id] = value;
+    events.fire(id, value);
+    sendChangeToInjected(id, value);
+    browser.storage.sync.set({ cfpp: config });
 }
 
-function Config() {
-    if (process.env.NODE_ENV == 'development') {
-        configProps.push(
-            prop('Version', 'text', 'version')
-        );
-    }
+events.listen('darkTheme', on => {
+    document.body.classList[on ? 'add' : 'remove']('dark');
+});
 
-    let inner = configProps.map(p => <Prop {...p}/>);
+(async function() {
+    config = await browser.storage.sync.get(['cfpp']);
+    config = config.cfpp;
+    config = Object.assign({}, defaultConfig, config);
 
-    return <div>
-        {inner}
-    </div>;
-}
+    if (config.darkTheme)
+        document.body.classList.add('dark');
 
-document.body.appendChild(<Config />);
+    document.body.appendChild(<div id="ui">
+        <Config config={config} pushChange={pushChange} pullChange={events.listen} />
+    </div>);
+})();

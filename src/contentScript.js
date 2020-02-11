@@ -6,7 +6,8 @@ function respond(event, result) {
     window.postMessage({
         type: 'bg result',
         id: event.data.id,
-        result: result
+        result: result,
+        to: 'is',
     }, window.origin);
 }
 
@@ -38,8 +39,7 @@ window.addEventListener('message', e => {
 });
 browser.runtime.onMessage.addListener(e => {
     log('[content] Got from bg', e);
-    if (e.origin === window.origin)
-        window.postMessage(e, window.origin);
+    window.postMessage(e, window.origin);
 });
 
 let script = document.createElement('script');

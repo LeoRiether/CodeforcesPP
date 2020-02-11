@@ -2,8 +2,13 @@
 // require('env.js') instead
 
 import { pluck } from '../helpers/Functional';
+import * as events from '../helpers/events';
 
 export const global = process.env.TARGET == 'extension' && window;
+
+const log = process.env.NODE_ENV == 'development'
+            ? console.log
+            : function(){};
 
 // Stands for Message-Passing Hell and helps us to send and receive messages
 let mph = {
@@ -17,7 +22,6 @@ let mph = {
             message.id = id;
             message.to = 'cs';
             this.resolvers[id] = resolve;
-            console.log('Posting message', message);
 
             window.postMessage(message, '*');
             setTimeout(() => reject('Failed to get configuration: timeout'), 20000); // 20s timeout
@@ -30,12 +34,17 @@ let mph = {
         this.initialized = true;
 
         window.addEventListener('message', e => {
-            console.log("[mph] Got", e.data);
-            if (e.origin !== window.origin || e.data.type !== 'bg result')
+            log("[mph] Got", e.data);
+            if (e.origin !== window.origin || e.data.to != 'is')
                 return;
 
-            this.resolvers[e.data.id](e.data.result);
-            delete this.resolvers[e.data.id];
+            if (e.data.type == 'bg result') {
+                this.resolvers[e.data.id](e.data.result);
+                delete this.resolvers[e.data.id];
+            }
+            else if (e.data.type == 'config change') {
+                events.fire('request config change', { id: e.data.id, value: e.data.value });
+            }
         });
     }
 };

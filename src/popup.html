@@ -8,8 +8,15 @@
 
     <style>
         body {
-            margin: 1em;
-            width: 300px;
+            margin: 0;
+            width: 256px;
+            padding: 0.5em;
+        }
+        .dark {
+            background: black;
+            color: white;
+            border: 2px solid white;
+            border-radius: 6px;
         }
 
         #ui {
@@ -17,13 +24,20 @@
         }
         #ui>div {
             margin-bottom: 0.5em;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
+        #ui input[type=text], #ui input[type=number] {
+            width: 32%;
+        }
+
         label {
-            margin-right: 0.5em;
+            user-select: none;;
         }
 
         #logo {
-            width: 7rem;
+            width: 5rem;
         }
 
         .centered {
@@ -37,6 +51,8 @@
     <div class="centered">
         <img id="logo" src="icons/cf++ logo.svg" alt="Something else is supposed to be here">
     </div>
+
+    <script src="/browser-polyfill.min.js"></script>
     <script src="/popup.js"></script>
 
 </body>

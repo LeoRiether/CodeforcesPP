@@ -11,6 +11,10 @@ import env from './env';
 import { Config } from './config_ui';
 
 let config = {};
+export const get = key => config[key];
+export const set = (key, value) => { config[key] = value; commit(key); };
+export const toggle = key => set(key, !config[key]);
+
 export const defaultConfig = {
     showTags:       true,
     style:          true,
@@ -40,6 +44,9 @@ export function load() {
     } else {
         save();
     }
+
+    // Listen to requests for the config to change. Can come from the MPH, for example (env-extension.js)
+    events.listen('request config change', ({ id, value }) => set(id, value));
 }
 
 /**
@@ -64,10 +71,6 @@ function updateFromSync() {
     .then(save);
 }
 
-export function reset() {
-    config = defaultConfig;
-    save();
-}
 export function save() {
     localStorage.cfpp = JSON.stringify(config);
     if (process.env.TARGET == 'extension') {
@@ -90,23 +93,17 @@ export const createUI = process.env.TARGET == 'extension'
     // As there's no place to put the settings button, just abort
     if (!dom.$('.lang-chooser')) return;
 
-    function pushChange(id, value) {
-        // TODO: fix for extension, maybe
-        config[id] = value;
-        commit(id);
-    }
-
     let modal = (
         <div className="cfpp-config cfpp-modal cfpp-hidden">
             <div className="cfpp-modal-background" onClick={closeUI}/>
             <div className="cfpp-modal-inner">
-                <Config config={config} pushChange={pushChange} pullChange={events.listen} />
+                <Config config={config} pushChange={set} pullChange={events.listen} />
             </div>
         </div>
     );
 
     // Create the button that shows the modal
-    let modalBtn = <a className="cfpp-config-btn">[++]</a>
+    let modalBtn = <a className="cfpp-config-btn">[++]</a>;
     dom.on(modalBtn, 'click', ev => {
         ev.preventDefault();
         modal.classList.remove('cfpp-hidden');
@@ -125,7 +122,3 @@ export function closeUI() {
     dom.$('.cfpp-config').classList.add('cfpp-hidden');
     save();
 }
-
-export const get = key => config[key];
-export const set = (key, value) => { config[key] = value; commit(key); };
-export const toggle = key => set(key, !config[key]);
