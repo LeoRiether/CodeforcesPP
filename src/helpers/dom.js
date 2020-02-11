@@ -19,7 +19,7 @@ export default {
 
     /**
      * Works like React.createElement
-     * Doesn't support a set of features, like dataset attributions, but should work for most purposes
+     * Doesn't support a set of features, but should work for most purposes
      */
     element(tag, props, ...children) {
         let el;

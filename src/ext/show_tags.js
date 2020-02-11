@@ -2,7 +2,7 @@
  * @file Adds a "Show Tags" button to a problem's page
  */
 import dom from '../helpers/dom';
-import config from '../env/config';
+import * as config from '../env/config';
 import env from '../env/env';
 
 export const install = env.ready(function () {

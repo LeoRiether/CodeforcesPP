@@ -5,12 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Codeforces++ Background Page</title>
+
+    <style>
+        body {
+            margin: 0;
+            width: 256px;
+            padding: 0.5em;
+        }
+        .dark {
+            background: black;
+            color: white;
+            border: 2px solid white;
+            border-radius: 6px;
+        }
+
+        #ui {
+            font-size: 1.15em;
+        }
+        #ui>div {
+            margin-bottom: 0.5em;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        #ui input[type=text], #ui input[type=number] {
+            width: 32%;
+        }
+
+        label {
+            user-select: none;;
+        }
+
+        #logo {
+            width: 5rem;
+        }
+
+        .centered {
+            text-align: center;
+        }
+    </style>
+
 </head>
 <body>
 
-    <img src="icons/cf++ logo.svg" alt="Codeforces++">
+    <div class="centered">
+        <img id="logo" src="icons/cf++ logo.svg" alt="Something else is supposed to be here">
+    </div>
 
-    <button>Click here to claim your prize!</button>
+    <script src="/browser-polyfill.min.js"></script>
+    <script src="/popup.js"></script>
 
 </body>
 </html>

@@ -6,7 +6,7 @@ import dom from '../helpers/dom';
 import env from '../env/env';
 
 export const install = env.ready(async function() {
-    const handle = await env.userHandle;
+    const handle = await env.userHandle();
 
     let oldNav = dom.$('.main-menu-list');
     let newNav = <nav className="cfpp-navbar"/>;
@@ -79,7 +79,7 @@ export const install = env.ready(async function() {
 
     // Change Codeforces logo to Codeforces++
     let logo = dom.$('#header img');
-    if (logo && logo.getAttribute('src').endsWith('codeforces-logo-with-telegram.png')) {
+    if (logo && /codeforces-logo/.test(logo.getAttribute('src'))) {
         logo.setAttribute('src', 'https://github.com/LeoRiether/CodeforcesPP/raw/master/assets/codeforcespp.png');
     }
 });

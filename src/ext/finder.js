@@ -3,7 +3,7 @@
  */
 
 import dom from '../helpers/dom';
-import config from '../env/config';
+import * as config from '../env/config';
 import { safe, pipe, map, once } from '../helpers/Functional';
 import env from '../env/env';
 
@@ -185,7 +185,7 @@ function bindEvents(input, results) {
 }
 
 async function resultList() {
-    const handle = await env.userHandle;
+    const handle = await env.userHandle();
 
     let data = [];
     if (/\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i.test(location.pathname)) {
@@ -312,7 +312,7 @@ function includesSubseq(text, pattern) {
 }
 
 async function updateGroups() {
-    const handle = await env.userHandle;
+    const handle = await env.userHandle();
     if (location.href.endsWith(`/groups/with/${handle}`)) {
         // Opportune moment to update the user's groups
         const idRegex = /\/group\/([\d\w]+)/

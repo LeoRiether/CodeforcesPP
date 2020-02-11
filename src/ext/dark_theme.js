@@ -1,4 +1,4 @@
-import config from '../env/config';
+import * as config from '../env/config';
 
 export function install() {
     if (config.get('darkTheme'))

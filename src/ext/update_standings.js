@@ -3,7 +3,7 @@
  */
 
 import dom from '../helpers/dom';
-import config from '../env/config';
+import * as config from '../env/config';
 
 // FIXME: cf-predictor deltas dissapear after reloading standings
 

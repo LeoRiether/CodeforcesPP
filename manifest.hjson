@@ -15,8 +15,8 @@
     content_scripts: [
         {
           matches: [ "*://codeforces.com/*" ]
-          js: [ "contentScript.js" ]
-          css: [ "custom.css" ]
+          js: [ "browser-polyfill.min.js", "contentScript.js" ]
+          css: [ "common.css" ]
           run_at: document_start
         }
     ]
@@ -24,8 +24,8 @@
     web_accessible_resources: ["*.js"]
 
     background: {
-        persistent: false
-        scripts: [ "background.js" ]
+        persistent: true // should be changed to false later
+        scripts: [ "browser-polyfill.min.js", "background.js" ]
     }
 
     browser_action: {

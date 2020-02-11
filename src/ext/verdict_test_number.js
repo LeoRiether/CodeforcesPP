@@ -3,7 +3,7 @@
  */
 
 import dom from '../helpers/dom';
-import config from '../env/config';
+import * as config from '../env/config';
 import { safe } from '../helpers/Functional';
 import env from '../env/env';
 

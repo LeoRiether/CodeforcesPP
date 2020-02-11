@@ -69,16 +69,13 @@ function createModalNodes() {
 
     dom.on(document, 'keyup', keyupEvent => {
         if (keyupEvent.key == 'Escape')
-        closeModal();
+            closeModal();
     });
 
     return [modal, modalInner];
 }
 
-const loadModal = once(async function(deadline) {
-    if (deadline && deadline.timeRemaining() <= 0)
-        return;
-
+const loadModal = once(async function() {
     let [modal, modalInner] = createModalNodes();
     document.body.appendChild(modal);
 

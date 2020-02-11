@@ -77,8 +77,8 @@ export default [
             (process.env.NODE_ENV == 'production' ? terser() : {}),
             copy({
                 targets: [
-                    { src: ['src/popup.js', 'src/popup.html',
-                            'src/custom.css', 'src/common.css', 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js'],
+                    { src: ['src/popup.html', 'src/custom.css', 'src/common.css',
+                            'node_modules/webextension-polyfill/dist/browser-polyfill.min.js'],
                       dest: 'dist/extension' },
                 ]
             }),
@@ -107,5 +107,13 @@ export default [
             file: 'dist/extension/background.js',
         },
         plugins: plugins('extension'),
+    },
+    {
+        input: 'src/popup.js',
+        output: {
+            format: 'esm',
+            file: 'dist/extension/popup.js'
+        },
+        plugins: plugins('extension')
     }
 ];

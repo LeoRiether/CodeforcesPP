@@ -55,6 +55,7 @@ html.cfpp-dark-mode .cfpp-modal-background { background: #ffffff87; }
 
 /** Navbar **/
 .cfpp-navbar {
+    float: left;
     margin-left: 1.5em;
 }
 .cfpp-navbar-item {

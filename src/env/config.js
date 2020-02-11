@@ -5,12 +5,17 @@
 // TODO: needs some refactoring
 
 import dom from '../helpers/dom';
-import { time } from '../helpers/Functional';
+import { safe } from '../helpers/Functional';
 import * as events from '../helpers/events';
 import env from './env';
+import { Config } from './config_ui';
 
 let config = {};
-const defaultConfig = {
+export const get = key => config[key];
+export const set = (key, value) => { config[key] = value; commit(key); };
+export const toggle = key => set(key, !config[key]);
+
+export const defaultConfig = {
     showTags:       true,
     style:          true,
     finder:         'Ctrl+Space',
@@ -21,26 +26,58 @@ const defaultConfig = {
     sidebarBox:     true
 };
 
-async function load() {
-    await time(async function loadConfiguration() {
-        config = await env.storage.get('cfpp');
-    });
+export function load() {
+    // Get the data from localStorage because it's fast
+    config = safe (JSON.parse, {}) (localStorage.cfpp);
 
     // Settings auto-extend when more are added in the script
     config = Object.assign({}, defaultConfig, config);
-    save();
+
+    if (process.env.TARGET == 'extension') {
+        // Query the updated data (from browser.storage.sync) when the window is idle
+        // Can be very slow on some browsers (like Opera)
+        if ('requestIdleCallback' in env.global) {
+            env.global.requestIdleCallback(updateFromSync, { timeout: 1000 });
+        } else {
+            updateFromSync();
+        }
+    } else {
+        save();
+    }
+
+    // Listen to requests for the config to change. Can come from the MPH, for example (env-extension.js)
+    events.listen('request config change', ({ id, value }) => set(id, value));
 }
 
-function reset() {
-    config = defaultConfig;
-    save();
+/**
+ * We want to patch an object (set `obj[key] = patch[key]` for every key in patch).
+ * keysToPatch() returns the keys that we need to update to apply this patch.
+ * It does not return any key that has `obj[key] == patch[key]`
+ */
+const keysToPatch = (obj, patch) =>
+    Object.keys(patch)
+          .filter(k => obj[k] != patch[k]);
+
+function updateFromSync() {
+    return env.storage
+    .get('cfpp')
+    .then(patch => {
+        keysToPatch(config, patch)
+        .forEach(key => {
+            config[key] = patch[key];
+            events.fire(key, patch[key]);
+        });
+    })
+    .then(save);
 }
 
-function save() {
-    env.storage.set('cfpp', config);
+export function save() {
+    localStorage.cfpp = JSON.stringify(config);
+    if (process.env.TARGET == 'extension') {
+        env.storage.set('cfpp', config);
+    }
 }
-
-function commit(id) {
+export function commit(id) {
     events.fire(id, config[id]);
     save();
 }
@@ -48,138 +85,25 @@ function commit(id) {
 /**
  * Creates the interface to change the settings.
  */
-const createUI = process.env.TARGET == 'extension' && false
+export const createUI = process.env.TARGET == 'extension'
                  ? function(){ /* there's no createUI in extension mode */ }
-                 : env.ready(function() {
+                 : env.ready(function()
+{
     // Some pages, like error pages and m2.codeforces, don't have a header
     // As there's no place to put the settings button, just abort
     if (!dom.$('.lang-chooser')) return;
-
-    function prop(title, type, id, data) {
-        return { title, type, id, data };
-    }
-
-    let modalProps = [
-        prop('"Show Tags" button', 'toggle', 'showTags'),
-        prop('Sidebar Action Box', 'toggle', 'sidebarBox'),
-        prop('Default standings', 'select', 'defStandings', ['Common', 'Friends']),
-        prop('Custom Style', 'toggle', 'style'),
-        prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
-        prop('Finder keyboard shortcut', 'text', 'finder'),
-        prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber'),
-        prop('Dark Theme', 'toggle', 'darkTheme'),
-    ];
-
-    if (process.env.NODE_ENV == 'development') {
-        modalProps.push(
-            prop('Version', 'text', 'version')
-        );
-    }
-
-    function makeToggle({id}) {
-        let checkbox =
-            <input id={id}
-                   checked={config[id]}
-                   type="checkbox"/>;
-
-        dom.on(checkbox, 'change', () => {
-            // Update property value when the checkbox is toggled
-            config[id] = checkbox.checked;
-            commit(id);
-        });
-
-        events.listen(id, value => checkbox.checked = value);
-
-        return checkbox;
-    }
-
-    function makeNumber({id}) {
-        let input = <input id={id} value={config[id] || 0} type="number"/>
-
-        dom.on(input, 'input', () => {
-            // Update property value when the number changes
-            config[id] = +input.value;
-            commit(id);
-        });
-
-        return input;
-    }
-
-    function makeSelect({id, data}) {
-        let select = <select id={id}/>;
-        data
-            .map(option =>
-                <option value={option}
-                        selected={option == config[id]}>
-                    {option}
-                </option>
-            )
-            .forEach(opt => select.appendChild(opt));
-
-        dom.on(select, 'change', () => {
-            // Update property value when the number changes
-            config[id] = select.value;
-            commit(id);
-        });
-
-        return select;
-    }
-
-    function makeText({id}) {
-        let input = <input id={id} value={config[id]} type="text"/>
-        dom.on(input, 'change', () => {
-            config[id] = input.value;
-            commit(id);
-        });
-
-        return input;
-    }
-
-    let make = {
-        'toggle': makeToggle,
-        'number': makeNumber,
-        'select': makeSelect,
-        'text':   makeText,
-    };
-
-    // Create the actual nodes based on the props
-    modalProps = modalProps.map(p => {
-        let node;
-        if (typeof make[p.type] === 'function') {
-            node = make[p.type](p);
-        } else {
-            node = document.createTextNode(`${p.type} does not have a make function! Please check the createUI function on config.js`);
-        }
-
-        if (p.type == 'toggle') {
-            // Toggles come before their labels
-            return (
-                <div>
-                    {node}
-                    <label style="margin-left: 0.5em;" for={p.id}>{p.title}</label>
-                </div>
-            );
-        }
-
-        return (
-            <div>
-                <label for={p.id}>{p.title}</label>
-                {node}
-            </div>
-        );
-    });
 
     let modal = (
         <div className="cfpp-config cfpp-modal cfpp-hidden">
             <div className="cfpp-modal-background" onClick={closeUI}/>
             <div className="cfpp-modal-inner">
-                {modalProps}
+                <Config config={config} pushChange={set} pullChange={events.listen} />
             </div>
         </div>
     );
 
     // Create the button that shows the modal
-    let modalBtn = <a className="cfpp-config-btn">[++]</a>
+    let modalBtn = <a className="cfpp-config-btn">[++]</a>;
     dom.on(modalBtn, 'click', ev => {
         ev.preventDefault();
         modal.classList.remove('cfpp-hidden');
@@ -194,22 +118,7 @@ const createUI = process.env.TARGET == 'extension' && false
     dom.$('.lang-chooser').children[0].prepend(modalBtn);
 });
 
-function closeUI() {
+export function closeUI() {
     dom.$('.cfpp-config').classList.add('cfpp-hidden');
     save();
 }
-
-export default {
-    createUI,
-    closeUI,
-    get: key => config[key],
-    set: (key, value) => { config[key] = value; commit(key); },
-    toggle: key => { config[key] = !config[key]; commit(key); },
-    load,
-    reset,
-    save,
-
-    // Events stuff
-    listen: events.listen,
-    fire: events.fire,
-};

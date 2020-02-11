@@ -3,10 +3,10 @@
  */
 
 import dom from '../helpers/dom';
-import config from '../env/config';
+import * as config from '../env/config';
 import env from '../env/env';
 
-const changeNoACsDisplay = env.ready(function (display) {
+function changeNoACsDisplay(display) {
     // Get problems that don't have an AC
     let noACs = dom.$$('.problems tr:not(.accepted-problem)');
     for (let p of noACs) {
@@ -15,11 +15,11 @@ const changeNoACsDisplay = env.ready(function (display) {
         k = k.style || {};
         k.display = display;
     }
-});
-
-export function install() {
-    if (config.get('showTags') && dom.$('.problems'))
-        changeNoACsDisplay('none');
 }
 
-export const uninstall = changeNoACsDisplay.bind(null, 'block');
+export const install = env.ready(function() {
+    if (config.get('showTags') && dom.$('.problems'))
+        changeNoACsDisplay('none');
+});
+
+export const uninstall = () => changeNoACsDisplay('block');
