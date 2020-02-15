@@ -13,6 +13,10 @@
     cursor: pointer;
 }
 
+.cfpp-config>.cfpp-modal-inner {
+    width: 30%;
+}
+
 .cfpp-modal {
     box-sizing: border-box;
     position: fixed;
@@ -32,6 +36,44 @@
     animation: fadeIn 0.15s forwards;
 }
 html.cfpp-dark-mode .cfpp-modal-background { background: #ffffff87; }
+.cfpp-modal-inner>label {
+    position: relative;
+    margin-bottom: 0.5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    user-select: none;
+}
+.cfpp-modal-inner input[type=text], .cfpp-modal-inner input[type=number] {
+    width: 32%;
+}
+.cfpp-modal-inner input[type=checkbox] {
+    visibility: hidden;
+}
+.cfpp-modal-inner .toggle>span {
+    position: absolute;
+    width: 1.4rem;
+    height: 1.4rem;
+    top: calc(50% - 0.7rem);
+    right: 0;
+    display: inline-block;
+    border: thin solid #188ecd;
+    border-radius: 100%;
+    background: #eee;
+    transition: background 0.2s;
+}
+.cfpp-modal-inner .toggle>input:checked + span {
+    background: #188ecd;
+}
+.cfpp-modal-inner .toggle>span:before {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #eee;
+    font-size: 0.8em;
+}
 .cfpp-modal-inner {
     position: absolute;
     top: 50%;
@@ -44,13 +86,6 @@ html.cfpp-dark-mode .cfpp-modal-background { background: #ffffff87; }
     border-radius: 6px;
     overflow: auto;
     animation: fadeIn 0.15s forwards;
-}
-.cfpp-config .cfpp-modal-inner>div {
-    margin-bottom: 0.5em;
-}
-
-.cfpp-config label {
-    margin-right: 0.75em;
 }
 
 /** Navbar **/
