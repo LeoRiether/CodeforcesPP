@@ -17,10 +17,13 @@ export let configProps = [
 ];
 
 const Toggle = ({config, id, pushChange, pullChange}) => {
-    let checkbox = <input id={id}
-                          checked={config[id]}
-                          type="checkbox"
-                          onChange={e => pushChange(id, e.target.checked)} />;
+    let checkbox = <>
+        <input id={id}
+               checked={config[id]}
+               type="checkbox"
+               onChange={e => pushChange(id, e.target.checked)} />
+        <span/>
+    </>;
     pullChange(id, value => checkbox.checked = value);
     return checkbox;
 };
@@ -59,13 +62,16 @@ function Prop({ title, type, id, data, config, pushChange, pullChange }) {
 
     let el = table[type]();
 
-    return <div className={type}>
-        <label for={id}>{title}</label>
-        {el}
-    </div>;
+    return (
+        <label className={type} for={id}>
+            {title}
+            {el}
+        </label>
+    );
 }
 
 /**
+ * Creates the UI's core, toggles, inputs, labels, and everything
  * @param {Object} config JSON object with the user config e.g. `config = { darkTheme: true, showTags: false }`
  * @param {Function(id, value)} pushChange will be called when the `id` config changes in the UI
  * @param {Function(id, callback)} pullChange registers an event listener/callback for any `id` config changes
