@@ -5,18 +5,20 @@ import { defaultConfig } from './env/config';
 
 let config;
 
-async function sendChangeToInjected(id, value) {
+function sendChangeToInjected(id, value) {
     // There are like 3 ways of sending messages around
     // what the fuck
-    let tabs = await browser.tabs.query({});
-    tabs.forEach(t =>
-        browser.tabs.sendMessage(t.id, {
+    function send(tab) {
+        browser.tabs.sendMessage(tab.id, {
             type: 'config change',
             to: 'is',
             id,
             value,
-        })
-    );
+        });
+    }
+
+    browser.tabs.query({ url: '*://codeforces.com/*' })
+    .then(tabs => tabs.forEach(send));
 }
 
 function pushChange(id, value) {
