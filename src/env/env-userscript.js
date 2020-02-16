@@ -8,5 +8,6 @@ export const global = process.env.TARGET == 'userscript' && typeof unsafeWindow 
 export const storage = {
     get: key => Promise.resolve(localStorage.getItem(key))
                 .then (safe(JSON.parse, {})),
-    set: (key, value) => Promise.resolve(localStorage.setItem(key, JSON.stringify(value)))
+    set: (key, value) => Promise.resolve(localStorage.setItem(key, JSON.stringify(value))),
+    propagate: async function(){},
 };

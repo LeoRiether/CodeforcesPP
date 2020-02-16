@@ -17,7 +17,8 @@ function sendChangeToInjected(id, value) {
         });
     }
 
-    browser.tabs.query({ url: '*://codeforces.com/*' })
+    browser.tabs
+    .query({ url: '*://codeforces.com/*' })
     .then(tabs => tabs.forEach(send));
 }
 

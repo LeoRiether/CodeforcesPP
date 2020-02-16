@@ -13,7 +13,7 @@ const log = process.env.NODE_ENV == 'development'
 // Stands for Message-Passing Hell and helps us to send and receive messages
 let mph = {
     resolvers: {},
-    genID: (id => () => id++)(1),
+    genID: (id => () => id++ | 0)(1),
 
     send(message) {
         this.init();
@@ -52,5 +52,6 @@ let mph = {
 export const storage = {
     get: key => mph.send({ type: 'get storage', key })
                 .then (pluck(key)),
-    set: (key, value) => mph.send({ type: 'set storage', key, value })
+    set: (key, value) => mph.send({ type: 'set storage', key, value }),
+    propagate: (key, value) => mph.send({ type: 'propagate config', key, value }),
 };

@@ -11,8 +11,16 @@ import env from './env';
 import { Config } from './config_ui';
 
 let config = {};
+
 export const get = key => config[key];
-export const set = (key, value) => { config[key] = value; commit(key); };
+
+export function set(key, value) {
+    if (config[key] == value)
+        return;
+    config[key] = value;
+    commit(key);
+}
+
 export const toggle = key => set(key, !config[key]);
 
 export const defaultConfig = {
@@ -80,6 +88,9 @@ export function save() {
 export function commit(id) {
     events.fire(id, config[id]);
     save();
+    if (process.env.TARGET == 'extension') {
+        env.storage.propagate(id, config[id]);
+    }
 }
 
 /**
