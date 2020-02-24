@@ -10,7 +10,6 @@ export let configProps = [
     prop('Default standings', 'select', 'defStandings', ['Common', 'Friends']),
     prop('Custom Style', 'toggle', 'style'),
     prop('Update standings every ___ seconds (0 to disable)', 'number', 'standingsItv'),
-    prop('Finder keyboard shortcut', 'text', 'finder'),
     prop('Hide "on test X" in verdicts', 'toggle', 'hideTestNumber'),
     prop('Dark Theme', 'toggle', 'darkTheme'),
     ...(process.env.NODE_ENV == 'development' ? [prop('Version', 'text', 'version')] : [])

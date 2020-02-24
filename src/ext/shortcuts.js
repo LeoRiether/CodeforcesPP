@@ -27,47 +27,59 @@ function submit() {
     fileInput.click(); // open the file picker
 }
 
-function scrollToPageContent() {
+function scrollToContent() {
     const pageContent = dom.$('#pageContent');
     if (!pageContent) return;
     pageContent.scrollIntoView();
     document.documentElement.scrollBy(0, -20);
 }
 
-let shortcuts = {
-    'ctrl+s': submit,
-    'ctrl+shift+v': scrollToPageContent, // V => view
-    'ctrl+alt+v': scrollToPageContent,
-    'ctrl+i': () => config.toggle('darkTheme'),
-    'ctrl+shift+h': () => config.toggle('hideTestNumber'), // H => hard mode | hide test cases
-};
-
 const isFKey = key =>
     (key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9');
 
 export function install() {
-    let finderValue = config.get('finder').toLowerCase();
-    shortcuts[finderValue] = finder.open;
-    events.listen('finder', newValue => {
-        delete shortcuts[finderValue];
-        finderValue = newValue.toLowerCase();
-        shortcuts[finderValue] = finder.open;
-    });
+    // id2Fn[an id like "darkTheme"] == a function that is called when the shortcut is pressed
+    const id2Fn = {
+        submit: submit,
+        scrollToContent: scrollToContent,
+        darkTheme: () => config.toggle('darkTheme'),
+        hideTestNumber: () => config.toggle('hideTestNumber'),
+        finder: finder.open,
+    };
+
+    // id2Shortcut[an id like "darkTheme"] == a shortcut like "Ctrl+I"
+    let id2Shortcut = config.get('shortcuts');
+
+    // convert(id2Shortcut, id2Fn) -> shortcut2Fn
+    function convert(i2s, i2f) {
+        let s2f = {};
+        for (let id in i2s) {
+            let shortcut = i2s[id].toLowerCase();
+            let fn = i2f[id];
+            s2f[shortcut] = fn;
+        }
+        return s2f;
+    }
+
+    // shortcut2Fn["Ctrl+I"] == a function like darkTheme()
+    let shortcut2Fn = convert(id2Shortcut, id2Fn);
+    events.listen('shortcuts', newId2Shortcut =>
+        shortcut2Fn = convert(newId2Shortcut, id2Fn));
 
     dom.on(document, 'keydown', (e) => {
-        // Not going to use precious cycles when there's not even a ctrl or shift
-        if (!e.ctrlKey && !isFKey(e.key)) return;
+        const hasModifier = e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || isFKey(e.key);
+        if (!hasModifier) return;
 
         // Build the key sequence string (like 'ctrl+shift+p')
-        let key = "";
-        if (e.metaKey) key += 'meta+';
-        if (e.ctrlKey) key += 'ctrl+';
-        if (e.altKey) key += 'alt+';
-        if (e.shiftKey) key += 'shift+';
+        let sc = "";
+        if (e.metaKey) sc += 'meta+';
+        if (e.ctrlKey) sc += 'ctrl+';
+        if (e.altKey) sc += 'alt+';
+        if (e.shiftKey) sc += 'shift+';
 
-        key += e.key == ' ' ? 'space' : e.key.toLowerCase();
+        sc += e.key == ' ' ? 'space' : e.key.toLowerCase();
 
-        const fn = shortcuts[key];
+        const fn = shortcut2Fn[sc];
         if (fn)  {
             e.preventDefault();
             e.stopPropagation();

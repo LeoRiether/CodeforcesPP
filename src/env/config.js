@@ -26,12 +26,19 @@ export const toggle = key => set(key, !config[key]);
 export const defaultConfig = {
     showTags:       true,
     style:          true,
-    finder:         'Ctrl+Space',
     darkTheme:      false,
     standingsItv:   0,
-    defStandings:   'Common',
+    defStandings:   "Common",
     hideTestNumber: false,
-    sidebarBox:     true
+    sidebarBox:     true,
+
+    shortcuts: {
+        darkTheme: "Ctrl+I",
+        finder: "Ctrl+Space",
+        submit: "Ctrl+S",
+        scrollToContent: "Ctrl+Alt+C",
+        hideTestNumber: "Ctrl+Shift+H",
+    }
 };
 
 export function load() {

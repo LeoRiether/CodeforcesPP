@@ -6,7 +6,6 @@
 
     permissions: [
         storage
-        activeTab
         *://codeforces.com/*
         http://fonts.googleapis.com/*
         https://fonts.googleapis.com/*
@@ -24,7 +23,7 @@
     web_accessible_resources: ["*.js"]
 
     background: {
-        persistent: true // should be changed to false later
+        persistent: false
         scripts: [ "browser-polyfill.min.js", "background.js" ]
     }
 

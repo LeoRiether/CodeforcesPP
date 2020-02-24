@@ -8,6 +8,7 @@ let config;
 function sendChangeToInjected(id, value) {
     // There are like 3 ways of sending messages around
     // what the fuck
+    // Also it doesn't work some times. Fuck this.
     function send(tab) {
         browser.tabs.sendMessage(tab.id, {
             type: 'config change',
