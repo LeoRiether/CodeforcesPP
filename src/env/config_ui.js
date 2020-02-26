@@ -67,11 +67,12 @@ const Text = ({config, id, pushChange}) =>
            onChange={e => pushChange(id, e.target.value)}/>;
 
 function Prop({ title, type, id, data, config, pushChange, pullChange }) {
+    let props = { config, id, pushChange, pullChange };
     const table = {
-        toggle: () => <Toggle config={config} id={id} pushChange={pushChange} pullChange={pullChange} />,
-        number: () => <Number config={config} id={id} pushChange={pushChange} pullChange={pullChange} />,
-        select: () => <Select config={config} id={id} pushChange={pushChange} pullChange={pullChange} data={data}/>,
-        text:   () => <Text   config={config} id={id} pushChange={pushChange} pullChange={pullChange} />
+        toggle: () => <Toggle {...props} />,
+        number: () => <Number {...props} />,
+        select: () => <Select {...props} data={data}/>,
+        text:   () => <Text   {...props} />
     };
 
     let el = table[type]();
