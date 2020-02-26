@@ -1,4 +1,5 @@
 import dom from '../helpers/dom';
+import { formatShortcut, debounce } from '../helpers/Functional';
 
 export function prop(title, type, id, data) {
     return { title, type, id, data };
@@ -15,16 +16,30 @@ export let configProps = [
     ...(process.env.NODE_ENV == 'development' ? [prop('Version', 'text', 'version')] : [])
 ];
 
+export function scProp(title, id) {
+    return { title, id };
+}
+
+export let shortcutProps = [
+    scProp('Submit', 'submit'),
+    scProp('Dark Theme', 'darkTheme'),
+    scProp('Open Finder', 'finder'),
+    scProp('Scroll to Content', 'scrollToContent'),
+    scProp('Hide Test Number', 'hideTestNumber'),
+];
+
 const Toggle = ({config, id, pushChange, pullChange}) => {
-    let checkbox = <>
+    let checkbox = (
         <input id={id}
                checked={config[id]}
                type="checkbox"
                onChange={e => pushChange(id, e.target.checked)} />
-        <span/>
-    </>;
+    );
     pullChange(id, value => checkbox.checked = value);
-    return checkbox;
+    return (<>
+        {checkbox}
+        <span />
+    </>);
 };
 
 const Number = ({config, id, pushChange}) =>
@@ -69,6 +84,29 @@ function Prop({ title, type, id, data, config, pushChange, pullChange }) {
     );
 }
 
+function Shortcut({ title, id, shortcuts, pushChange }) {
+    const pushDebounced = debounce(pushChange, 250);
+    function handleKeyDown(e) {
+        e.preventDefault();
+
+        let sc = formatShortcut(e);
+        if (sc != 'Escape') { // would conflict with other CF++ default shortcuts and prevent exiting the popup/config modal
+            e.target.value = sc;
+            pushDebounced(id, sc);
+        }
+    }
+
+    return (
+        <label className="shortcut" for={`sc-${id}`}>
+            {title}
+            <input id={`sc-${id}`}
+               value={shortcuts[id]}
+               type="text"
+               onKeyDown={handleKeyDown} />
+        </label>
+    );
+}
+
 /**
  * Creates the UI's core, toggles, inputs, labels, and everything
  * @param {Object} config JSON object with the user config e.g. `config = { darkTheme: true, showTags: false }`
@@ -77,9 +115,12 @@ function Prop({ title, type, id, data, config, pushChange, pullChange }) {
  * @example <Config pushChange={(id, value) => console.log("Toggle was set to", value)}
  *                  pullChange={(id, cb) => events.listen(id, cb)}/>
  */
-export function Config({config, pushChange, pullChange}) {
-    pushChange = pushChange || function(){};
-    pullChange = pullChange || function(){};
-    let inner = configProps.map(p => <Prop {...p} config={config} pushChange={pushChange} pullChange={pullChange}/>);
-    return inner;
+export function Config({config, pushChange=function(){}, pullChange=function(){}}) {
+    return configProps.map(p =>
+        <Prop {...p} config={config} pushChange={pushChange} pullChange={pullChange}/>);
+}
+
+export function Shortcuts({shortcuts, pushChange=function(){}}) {
+    return shortcutProps.map(p =>
+        <Shortcut {...p} shortcuts={shortcuts} pushChange={pushChange}/>)
 }

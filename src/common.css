@@ -88,6 +88,13 @@ html.cfpp-dark-mode .cfpp-modal-background { background: #ffffff87; }
     animation: fadeIn 0.15s forwards;
 }
 
+.hr {
+    display: block;
+    border-top: 1px solid #7f7f7f52;
+    width: calc(100% + 4em);
+    margin: .5em -2em;
+}
+
 /** Navbar **/
 .cfpp-navbar {
     float: left;

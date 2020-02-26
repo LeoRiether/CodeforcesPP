@@ -8,9 +8,23 @@ import dom from '../helpers/dom';
 import { safe } from '../helpers/Functional';
 import * as events from '../helpers/events';
 import env from './env';
-import { Config } from './config_ui';
+import { Config, Shortcuts } from './config_ui';
 
 let config = {};
+
+export function save() {
+    localStorage.cfpp = JSON.stringify(config);
+    if (process.env.TARGET == 'extension') {
+        env.storage.set('cfpp', config);
+    }
+}
+export function commit(id) {
+    events.fire(id, config[id]);
+    save();
+    if (process.env.TARGET == 'extension') {
+        env.storage.propagate(id, config[id]);
+    }
+}
 
 export const get = key => config[key];
 
@@ -61,7 +75,11 @@ export function load() {
     }
 
     // Listen to requests for the config to change. Can come from the MPH, for example (env-extension.js)
-    events.listen('request config change', ({ id, value }) => set(id, value));
+    events.listen('request config change', ({ id, value }) => {
+        config[id] = value;
+        events.fire(id, value);
+        // no save(), commit() or set() to prevent infinite loops
+    });
 }
 
 /**
@@ -86,20 +104,6 @@ function updateFromSync() {
     .then(save);
 }
 
-export function save() {
-    localStorage.cfpp = JSON.stringify(config);
-    if (process.env.TARGET == 'extension') {
-        env.storage.set('cfpp', config);
-    }
-}
-export function commit(id) {
-    events.fire(id, config[id]);
-    save();
-    if (process.env.TARGET == 'extension') {
-        env.storage.propagate(id, config[id]);
-    }
-}
-
 /**
  * Creates the interface to change the settings.
  */
@@ -111,11 +115,18 @@ export const createUI = process.env.TARGET == 'extension'
     // As there's no place to put the settings button, just abort
     if (!dom.$('.lang-chooser')) return;
 
+    function pushShortcut(id, value) {
+        config.shortcuts[id] = value;
+        commit('shortcuts');
+    }
+
     let modal = (
         <div className="cfpp-config cfpp-modal cfpp-hidden">
             <div className="cfpp-modal-background" onClick={closeUI}/>
             <div className="cfpp-modal-inner">
                 <Config config={config} pushChange={set} pullChange={events.listen} />
+                <span className="hr"/>
+                <Shortcuts shortcuts={config.shortcuts} pushChange={pushShortcut}/>
             </div>
         </div>
     );

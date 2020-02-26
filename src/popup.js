@@ -1,6 +1,6 @@
 import dom from './helpers/dom';
 import * as events from './helpers/events';
-import { Config } from './env/config_ui';
+import { Config, Shortcuts } from './env/config_ui';
 import { defaultConfig } from './env/config';
 
 let config;
@@ -31,6 +31,13 @@ function pushChange(id, value) {
     browser.storage.sync.set({ cfpp: config });
 }
 
+function pushShortcut(id, value) {
+    console.log(`shortcut #${id} changed to ${value}. Notifying clients.`);
+    config.shortcuts[id] = value;
+    sendChangeToInjected('shortcuts', config.shortcuts);
+    browser.storage.sync.set({ cfpp: config });
+}
+
 events.listen('darkTheme', on => {
     document.body.classList[on ? 'add' : 'remove']('dark');
 });
@@ -45,5 +52,7 @@ events.listen('darkTheme', on => {
 
     document.body.appendChild(<div id="ui">
         <Config config={config} pushChange={pushChange} pullChange={events.listen} />
+        <span className="hr"/>
+        <Shortcuts shortcuts={config.shortcuts} pushChange={pushShortcut}/>
     </div>);
 })();

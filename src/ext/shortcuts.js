@@ -6,6 +6,7 @@ import dom from '../helpers/dom';
 import * as finder from './finder';
 import * as config from '../env/config';
 import * as events from '../helpers/events';
+import { formatShortcut } from '../helpers/Functional';
 
 //
 // Commands
@@ -66,18 +67,11 @@ export function install() {
     events.listen('shortcuts', newId2Shortcut =>
         shortcut2Fn = convert(newId2Shortcut, id2Fn));
 
-    dom.on(document, 'keydown', (e) => {
+    dom.on(document, 'keydown', e => {
         const hasModifier = e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || isFKey(e.key);
         if (!hasModifier) return;
 
-        // Build the key sequence string (like 'ctrl+shift+p')
-        let sc = "";
-        if (e.metaKey) sc += 'meta+';
-        if (e.ctrlKey) sc += 'ctrl+';
-        if (e.altKey) sc += 'alt+';
-        if (e.shiftKey) sc += 'shift+';
-
-        sc += e.key == ' ' ? 'space' : e.key.toLowerCase();
+        let sc = formatShortcut(e).toLowerCase();
 
         const fn = shortcut2Fn[sc];
         if (fn)  {

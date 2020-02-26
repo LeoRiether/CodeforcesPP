@@ -92,6 +92,44 @@ export function once(fn) {
 
 export const pluck = key => obj => obj[key];
 
+export const capitalize = str =>
+    str[0].toUpperCase() + str.slice(1).toLowerCase();
+
+/**
+ * Formats a keyboard event to a shortcut string
+ * It's in Functional.js because putting it in shortcuts.js created a circular dependency, and I don't like warnings in my builds
+ * @param {KeyboardEvent} event
+ * @returns {String} a formatted shortcut string from the event, like "Ctrl+Shift+P"
+ */
+export function formatShortcut(event) {
+    let res = "";
+
+    if (event.metaKey) res += 'Meta+';
+    if (event.ctrlKey) res += 'Ctrl+';
+    if (event.altKey) res += 'Alt+';
+    if (event.shiftKey) res += 'Shift+';
+
+    res += event.key == ' ' ? 'Space' : capitalize(event.key);
+
+    return res;
+}
+
+/**
+ * Returns a debounced function that fires no more than once in a `delay` ms period
+ * @param {Function} fn the function to debounce
+ * @param {Number} delay the delay in milliseconds
+ */
+export function debounce(fn, delay) {
+    let timeout;
+    return function debounced(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            timeout = undefined;
+            fn(...args);
+        }, delay);
+    };
+}
+
 export async function time(fn) {
     if (process.env.NODE_ENV == 'production') return fn();
     console.time('[CF++] ' + fn.name);
