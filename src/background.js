@@ -5,7 +5,7 @@ browser.runtime.onMessage.addListener(data => {
 
     if (data.type == 'propagate config') {
         // Copied straight from popup.js
-        function sendChangeToInjected(id, value) {
+        let sendChangeToInjected = function(id, value) {
             // There are like 3 ways of sending messages around
             // what the fuck
             function send(tab) {

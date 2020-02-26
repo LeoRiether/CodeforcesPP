@@ -129,7 +129,7 @@ input[type=submit]:active {
     margin-bottom: 0 !important;
 }
 .problem-statement .header {
-    margin: 2.5em 0 1.5em 0 !important;
+    margin: 2.5em 0 1.5em !important;
     text-align: left !important;
 }
 .problem-statement .header>div {
@@ -176,5 +176,5 @@ body {
     box-shadow: 1px 1px 5px rgba(108, 108, 108, 0.17);
 }
 .problem-statement .header, div.ttypography {
-    margin: 0 0 1em 0 !important;
+    margin: 0 0 1em !important;
 }
