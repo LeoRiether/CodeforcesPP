@@ -17,15 +17,16 @@ export const install = env.ready(function () {
     container.style.display = 'none';
 
     function ShowTagsButton() {
-        let btn =
-            <button className="caption showTagsBtn" style="background: transparent; border: none; cursor: pointer;">
+        return (
+            <button className="caption showTagsBtn"
+                    style="background: transparent; border: none; cursor: pointer;"
+                    onClick={uninstall}>
                 Show
-            </button>;
-        dom.on(btn, 'click', uninstall);
-        return btn;
+            </button>
+        );
     }
 
-    container.parentNode.appendChild( <ShowTagsButton /> );
+    container.parentNode.appendChild(<ShowTagsButton />);
 });
 
 export const uninstall = env.ready(function () {

@@ -8,10 +8,6 @@ import * as config from '../env/config';
 import * as events from '../helpers/events';
 import { formatShortcut } from '../helpers/Functional';
 
-//
-// Commands
-//
-
 // Opens the file picker and focuses the submit button
 function submit() {
     // Try getting the [choose a file] input

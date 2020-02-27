@@ -164,7 +164,7 @@ html.cfpp-dark-mode .cfpp-modal-background { background: #ffffff87; }
 }
 .finder-results a {
     cursor: pointer;
-    color: #282828;
+    color: #282828 !important;
     display: block;
     padding: 1em 1.25em;
     transition: color, margin-left 0.1s;
