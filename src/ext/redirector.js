@@ -41,14 +41,14 @@ function problemsetStandings(contestID) {
 
 // Adds a /virtual button on gym pages
 function gymVirtual() {
-    dom.$('#sidebar').children[0].insertAdjacentHTML('afterend', `
+    dom.$('#sidebar').children[0].insertAdjacentElement('afterend',
         <div class="roundbox sidebox">
             <div class="caption titled">→ Virtual participation</div>
-            <form style="text-align:center; margin:1em;" action="${location.href}/virtual" method="get">
-                <input type="submit" value="Start virtual contest">
+            <form style="text-align:center; margin:1em;" action={`${location.href}/virtual`} method="get">
+                <input type="submit" value="Start virtual contest" />
             </form>
         </div>
-    `);
+    );
 }
 
 export const install = env.ready(function() {
