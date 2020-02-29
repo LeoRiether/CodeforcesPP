@@ -8,7 +8,7 @@
   "private": false,
   "scripts": {
     "start": "rollup -c -w --environment NODE_ENV:development",
-    "build": "rollup -c --environment NODE_ENV:production",
+    "build": "rollup -c --environment NODE_ENV:production && yarn run zip",
     "clean": "rm -r dist/",
     "test": "tape test/",
     "zip": "7z a dist/bundle.zip ./dist/extension/*"

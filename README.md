@@ -23,7 +23,7 @@ First you need a userscript manager, like [Tampermonkey](https://www.tampermonke
 + `Ctrl+Shift+H`: Toggle "on test X" in verdicts
 
 # Development
-Run `yarn build` to build with Parcel or `yarn start` to build in watch mode
+Run `yarn build` to build in production mode with Rollup or `yarn start` to build in watch mode
 
 # Contributing
 Think there's something missing from Codeforces++ or some feature could be better? I think so too, please send some PRs or create an issue
