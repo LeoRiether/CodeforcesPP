@@ -6,14 +6,16 @@
 First you need a userscript manager, like [Tampermonkey](https://www.tampermonkey.net), [Violentmonkey](https://violentmonkey.github.io) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) (the former is preferred). Then, download the latest release of [script.user.js](https://github.com/LeoRiether/CodeforcesPP/releases/latest/download/script.user.js), a pop-up should appear prompting to install the userscript. If this doesn't happen, add the .js manually and you're set.
 
 # Features
++ "Show Tags" button
 + Navbar dropdowns for easier navigation
 + "Google It" button on mashups/gym problems
 + Tutorial pop-up button
-+ Custom, more minimalistic styling
++ Custom styling
 + Auto-update standings page
 + Keyboard shortcuts (see below)
 + Choose the default between common/friends-only standings
 + Hide "on test X" in verdicts
++ Start gym virtual contest from the /problems page
 
 ## Shortcuts
 + `Ctrl+S`: Open file picker to submit
@@ -23,11 +25,10 @@ First you need a userscript manager, like [Tampermonkey](https://www.tampermonke
 + `Ctrl+Shift+H`: Toggle "on test X" in verdicts
 
 # Development
-Run `yarn build` to build in production mode with Rollup or `yarn start` to build in watch mode
+Run `yarn build` to build in production mode with Rollup or `yarn start` to build in watch mode. We're currently using node v12.13.0 and yarn v1.17.3.
 
 # Contributing
 Think there's something missing from Codeforces++ or some feature could be better? I think so too, please send some PRs or create an issue
 
 # Tests
-`yarn test`
-I probably won't write many tests, if any at all
+Tests? Where we're going, we don't need tests.
