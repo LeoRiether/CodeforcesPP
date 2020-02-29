@@ -48,6 +48,7 @@ const plugins = TARGET => [
         VERSION: require('./package.json').version,
         TARGET
     }),
+    (TARGET == 'extension' && process.env.NODE_ENV == 'production' ? terser() : {}),
 ];
 
 export default [
@@ -74,7 +75,6 @@ export default [
         },
         plugins: [
             ...plugins('extension'),
-            (process.env.NODE_ENV == 'production' ? terser() : {}),
             copy({
                 targets: [
                     { src: ['src/popup.html', 'src/custom.css', 'src/common.css',

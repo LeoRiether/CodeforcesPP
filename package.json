@@ -11,7 +11,7 @@
     "build": "rollup -c --environment NODE_ENV:production",
     "clean": "rm -r dist/",
     "test": "tape test/",
-    "zip": "7z a dist/bundle.zip dist/extension/*"
+    "zip": "7z a dist/bundle.zip ./dist/extension/*"
   },
   "devDependencies": {
     "@atomico/rollup-plugin-import-css": "^1.0.3",
