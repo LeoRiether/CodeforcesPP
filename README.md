@@ -12,7 +12,9 @@
 + Keyboard shortcuts (see below)
 + Choose the default between common/friends-only standings
 + Hide "on test X" in verdicts
-+ Start gym virtual contest from the /problems page
++ Start gym virtual contest from the problems page
++ The Finder, to search for any page in Codeforces
++ A **dark theme**
 
 ## Shortcuts
 Fully configurable, here are the default values:
