@@ -6,6 +6,7 @@
 
     permissions: [
         storage
+        tabs
         *://codeforces.com/*
         http://fonts.googleapis.com/*
         https://fonts.googleapis.com/*
