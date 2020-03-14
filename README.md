@@ -14,6 +14,7 @@
 + Hide "on test X" in verdicts
 + Start gym virtual contest from the problems page
 + The Finder, to search for any page in Codeforces
++ Add many problems at once to a mashup
 + A **dark theme**
 
 ## Shortcuts
