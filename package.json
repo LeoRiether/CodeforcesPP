@@ -31,6 +31,7 @@
   "dependencies": {
     "acorn": "^7.1.1",
     "diff": "^3.5.0",
+    "minimist": "^0.2.1",
     "webextension-polyfill": "^0.6.0"
   }
 }
