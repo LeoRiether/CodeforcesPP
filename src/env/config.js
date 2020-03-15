@@ -38,13 +38,14 @@ export function set(key, value) {
 export const toggle = key => set(key, !config[key]);
 
 export const defaultConfig = {
-    showTags:       true,
-    style:          true,
-    darkTheme:      false,
-    standingsItv:   0,
-    defStandings:   "Common",
-    hideTestNumber: false,
-    sidebarBox:     true,
+    showTags:         true,
+    style:            true,
+    darkTheme:        false,
+    standingsItv:     0,
+    defStandings:     "common",
+    hideTestNumber:   false,
+    sidebarBox:       true,
+    tutorialSpoilers: false,
 
     shortcuts: {
         darkTheme: "Ctrl+I",

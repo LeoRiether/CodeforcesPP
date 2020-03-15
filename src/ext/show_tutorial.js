@@ -5,6 +5,8 @@
 import dom from '../helpers/dom';
 import env from '../env/env';
 import { once } from '../helpers/Functional';
+import * as config from '../env/config';
+import * as events from '../helpers/events';
 
 function showModal() {
     dom.$('.cfpp-tutorial').classList.remove('cfpp-hidden');
@@ -75,6 +77,35 @@ function createModalNodes() {
     return [modal, modalInner];
 }
 
+function addSpoilers(modalInner) {
+    const getChildren = node => [].slice.call(node.children);
+    const setSpoiler = state => node => node.classList.toggle('spoilered', state);
+
+    /**
+     * @param {Bool} state - set to true if you want to spoiler everything, false to unspoiler
+     */
+    function updateDOM(state) {
+        getChildren(dom.$('.problem-statement>div', modalInner))
+            .forEach(node => {
+                if (node.tagName == 'UL') // Spoiler <li>s individually instead of the whole <ul>
+                    getChildren(node).forEach(setSpoiler(state));
+                else
+                    setSpoiler (state) (node);
+            });
+    }
+
+    updateDOM(config.get('tutorialSpoilers'));
+    events.listen('tutorialSpoilers', updateDOM);
+
+    let title = modalInner.children[0];
+    title.appendChild(
+        <span style="font-size: 0.65em; float: right; cursor: pointer;"
+              onClick={() => config.toggle('tutorialSpoilers')}>
+            Toggle spoilers
+        </span>
+    );
+}
+
 const loadModal = once(async function() {
     let [modal, modalInner] = createModalNodes();
     document.body.appendChild(modal);
@@ -82,6 +113,7 @@ const loadModal = once(async function() {
     return extractProblemCode(location.pathname)
           .then (getTutorialHTML)
           .then (html => modalInner.innerHTML = html)
+          .then (() => addSpoilers(modalInner))
           .then (() => MathJax.Hub.Queue(() => MathJax.Hub.Typeset(modalInner)))
           .catch (err => modalInner.innerText = `Failed to load the tutorial: ${err}`);
 });

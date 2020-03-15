@@ -116,7 +116,6 @@ input[type=submit]:active {
 /* Better problem statement */
 .problem-statement {
     margin: 0 !important; /* why did it have a 4-side margin in first place?? */
-    margin-right: 1.5em !important; /* better separation */
 }
 .problem-statement .property-title {
     display: none !important;

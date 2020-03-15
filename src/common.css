@@ -208,3 +208,12 @@ html.cfpp-dark-mode body {
 .boxRow form {
     margin: 0 !important;
 }
+
+/* Tutorial */
+.spoilered:not(:hover) {
+    background: black;
+    color: black;
+}
+.spoilered:not(:hover) img, .spoilered:not(:hover) a {
+    visibility: hidden;
+}
