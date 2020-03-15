@@ -39,7 +39,7 @@ function pushShortcut(id, value) {
 }
 
 events.listen('darkTheme', on => {
-    document.body.classList[on ? 'add' : 'remove']('dark');
+    document.body.classList.toggle('dark', on);
 });
 
 (async function() {
