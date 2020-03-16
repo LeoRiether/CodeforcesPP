@@ -213,6 +213,7 @@ html.cfpp-dark-mode body {
 .spoilered:not(:hover) {
     background: black;
     color: black;
+    opacity: .25;
 }
 .spoilered:not(:hover) img, .spoilered:not(:hover) a {
     visibility: hidden;
