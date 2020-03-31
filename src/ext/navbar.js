@@ -83,5 +83,3 @@ export const install = env.ready(async function() {
         logo.setAttribute('src', 'https://github.com/LeoRiether/CodeforcesPP/raw/master/assets/codeforcespp.png');
     }
 });
-
-export function uninstall() {}

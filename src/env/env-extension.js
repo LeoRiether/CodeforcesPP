@@ -1,14 +1,14 @@
 // DO NOT DIRECTLY REQUIRE THIS
 // require('env.js') instead
 
-import { pluck } from '../helpers/Functional';
+import { pluck, nop } from '../helpers/Functional';
 import * as events from '../helpers/events';
 
 export const global = process.env.TARGET == 'extension' && window;
 
 const log = process.env.NODE_ENV == 'development'
             ? console.log
-            : function(){};
+            : nop;
 
 // Stands for Message-Passing Hell and helps us to send and receive messages
 let mph = {

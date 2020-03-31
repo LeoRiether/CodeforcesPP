@@ -1,5 +1,5 @@
 import dom from '../helpers/dom';
-import { formatShortcut, debounce } from '../helpers/Functional';
+import { formatShortcut, debounce, nop } from '../helpers/Functional';
 
 export function prop(title, type, id, data) {
     return { title, type, id, data };
@@ -116,12 +116,12 @@ function Shortcut({ title, id, shortcuts, pushChange }) {
  * @example <Config pushChange={(id, value) => console.log("Toggle was set to", value)}
  *                  pullChange={(id, cb) => events.listen(id, cb)}/>
  */
-export function Config({config, pushChange=function(){}, pullChange=function(){}}) {
+export function Config({config, pushChange=nop, pullChange=nop}) {
     return configProps.map(p =>
         <Prop {...p} config={config} pushChange={pushChange} pullChange={pullChange}/>);
 }
 
-export function Shortcuts({shortcuts, pushChange=function(){}}) {
+export function Shortcuts({shortcuts, pushChange=nop}) {
     return shortcutProps.map(p =>
         <Shortcut {...p} shortcuts={shortcuts} pushChange={pushChange}/>)
 }

@@ -78,7 +78,7 @@ function createModalNodes() {
 }
 
 function addSpoilers(modalInner) {
-    const getChildren = node => [].slice.call(node.children);
+    const getChildren = node => [].slice.call(node ? node.children : []);
     const setSpoiler = state => node => node.classList.toggle('spoilered', state);
 
     /**
@@ -139,5 +139,3 @@ export const install = env.ready(function() {
 
     dom.$('.second-level-menu-list').appendChild( <li>{btn}</li> );
 });
-
-export function uninstall() { }

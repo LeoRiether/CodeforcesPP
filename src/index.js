@@ -27,7 +27,7 @@ import env from './env/env';
 import * as config from './env/config';
 import * as events from './helpers/events';
 
-import { tryCatch, profile } from './helpers/Functional';
+import { tryCatch, profile, nop } from './helpers/Functional';
 
 profile(run);
 
@@ -61,21 +61,17 @@ async function run() {
     function registerConfigCallback(m, id) {
         events.listen(id, value => {
             if (value === true || value === false) {
-                value ? m.install() : m.uninstall();
+                value ? m.install() : (m.uninstall || nop)();
             } else {
-                m.uninstall();
+                (m.uninstall || nop)();
                 m.install(value);
             }
         });
     }
 
     modules.forEach(([m, configID], index) => {
-        if (process.env.NODE_ENV == 'development') {
-            if (typeof m.install !== 'function' || typeof m.uninstall !== 'function')
-                return console.error(`Module ${moduleNames[index]} needs to have both install() and uninstall() exported methods`);
-        }
-
         tryCatch(m.install, e => console.log(`Error installing module #${moduleNames[index]}:`, e)) ();
+
         if (configID) {
             registerConfigCallback(m, configID);
         }

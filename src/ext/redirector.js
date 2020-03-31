@@ -75,5 +75,3 @@ export const install = env.ready(function() {
         gymVirtual();
     }
 });
-
-export function uninstall() { }

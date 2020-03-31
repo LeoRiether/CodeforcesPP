@@ -95,6 +95,8 @@ export const pluck = key => obj => obj[key];
 export const capitalize = str =>
     str[0].toUpperCase() + str.slice(1).toLowerCase();
 
+export const nop = function(){};
+
 /**
  * Formats a keyboard event to a shortcut string
  * It's in Functional.js because putting it in shortcuts.js created a circular dependency, and I don't like warnings in my builds

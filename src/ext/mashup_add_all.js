@@ -41,5 +41,3 @@ export const install = env.ready(function() {
     dom.$('#addMashupForm')
        .insertAdjacentElement('afterend', button);
 });
-
-export function uninstall() { }
