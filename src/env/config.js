@@ -42,6 +42,7 @@ export const defaultConfig = {
     style:            true,
     darkTheme:        false,
     standingsItv:     0,
+    standingsSec:     false,
     defStandings:     "common",
     hideTestNumber:   false,
     sidebarBox:       true,

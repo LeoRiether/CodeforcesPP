@@ -16,7 +16,8 @@ import * as search_button from './ext/search_button';
 import * as show_tutorial from './ext/show_tutorial';
 import * as navbar from './ext/navbar';
 import * as redirector from './ext/redirector';
-import * as update_standings from './ext/update_standings';
+import * as update_standings from './ext/standings/update';
+import * as twin_standings from './ext/standings/twin';
 import * as verdict_test_number from './ext/verdict_test_number';
 import * as shortcuts from './ext/shortcuts';
 import * as sidebar from './ext/sidebar';
@@ -47,6 +48,7 @@ async function run() {
         [navbar             , ''],
         [redirector         , ''],
         [update_standings   , 'standingsItv'],
+        [twin_standings     , 'standingsTwin'],
         [verdict_test_number, 'hideTestNumber'],
         [shortcuts          , ''],
         [sidebar            , 'sidebarBox'],
@@ -55,7 +57,7 @@ async function run() {
 
     // It works until you need to change the load order
     let moduleNames = [ 'style', 'dark_theme', 'show_tags', 'problemset', 'search_button',
-                        'show_tutorial', 'navbar', 'redirector', 'update_standings',
+                        'show_tutorial', 'navbar', 'redirector', 'update_standings', 'twin_standings',
                         'verdict_test', 'shortcuts', 'sidebar', 'mashup_add_all' ];
 
     function registerConfigCallback(m, id) {

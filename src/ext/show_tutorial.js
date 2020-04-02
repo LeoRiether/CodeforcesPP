@@ -16,6 +16,7 @@ function closeModal() {
     dom.$('.cfpp-tutorial').classList.add('cfpp-hidden');
 }
 
+// TODO: make it a fetch()
 /**
  * Queries the tutorial page and resolves with the HTML *string* returned by the Codeforces API
  * Assumes the document has been loaded completely already (because install() is decorated with env.ready)
