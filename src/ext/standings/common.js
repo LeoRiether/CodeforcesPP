@@ -9,7 +9,6 @@ export function runScripts(element) {
     const scripts = [].slice.call(element.getElementsByTagName('script'));
     scripts.forEach(s => {
         const content = s.childNodes[0].nodeValue;
-        console.log(content);
         element.appendChild(<script type="text/javascript">{content}</script>);
         s.remove();
     });
