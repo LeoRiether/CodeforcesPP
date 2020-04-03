@@ -15,6 +15,8 @@
 + Start gym virtual contest from the problems page
 + The Finder, to search for any page in Codeforces
 + Add many problems at once to a mashup
++ Read the tutorials one paragraph at a time with tutorial spoilers
++ Twin standings: show both div1 and div2 standings in the same page
 + A **dark theme**
 
 ## Shortcuts

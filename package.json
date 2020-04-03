@@ -1,6 +1,6 @@
 {
   "name": "cfpp",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "Codeforces extension pack",
   "main": "src/index.js",
   "author": "Leonardo Riether <riether.leonardo@gmail.com>",
