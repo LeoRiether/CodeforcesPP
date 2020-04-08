@@ -266,12 +266,12 @@ async function close() {
 /**
  * Increases the priority of a finder key in localStorage.finderPriority
  */
-async function increasePriority(key) {
-    let fp = safeJSONParse(await env.storage.get('finderPriority'));
+function increasePriority(key) {
+    let fp = safeJSONParse(localStorage.finderPriority);
 
     const maxValue = Object.values(fp).reduce((x, y) => Math.max(x, y), 0);
     fp[key] = maxValue + 1;
-    env.storage.set('finderPriority', fp);
+    localStorage.finderPriority = JSON.stringify(fp);
 }
 
 /**
