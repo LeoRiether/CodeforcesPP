@@ -55,6 +55,7 @@ export const update = env.ready(function() {
             dom.$('.toggle-show-unofficial', content).remove();
             dom.$('.source-and-history-div', content).remove();
             dom.$('.history-div', content).remove();
+            dom.$('.second-level-menu', content).remove();
 
             if (container.children.length) {
                 container.children[0].replaceWith(content);
