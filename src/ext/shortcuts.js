@@ -64,9 +64,6 @@ export function install() {
         shortcut2Fn = convert(newId2Shortcut, id2Fn));
 
     dom.on(document, 'keydown', e => {
-        const hasModifier = e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || isFKey(e.key);
-        if (!hasModifier) return;
-
         let sc = formatShortcut(e).toLowerCase();
 
         const fn = shortcut2Fn[sc];
