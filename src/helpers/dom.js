@@ -70,7 +70,7 @@ export default {
 
     isEditable(element) {
         const unselectable = ["button", "checkbox", "color", "file", "hidden", "image", "radio", "reset", "submit"];
-        const isEditableInput = element.tagName == "INPUT" && unselectable.indexOf(element.type == -1);
+        const isEditableInput = element.tagName == "INPUT" && unselectable.indexOf(element.type) == -1;
         const isTextarea = element.tagName == "TEXTAREA";
         const isSelect = element.tagName == "SELECT";
         return isEditableInput || isTextarea || isSelect || element.isContentEditable;

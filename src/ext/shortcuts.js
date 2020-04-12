@@ -31,9 +31,6 @@ function scrollToContent() {
     document.documentElement.scrollBy(0, -20);
 }
 
-const isFKey = key =>
-    (key.length == 2 && key[0] == 'F' && key[1] >= '0' && key[1] <= '9');
-
 export function install() {
     // id2Fn[an id like "darkTheme"] == a function that is called when the shortcut is pressed
     const id2Fn = {
