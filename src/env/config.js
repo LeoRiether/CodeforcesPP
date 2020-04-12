@@ -89,7 +89,7 @@ export function load() {
  * keysToPatch() returns the keys that we need to update to apply this patch.
  * It does not return any key that has `obj[key] == patch[key]`
  */
-const keysToPatch = (obj, patch) =>
+const keysToPatch = (obj={}, patch={}) =>
     Object.keys(patch)
           .filter(k => obj[k] != patch[k]);
 
