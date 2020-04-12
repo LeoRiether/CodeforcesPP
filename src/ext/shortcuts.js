@@ -64,6 +64,10 @@ export function install() {
         shortcut2Fn = convert(newId2Shortcut, id2Fn));
 
     dom.on(document, 'keydown', e => {
+        // Disallow shortcuts from firing when the user is focusing an input, textarea, ...
+        if (dom.isEditable(document.activeElement))
+            return;
+
         let sc = formatShortcut(e).toLowerCase();
 
         const fn = shortcut2Fn[sc];
