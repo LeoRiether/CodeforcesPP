@@ -186,10 +186,7 @@ html.cfpp-dark-mode .tex-formula:not(.inverted) {
     filter: none !important;
 }
 #header img { filter: none; }
-html.cfpp-dark-mode {
-    background: hsl(0, 0%, 7%) !important;
-}
-html.cfpp-dark-mode body {
+html.cfpp-dark-mode, html.cfpp-dark-mode body {
     background: hsl(0, 0%, 93%) !important;
 }
 
