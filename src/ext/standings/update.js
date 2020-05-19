@@ -15,14 +15,18 @@ import { getStandingsPageContent, runScripts } from './common';
  */
 function update() {
     // Load the main standings
-    getStandingsPageContent(location.href)
+    const upd = getStandingsPageContent(location.href)
         .then(env.ready(content => {
             dom.$('#pageContent').replaceWith(content);
-            runScripts(content);
+            return content;
         }))
         .catch(err => console.error("Couldn't load the standings. Reason: ", err));
 
-    events.fire('standings updated');
+    const evt = events.fire('standings updated');
+
+    // After everything has been updated, run the scripts
+    Promise.all([ upd, evt ])
+        .then(([ content, _ ]) => runScripts(content));
 }
 
 let intervalID = 0;

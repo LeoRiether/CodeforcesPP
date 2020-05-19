@@ -2,6 +2,9 @@
 
 import dom from '../../helpers/dom';
 
+const includesAny = (patterns, text) =>
+    patterns.some(p => text.includes(p))
+
 /**
  * Runs all <script> tags inside the element
  */
@@ -9,8 +12,11 @@ export function runScripts(element) {
     const scripts = [].slice.call(element.getElementsByTagName('script'));
     scripts.forEach(s => {
         const content = s.childNodes[0].nodeValue;
-        element.appendChild(<script type="text/javascript">{content}</script>);
-        s.remove();
+        const patterns = ['handleContestantProblemHistory', 'statisticsRow'];
+        if (includesAny(patterns, content)) {
+            element.appendChild(<script type="text/javascript">{content}</script>);
+            s.remove();
+        }
     });
 }
 

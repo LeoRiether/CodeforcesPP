@@ -50,7 +50,7 @@ export const update = env.ready(function() {
         return;
 
     const url = twinURL();
-    getStandingsPageContent(url)
+    return getStandingsPageContent(url)
         .then(content => {
             dom.$('.toggle-show-unofficial', content).remove();
             dom.$('.source-and-history-div', content).remove();
@@ -62,13 +62,14 @@ export const update = env.ready(function() {
             } else {
                 container.appendChild(content);
             }
-
-            runScripts(content);
         })
         .catch(err => console.error("Couldn't load twin standings. Reason: ", err));
 });
 
-let eventRegistered = false;
+const listenToStandingsUpdates = once(() =>
+    events.listen('standings updated', update) // If the main standings updated, we should too
+);
+
 export const install = env.ready(async function() {
     if (!config.get('standingsTwin') || !location.pathname.includes('/standings'))
         return;
@@ -82,15 +83,11 @@ export const install = env.ready(async function() {
     twinURL(info);
 
     // Create standings container
-    info.pageContent.parentNode
-        .appendChild(<div id="cfpp-twin-standings"></div>);
+    let container = <div id="cfpp-twin-standings"></div>;
+    info.pageContent.parentNode.appendChild(container);
 
-    update();
-
-    if (!eventRegistered) {
-        events.listen('standings updated', update); // If the main standings updated, we should too
-        eventRegistered = true;
-    }
+    update().then(() => runScripts(container));
+    listenToStandingsUpdates();
 });
 
 export function uninstall() {

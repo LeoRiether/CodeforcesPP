@@ -11,6 +11,8 @@ export function listen(event, callback) {
 }
 
 export async function fire(event, data) {
-    (listeners[event] || [])
-        .forEach(async cb => cb(data));
+    const results = (listeners[event] || [])
+                        .map(async cb => cb(data));
+
+    return Promise.all(results);
 }
