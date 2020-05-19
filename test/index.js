@@ -28,15 +28,36 @@ const testAsync = (description, fn, testFn=test) => {
 };
 
 test('events.js works', t => {
-    t.plan(3);
-    events.listen('event_id', data =>
-        t.equal(data, 123, "Events fire correctly 1"));
-    events.listen('creative event name', data =>
-        t.equal(data, 'creative data', "Events fire correctly 2"));
+    t.test('basic events', t => {
+        t.plan(3);
+        events.listen('event_id', data =>
+            t.equal(data, 123, "Events fire correctly 1"));
 
-    events.fire('event_id', 123);
-    events.fire('creative event name', 'creative data');
-    events.fire('event_id', 123);
+        const symbol_event = Symbol();
+        events.listen(symbol_event, data =>
+            t.equal(data, 'creative data', "Events fire correctly 2"));
+
+        events.fire('event_id', 123);
+        events.fire(symbol_event, 'creative data');
+        events.fire('event_id', 123);
+    });
+
+    t.test('events.fire', t => {
+        t.plan(3);
+        const id = Symbol();
+        events.listen(id, () => 1);
+        events.listen(id, () => Promise.resolve(2));
+        events.listen(id, () => new Promise(resolve => {
+            setTimeout(() => resolve(3), 20);
+        }));
+
+        const p = events.fire(id);
+        t.equal(typeof p.then, 'function', 'returns a Promise');
+        p.then(results => {
+            t.ok(results instanceof Array && results.length == 3, 'is resolved with an array');
+            t.deepEqual(results, [1, 2, 3], 'is resolved with an array of results from the listeners');
+        });
+    });
 });
 
 test('Functional works', t => {
