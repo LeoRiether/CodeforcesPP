@@ -26,11 +26,40 @@ function curry(fn, arity = fn.length, ...args) {
   return arity <= args.length ? fn(...args) : curry.bind(null, fn, arity, ...args);
 }
 /**
+ * Returns a new function that, when called, will try to call `fn`.
+ * If `fn` throws, `def` will be returned instead
+ * @param {Function} fn The function to try executing
+ * @param {any} def The default value to return if `fn` throws
+ * @return {Function}
+ */
+
+function safe(fn, def) {
+  return (...args) => {
+    try {
+      return fn(...args);
+    } catch {
+      return def;
+    }
+  };
+}
+/**
  * Curried version of Array.prototype.map
  */
 
 const map = fn => arr => [].map.call(arr, fn);
 const flatten = list => list.reduce((acc, a) => acc.concat([].slice.call(a)), []);
+function once(fn) {
+  let result,
+      ran = false;
+  return function (...args) {
+    if (!ran) {
+      ran = true;
+      result = fn(...args);
+    }
+
+    return result;
+  };
+}
 const pluck = key => obj => obj[key];
 
 test.createStream().pipe(tapDiff()).pipe(globalThis.process.stdout); // Tests a function that returns a Promise and calls t.end() when the promise is resolved
@@ -85,7 +114,37 @@ test('Functional works', t => {
   });
   t.test('flatten', t => {
     const a = [[1, 2], [3], [4, [5]]];
+    const b = [1, [2], [[123, 456]]];
     t.deepEqual(flatten(a), [1, 2, 3, 4, [5]], 'flattens exactly one level of depth');
+    t.notDeepEqual(flatten(b), [1, 2, [3, 4]], 'flattens exactly one level of depth');
+    t.end();
+  });
+  t.test('safe', t => {
+    const fn = x => {
+      if (x == 0) throw "catch me if you can!";
+      return x + 1;
+    };
+
+    const safeFn = safe(fn, 123);
+    t.doesNotThrow(() => safeFn(0), undefined, "fn throws but safe does not");
+    t.equal(safeFn(0), 123, "fn throws but safe returns the given default value");
+    t.doesNotThrow(() => safeFn(1), undefined, "fn does not throw and safe doesn't either");
+    t.equal(safeFn(1), 2, "fn does not throw and safe returns the same value");
+    t.end();
+  });
+  t.test('once', t => {
+    let calls = 0;
+    const countCalls = once(() => calls++);
+    countCalls();
+    countCalls();
+    countCalls();
+    t.equal(calls, 1, "function decorated with once is only called once");
+
+    const inc = x => x + 1;
+
+    const inc_once = once(inc);
+    t.equal(inc_once(10), 11, "return value is always the result of the first call");
+    t.equal(inc_once(9999), 11, "return value is always the result of the first call");
     t.end();
   });
   t.end();

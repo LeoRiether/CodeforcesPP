@@ -3,7 +3,14 @@ import tapDiff from 'tap-diff';
 import puppeteer from 'puppeteer';
 
 import * as events from '../src/helpers/events';
-import { curry, pluck, map, flatten } from '../src/helpers/Functional';
+import {
+	curry,
+	pluck,
+	map,
+	flatten,
+	safe,
+	once
+} from '../src/helpers/Functional';
 
 import path from 'path';
 
@@ -75,9 +82,39 @@ test('Functional works', t => {
 
     t.test('flatten', t => {
         const a = [[1, 2], [3], [4, [5]]];
+		const b = [1, [2], [[123, 456]]];
         t.deepEqual(flatten(a), [1, 2, 3, 4, [5]], 'flattens exactly one level of depth');
+		t.notDeepEqual(flatten(b), [1, 2, [3, 4]], 'flattens exactly one level of depth');
         t.end();
     });
+
+	t.test('safe', t => {
+		const fn = x => {
+			if (x == 0)
+				throw "catch me if you can!";
+			return x + 1;
+		};
+		const safeFn = safe(fn, 123);
+		t.doesNotThrow(() => safeFn(0), undefined, "fn throws but safe does not");
+		t.equal(safeFn(0), 123, "fn throws but safe returns the given default value");
+		t.doesNotThrow(() => safeFn(1), undefined, "fn does not throw and safe doesn't either");
+		t.equal(safeFn(1), 2, "fn does not throw and safe returns the same value");
+		t.end();
+	});
+
+	t.test('once', t => {
+		let calls = 0;
+		const countCalls = once(() => calls++);
+		countCalls(); countCalls(); countCalls();
+		t.equal(calls, 1, "function decorated with once is only called once");
+
+		const inc = x => x+1;
+		const inc_once = once(inc);
+		t.equal(inc_once(10), 11, "return value is always the result of the first call");
+		t.equal(inc_once(9999), 11, "return value is always the result of the first call");
+
+		t.end();
+	});
 
     t.end();
 });
