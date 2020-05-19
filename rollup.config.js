@@ -115,5 +115,30 @@ export default [
             file: 'dist/extension/popup.js'
         },
         plugins: plugins('extension')
+    },
+
+    // Tests
+    {
+        input: 'test/index.js',
+        output: {
+            format: 'cjs',
+            file: 'test/bundle.js'
+        },
+        external: [ 'tape', 'tap-diff', 'puppeteer', 'path' ],
+        plugins: [
+            babel({
+                exclude: 'node_modules/**',
+                babelrc: true,
+            }),
+            importCss({
+                include: 'src/*.css',
+                minify: true,
+            }),
+            injectProcessEnv({
+                NODE_ENV: 'production',
+                VERSION: require('./package.json').version,
+                TARGET: 'extension',
+            }),
+        ]
     }
 ];
