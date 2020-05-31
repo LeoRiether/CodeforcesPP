@@ -49,7 +49,7 @@ export function safe(fn, def) {
 /**
  * Takes a list of functions and returns a function that executes them in
  * left-to-right order, passing the return value of one to the next
- * @param {[]Function} fns The functions to be piped
+ * @param {[Function]} fns The functions to be piped
  * @return {Function} The piped composition of the input functions
  */
 export const pipe = (...fns) => arg => fns.reduce((acc, f) => f(acc), arg);
@@ -67,7 +67,7 @@ export const forEach = fn => arr => [].forEach.call(arr, fn);
 /**
  * @example zipBy2([1,2,3,4,5,6]) == [[1,2], [3,4], [5,6]]
  * @example zipBy2([1,2,3]) == [[1,2], [3, undefined]]
- * @return {Array}
+ * @return {[a]}
  */
 export function zipBy2(list) {
     let r = [];
@@ -77,7 +77,26 @@ export function zipBy2(list) {
     return r;
 }
 
-export const flatten = list => list.reduce((acc, a) => acc.concat([].slice.call(a)), []);
+/**
+ * Flattens one level of a list
+ * @param {[[a]]} list
+ * @return {[a]}
+ */
+export function flatten(list) {
+    const len = xs => xs && typeof xs.length === 'number' ? xs.length : 1;
+    const n = list.reduce((acc, xs) => acc + len(xs), 0);
+    let res = new Array(n);
+    let p = 0;
+    for (let i = 0; i < list.length; i++) {
+        if (list[i] && list[i].length >= 0) {
+            for (let j = 0; j < list[i].length; j++)
+                res[p++] = list[i][j];
+        } else {
+            res[p++] = list[i];
+        }
+    }
+    return res;
+}
 
 export function once(fn) {
     let result, ran = false;

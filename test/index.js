@@ -103,9 +103,11 @@ test('Functional works', t => {
 
     t.test('flatten', t => {
         const a = [[1, 2], [3], [4, [5]]];
-		const b = [1, [2], [[123, 456]]];
+        const b = [1, [2], [[123, 456]]];
+        const c = [[1], [], [2]];
         t.deepEqual(flatten(a), [1, 2, 3, 4, [5]], 'flattens exactly one level of depth');
-		t.notDeepEqual(flatten(b), [1, 2, [3, 4]], 'flattens exactly one level of depth');
+        t.notDeepEqual(flatten(b), [1, 2, [3, 4]], 'flattens exactly one level of depth');
+        t.equal(flatten(c).length, [1, 2].length, 'should handle empty elements correctly');
         t.end();
     });
 

@@ -4,7 +4,7 @@
 
 import dom from '../helpers/dom';
 import * as config from '../env/config';
-import { safe, pipe, map, once } from '../helpers/Functional';
+import { safe, pipe, map, once, flatten } from '../helpers/Functional';
 import env from '../env/env';
 
 let isOpen = false;
@@ -20,8 +20,8 @@ const safeJSONParse = safe(JSON.parse, {});
 function Result(props) {
     if (!props.href && !props.onClick) {
         console.error(`Codeforces++ Error!\n` +
-                      `Please report this on the GitHub: github.com/LeoRiether/CodeforcesPP\n` +
-                      `<Result> was created without any action attached. title=${props.title}.`);
+                      `Please report this on GitHub: https://github.com/LeoRiether/CodeforcesPP\n` +
+                      `<Result> was created without any action attached. key=${props.key}.`);
     }
 
     return (
@@ -51,7 +51,8 @@ let extensions = {
             { key: "gym",        title: "Gym",              href: "/gyms" },
             { key: "blog",       title: "Blog",             href: `/blog/handle/${handle}` },
             { key: "mashups",    title: "Mashups",          href: "/mashups" },
-            { key: "rating",     title: "Rating",           href: "/ratings" }
+            { key: "rating",     title: "Rating",           href: "/ratings" },
+            { key: "api",        title: "API",              href: "/apiHelp" }
         ];
     },
 
@@ -110,71 +111,70 @@ let extensions = {
  * Bind search and navigation events (Input, ArrowDown, ArrowUp, ...)
  */
 function bindEvents(input, results) {
-    function updateDisplay(value) {
-        value = value.toLowerCase();
-        return result =>
-            result.style.display = includesSubseq(result.dataset.search, value) ? "" : "none";
-    }
+    // Random note: this is LISP, but without the parenthesis
+    const updateDisplay = value => result =>
+        result.style.display =
+            includesSubseq(result.dataset.search, value.toLowerCase()) ?
+                "" :     // visible
+                "none";  // invisible
+
+    const focus = result => {
+        let c = result.children[0]; // <a> inside the result <li>
+        c.focus();
+        c.scrollIntoViewIfNeeded();
+    };
 
     dom.on(input, 'input', () => {
         [].forEach.call(results.children, updateDisplay(input.value));
     });
 
     dom.on(input, 'keydown', e => {
+        const visibleResults =
+            Array.from(results.children)
+            .filter(c => c.style.display == "");
+
+        if (visibleResults.length == 0)
+            return;
+
         if (e.key == 'Enter') {
-            for (let r of results.children) {
-                if (r.style.display == "") {
-                    r.children[0].click();
-                    increasePriority(r.dataset.key);
-                    close();
-                    break;
-                }
-            }
-        } else if (e.key == 'ArrowUp') {
-            let focus = results.children[results.children.length-1];
-            while (focus && focus.style.display != "")
-                focus = focus.previousElementSibling;
-
-            if (focus !== null) {
-                focus.children[0].focus();
-                focus.children[0].scrollIntoViewIfNeeded();
-            }
+            let chosen = visibleResults[0];
+            chosen.children[0].click();
+            increasePriority(chosen.dataset.key);
+            close();
+        }
+        else if (e.key == 'ArrowUp') {
+            focus(visibleResults[visibleResults.length - 1]);
             e.preventDefault();
-        } else if (e.key == 'ArrowDown') {
-            let focus = results.children[0];
-            while (focus && focus.style.display != "")
-                focus = focus.nextElementSibling;
-
-            if (focus !== null) {
-                focus.children[0].focus();
-                focus.children[0].scrollIntoViewIfNeeded();
-            }
+        }
+        else if (e.key == 'ArrowDown') {
+            focus(visibleResults[0]);
             e.preventDefault();
         }
     });
 
     dom.on(results, 'keydown', e => {
-        let sibling = undefined;
+        const visibleResults =
+            Array.from(results.children)
+            .filter(c => c.style.display == "");
+
+        let i = visibleResults.indexOf(document.activeElement.parentElement);
+
+        // Move to desired sibling
         if (e.key == 'ArrowDown') {
-            sibling = document.activeElement.parentElement.nextElementSibling;
-            while (sibling && sibling.style.display != "") {
-                sibling = sibling.nextElementSibling;
-            }
+            i++;
         } else if (e.key == 'ArrowUp') {
-            sibling = document.activeElement.parentElement.previousElementSibling;
-            while (sibling && sibling.style.display != "") {
-                sibling = sibling.previousElementSibling;
-            }
+            i--;
+        } else {
+            return;
         }
 
-        if (sibling === null) { // no sibling
+        if (i < 0 || i >= visibleResults.length) {
             input.focus();
             putCursorAtEnd(input);
             results.scrollTop = 0;
             e.preventDefault(); // prevent putCursorAtEnd from not working correctly, and scrolling
-        } else if (sibling !== undefined) { // there's a sibling
-            sibling.children[0].focus();
-            sibling.children[0].scrollIntoViewIfNeeded();
+        } else {
+            focus(visibleResults[i]);
             e.preventDefault(); // prevent scrolling
         }
     });
@@ -189,7 +189,7 @@ async function resultList() {
 
     let data = [];
     if (/\/problemset\/problem\/|\/contest\/\d+\/problem\/\w/i.test(location.pathname)) {
-        data = data.concat(extensions.problem());
+        data.push(extensions.problem());
     }
 
     const contestMatch = location.href.match(/\/contest\/(\d+)/i);
@@ -197,18 +197,20 @@ async function resultList() {
     if (contestMatch) {
         // Is it a contest?
         const baseURL = location.href.substring(0, location.href.indexOf('contest'));
-        data = data.concat(extensions.contest(baseURL, contestMatch[1], false));
+        data.push(extensions.contest(baseURL, contestMatch[1], false));
     } else if (gymMatch) {
         // Is it a gym contest?
         const baseURL = location.href.substring(0, location.href.indexOf('gym'));
-        data = data.concat(extensions.contest(baseURL, gymMatch[1], true));
+        data.push(extensions.contest(baseURL, gymMatch[1], true));
     } else {
         // If it's neither, we have to put the problemset's Custom Invocation in the data
-        data.push({ key: "invoc", title: "Custom Invocation", href: "/problemset/customtest" });
+        data.push([{ key: "invoc", title: "Custom Invocation", href: "/problemset/customtest" }]);
     }
 
-    data = data.concat(extensions.groups());
-    data = data.concat(extensions.common(handle));
+    data.push(extensions.groups());
+    data.push(extensions.common(handle));
+
+    data = flatten(data);
 
     // Sort the data by priority
     let priority = safeJSONParse(localStorage.finderPriority);
@@ -221,14 +223,15 @@ const create = once(async function() {
     let input = <input type="text" className="finder-input" placeholder="Search anything"/>;
     let results = <ul className="finder-results" />;
 
-    let modal =
+    let modal = (
         <div className="cfpp-modal cfpp-hidden" tabindex="0">
             <div className="cfpp-modal-background" onClick={close}/>
             <div className="finder-inner" tabindex="0">
                 {input}
                 {results}
             </div>
-        </div>;
+        </div>
+    );
 
     dom.on(document, 'keyup', e => {
         if (e.key == 'Escape')
@@ -240,7 +243,7 @@ const create = once(async function() {
         <Result {...props} />
     ));
 
-    bindEvents(input, results);
+    bindEvents(input, results, list);
 
     document.body.appendChild(modal);
     return { modal, input, results };
@@ -293,22 +296,13 @@ function putCursorAtEnd(input) {
 }
 
 function includesSubseq(text, pattern) {
-    if (pattern.length == 0) {
-        return true;
-    }
-
     let p = pattern.length - 1;
-    for (let i = text.length-1; i >= 0; i--) {
-        if (text[i] == pattern[p]) {
+    for (let i = text.length-1; i >= 0 && p >= 0; i--) {
+        if (text[i] == pattern[p])
             p--;
-        }
-
-        if (p < 0) {
-            return true;
-        }
     }
 
-    return false;
+    return p < 0;
 }
 
 async function updateGroups() {
@@ -316,9 +310,7 @@ async function updateGroups() {
     if (location.href.endsWith(`/groups/with/${handle}`)) {
         // Opportune moment to update the user's groups
         const idRegex = /\/group\/([\d\w]+)/
-        const extractID = group => {
-            return idRegex.exec(group)[1];
-        };
+        const extractID = group => idRegex.exec(group)[1];
 
         let groups = [].map.call(
             dom.$$('.groupName'),
