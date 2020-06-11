@@ -2,6 +2,11 @@
 # Codeforces++
 ### Codeforces extension pack [![DeepScan grade](https://deepscan.io/api/teams/7211/projects/9332/branches/120125/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=7211&pid=9332&bid=120125) [![CodeFactor](https://www.codefactor.io/repository/github/leoriether/codeforcespp/badge)](https://www.codefactor.io/repository/github/leoriether/codeforcespp) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/LeoRiether/CodeforcesPP) ![GitHub](https://img.shields.io/github/license/LeoRiether/CodeforcesPP)
 
+## Relevant Links
++ [Chrome Web Store](https://chrome.google.com/webstore/detail/codeforces%2B%2B/ehbcfilpfnlahficlpimomapmbccieoi/)
++ [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/codeforces/)
++ [Userscript Release](https://github.com/LeoRiether/CodeforcesPP/releases)
+
 # Features
 + "Show Tags" button
 + Navbar dropdowns for easier navigation
