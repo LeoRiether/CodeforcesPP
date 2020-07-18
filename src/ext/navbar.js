@@ -37,6 +37,7 @@ export const install = env.ready(async function() {
         "/ratings": {
             "Friends": "/ratings/friends/true",
         },
+		"/edu/courses": {},
     };
 
     let other = <div className="cfpp-navbar-item">

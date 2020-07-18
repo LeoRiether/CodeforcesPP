@@ -243,7 +243,7 @@ const create = once(async function() {
         <Result {...props} />
     ));
 
-    bindEvents(input, results, list);
+    bindEvents(input, results);
 
     document.body.appendChild(modal);
     return { modal, input, results };
