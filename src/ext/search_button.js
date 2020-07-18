@@ -14,7 +14,7 @@ export const install = env.ready(function() {
     problemTitle = problemTitle.split('.').slice(1).join('.');
     problemTitle += ' codeforces';
 
-    const href = `https://google.com/search?q=${problemTitle.replace(/ /g, '+')}`;
+    const href = `https://google.com/search?q=${encodeURIComponent(problemTitle)}`;
     dom.$('.second-level-menu-list').appendChild(
         <li>
             <a href={href} target="_blank" className="searchBtn"> Google It </a>
