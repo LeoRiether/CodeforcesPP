@@ -27,7 +27,8 @@
     "rollup-plugin-inject-process-env": "^1.1.0",
     "rollup-plugin-terser": "^5.2.0",
     "tap-diff": "^0.1.1",
-    "tape": "^4.11.0"
+    "tape": "^4.11.0",
+	"lodash": "^4.17.19"
   },
   "dependencies": {
     "acorn": "^7.1.1",
