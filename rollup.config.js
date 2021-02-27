@@ -1,4 +1,4 @@
-import importCss from "@atomico/rollup-plugin-import-css";
+import importCss from "rollup-plugin-import-css";
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 import copy from 'rollup-plugin-copy';
 import babel from 'rollup-plugin-babel';

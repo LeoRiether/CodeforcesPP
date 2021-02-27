@@ -16,7 +16,8 @@ function listen(event, callback) {
   listeners[event].push(callback);
 }
 async function fire(event, data) {
-  (listeners[event] || []).forEach(async cb => cb(data));
+  const results = (listeners[event] || []).map(async cb => cb(data));
+  return Promise.all(results);
 }
 
 /**
@@ -47,7 +48,29 @@ function safe(fn, def) {
  */
 
 const map = fn => arr => [].map.call(arr, fn);
-const flatten = list => list.reduce((acc, a) => acc.concat([].slice.call(a)), []);
+/**
+ * Flattens one level of a list
+ * @param {[[a]]} list
+ * @return {[a]}
+ */
+
+function flatten(list) {
+  const len = xs => xs && typeof xs.length === 'number' ? xs.length : 1;
+
+  const n = list.reduce((acc, xs) => acc + len(xs), 0);
+  let res = new Array(n);
+  let p = 0;
+
+  for (let i = 0; i < list.length; i++) {
+    if (list[i] && list[i].length >= 0) {
+      for (let j = 0; j < list[i].length; j++) res[p++] = list[i][j];
+    } else {
+      res[p++] = list[i];
+    }
+  }
+
+  return res;
+}
 function once(fn) {
   let result,
       ran = false;
@@ -65,12 +88,30 @@ const pluck = key => obj => obj[key];
 test.createStream().pipe(tapDiff()).pipe(globalThis.process.stdout); // Tests a function that returns a Promise and calls t.end() when the promise is resolved
 
 test('events.js works', t => {
-  t.plan(3);
-  listen('event_id', data => t.equal(data, 123, "Events fire correctly 1"));
-  listen('creative event name', data => t.equal(data, 'creative data', "Events fire correctly 2"));
-  fire('event_id', 123);
-  fire('creative event name', 'creative data');
-  fire('event_id', 123);
+  t.test('basic events', t => {
+    t.plan(3);
+    listen('event_id', data => t.equal(data, 123, "Events fire correctly 1"));
+    const symbol_event = Symbol();
+    listen(symbol_event, data => t.equal(data, 'creative data', "Events fire correctly 2"));
+    fire('event_id', 123);
+    fire(symbol_event, 'creative data');
+    fire('event_id', 123);
+  });
+  t.test('events.fire', t => {
+    t.plan(3);
+    const id = Symbol();
+    listen(id, () => 1);
+    listen(id, () => Promise.resolve(2));
+    listen(id, () => new Promise(resolve => {
+      setTimeout(() => resolve(3), 20);
+    }));
+    const p = fire(id);
+    t.equal(typeof p.then, 'function', 'returns a Promise');
+    p.then(results => {
+      t.ok(results instanceof Array && results.length == 3, 'is resolved with an array');
+      t.deepEqual(results, [1, 2, 3], 'is resolved with an array of results from the listeners');
+    });
+  });
 });
 test('Functional works', t => {
   t.test('curry', t => {
@@ -115,8 +156,10 @@ test('Functional works', t => {
   t.test('flatten', t => {
     const a = [[1, 2], [3], [4, [5]]];
     const b = [1, [2], [[123, 456]]];
+    const c = [[1], [], [2]];
     t.deepEqual(flatten(a), [1, 2, 3, 4, [5]], 'flattens exactly one level of depth');
     t.notDeepEqual(flatten(b), [1, 2, [3, 4]], 'flattens exactly one level of depth');
+    t.equal(flatten(c).length, [1, 2].length, 'should handle empty elements correctly');
     t.end();
   });
   t.test('safe', t => {

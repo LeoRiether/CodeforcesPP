@@ -23,6 +23,7 @@ import * as shortcuts from './ext/shortcuts';
 import * as sidebar from './ext/sidebar';
 import * as finder from './ext/finder';
 import * as mashup_add_all from './ext/mashup_add_all';
+import * as change_page_title from './ext/change_page_title';
 
 import env from './env/env';
 import * as config from './env/config';
@@ -53,12 +54,13 @@ async function run() {
         [shortcuts          , ''],
         [sidebar            , 'sidebarBox'],
         [mashup_add_all     , ''],
+        [change_page_title  , ''],
     ];
 
     // It works until you need to change the load order
     let moduleNames = [ 'style', 'dark_theme', 'show_tags', 'problemset', 'search_button',
                         'show_tutorial', 'navbar', 'redirector', 'update_standings', 'twin_standings',
-                        'verdict_test', 'shortcuts', 'sidebar', 'mashup_add_all' ];
+                        'verdict_test', 'shortcuts', 'sidebar', 'mashup_add_all', 'change_page_title' ];
 
     function registerConfigCallback(m, id) {
         events.listen(id, value => {
