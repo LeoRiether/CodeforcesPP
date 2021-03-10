@@ -71,7 +71,10 @@ const listenToStandingsUpdates = once(() =>
 );
 
 export const install = env.ready(async function() {
-    if (!config.get('standingsTwin') || !location.pathname.includes('/standings'))
+    const shouldInstall = config.get('standingsTwin');
+    const isProblemsetStandings = location.pathname.includes('/problemset/standings');
+    const isStandings = location.pathname.includes('/standings');
+    if (!shouldInstall || isProblemsetStandings || !isStandings)
         return;
 
     let info = gatherInfo();
