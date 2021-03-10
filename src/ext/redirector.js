@@ -17,7 +17,13 @@ function groups() {
 function friendsStandings() {
     let links = document.getElementsByTagName('a');
     for (let link of links) {
-        if (link.href.endsWith('/standings')) {
+        if (link.href.endsWith('/problemset/standings')) {
+            // Problemset standings
+            let url = new URL(link.href);
+            url.searchParams.set('friendsEnabled', 'on'); // add '?friendsEnabled=on'
+            link.href = url.href;
+        } else if (link.href.endsWith('/standings')) {
+            // Everything else
             link.href += '/friends/true';
         }
     }
