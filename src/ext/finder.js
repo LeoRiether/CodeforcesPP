@@ -5,6 +5,7 @@
 import dom from '../helpers/dom';
 import * as config from '../env/config';
 import { safe, pipe, map, once, flatten } from '../helpers/Functional';
+import { toggleCoachMode } from '../helpers/util';
 import env from '../env/env';
 
 let isOpen = false;
@@ -35,24 +36,24 @@ function Result(props) {
 
 let extensions = {
     common(handle) {
-        // TODO: consider changing to JSON.parse for performance reasons
         return [
-            { key: "contests",   title: "Contests",         href: "/contests" },
-            { key: "problemset", title: "Problemset",       href: "/problemset" },
-            { key: "psetting",   title: "Problemsetting",   href: `/contests/with/${handle}` },
-            { key: "subms",      title: "Submissions",      href: `/submissions/${handle}` },
-            { key: "groups",     title: "Groups",           href: `/groups/with/${handle}` },
-            { key: "profile",    title: "Profile",          href: `/profile/${handle}` },
-            { key: "cfviz",      title: "CfViz",            href: "https://cfviz.netlify.com" },
-            { key: "favs",       title: "Favourites",       href: "/favourite/problems" },
-            { key: "teams",      title: "Teams",            href: `/teams/with/${handle}` },
-            { key: "status",     title: "Status",           href: "/problemset/status" },
-            { key: "fstatus",    title: "Friends Status",   href: "/problemset/status?friends=on" },
-            { key: "gym",        title: "Gym",              href: "/gyms" },
-            { key: "blog",       title: "Blog",             href: `/blog/handle/${handle}` },
-            { key: "mashups",    title: "Mashups",          href: "/mashups" },
-            { key: "rating",     title: "Rating",           href: "/ratings" },
-            { key: "api",        title: "API",              href: "/apiHelp" }
+            { key: "contests"   , title: "Contests"          , href: "/contests" }                     ,
+            { key: "problemset" , title: "Problemset"        , href: "/problemset" }                   ,
+            { key: "psetting"   , title: "Problemsetting"    , href: `/contests/with/${handle}` }      ,
+            { key: "subms"      , title: "Submissions"       , href: `/submissions/${handle}` }        ,
+            { key: "groups"     , title: "Groups"            , href: `/groups/with/${handle}` }        ,
+            { key: "profile"    , title: "Profile"           , href: `/profile/${handle}` }            ,
+            { key: "cfviz"      , title: "CfViz"             , href: "https://cfviz.netlify.com" }     ,
+            { key: "favs"       , title: "Favourites"        , href: "/favourite/problems" }           ,
+            { key: "teams"      , title: "Teams"             , href: `/teams/with/${handle}` }         ,
+            { key: "status"     , title: "Status"            , href: "/problemset/status" }            ,
+            { key: "fstatus"    , title: "Friends Status"    , href: "/problemset/status?friends=on" } ,
+            { key: "gym"        , title: "Gym"               , href: "/gyms" }                         ,
+            { key: "blog"       , title: "Blog"              , href: `/blog/handle/${handle}` }        ,
+            { key: "mashups"    , title: "Mashups"           , href: "/mashups" }                      ,
+            { key: "rating"     , title: "Rating"            , href: "/ratings" }                      ,
+            { key: "api"        , title: "API"               , href: "/apiHelp" }                      ,
+			{ key: "togCoach"   , title: "Toggle Coach Mode" , onClick: toggleCoachMode  }             ,
         ];
     },
 
