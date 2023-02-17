@@ -47,6 +47,7 @@ export const defaultConfig = {
     hideTestNumber:   false,
     sidebarBox:       true,
     tutorialSpoilers: false,
+    mashupSpoilers:   false,
 
     shortcuts: {
         darkTheme: "Ctrl+I",

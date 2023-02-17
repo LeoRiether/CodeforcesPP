@@ -206,12 +206,20 @@ html.cfpp-dark-mode, html.cfpp-dark-mode body {
     margin: 0 !important;
 }
 
-/* Tutorial */
-.spoilered:not(:hover) {
+/* Spoilers */
+.spoilered:not(:hover), .spoilered-mashup ._MashupContestEditFrame_tags:not(:active) {
     background: black;
     color: black;
     opacity: .25;
 }
 .spoilered:not(:hover) img, .spoilered:not(:hover) a {
     visibility: hidden;
+}
+.spoilered-mashup ._MashupContestEditFrame_tags.notice:not(:active) {
+    color: black !important; /* .notice has a "color: #888 !important",
+                                so ours needs to be... more important... */
+}
+.spoilered-mashup ._MashupContestEditFrame_tags {
+    cursor: pointer;
+    min-width: 50%;
 }
