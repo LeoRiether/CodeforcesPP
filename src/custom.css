@@ -44,6 +44,7 @@ body>div td {
 
 body>div div.ttypography pre,
 body>div pre.prettyprint li,
+body>div code.prettyprint span:not(.tex-span),
 body>div pre.prettyprint span:not(.tex-span) {
     font-family: monospace;
 }
