@@ -27,9 +27,32 @@ a, a:visited, a:link, .contest-state-phase {
     color: #2c63d5 !important;
 }
 
-p, span:not(.tex-span), a, div {
-    font-family: 'Libre Franklin', 'Roboto', sans-serif !important;
+/* Very specific selectors so we get priority over the default font */
+body *,
+body>div p,
+body>div li,
+body>div th,
+body>div span:not(.tex-span),
+body>div .problem-statement .header .title,
+body>div .problem-statement .section-title,
+body>div .problem-statement .sample-tests,
+body>div .ttypography p,
+body>div .second-level-menu-list li,
+body>div td {
+    font-family: 'Libre Franklin', 'Roboto', sans-serif;
 }
+
+body>div div.ttypography pre,
+body>div pre.prettyprint li,
+body>div pre.prettyprint span:not(.tex-span) {
+    font-family: monospace;
+}
+
+/* div p, .problem-statement .header .title, div.time-limit, div.memory-limit, */
+/* div.input-file, div.output-file, div a, div div, div */
+/* span:not(.tex-span), * { */
+/*     font-family: 'Libre Franklin', 'Roboto', sans-serif; */
+/* } */
 
 /* Put smallcaps on the navbar */
 .menu-list-container a {
