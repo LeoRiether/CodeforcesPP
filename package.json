@@ -33,7 +33,7 @@
   "dependencies": {
     "acorn": "^7.1.1",
     "diff": "^3.5.0",
-    "minimist": "^1.2.3",
+    "minimist": "^1.2.6",
     "rollup-plugin-import-css": "^2.0.0",
     "webextension-polyfill": "^0.6.0"
   }
